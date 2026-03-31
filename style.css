@@ -80,6 +80,46 @@ body {
 .dim { color: #3f3f46; }
 .dim-text { color: #52525b; font-size: 13px; margin-bottom: 12px; }
 
+/* ── FAQ ── */
+.faq-list { display: flex; flex-direction: column; gap: 0; }
+.faq-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #1c1c22;
+}
+.faq-item:last-child { border-bottom: none; }
+.faq-mode {
+  color: #e4e4e7;
+  font-size: 13px;
+  font-weight: 500;
+}
+.faq-desc {
+  color: #52525b;
+  font-size: 12px;
+  text-align: right;
+}
+
+.faq-pricing { display: flex; flex-direction: column; gap: 0; }
+.faq-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid #1c1c22;
+}
+.faq-price-row:last-child { border-bottom: none; }
+.faq-price-label {
+  color: #71717a;
+  font-size: 13px;
+}
+.faq-price-val {
+  color: #d4d4d8;
+  font-size: 13px;
+  font-weight: 500;
+}
+
 /* ── Custom Dropdown ── */
 .dropdown { position: relative; cursor: pointer; }
 .dropdown-selected {
