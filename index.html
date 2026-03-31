@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>NO LIMITS</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
   <div id="app">
@@ -56,14 +56,22 @@
       <div id="mode-generate" class="mode-panel">
         <div class="card">
           <label class="label">PROMPT</label>
-          <textarea id="gen-prompt" class="input-area" placeholder="describe the scene (kira, sitting on a couch, bedroom...)"></textarea>
-          <button class="btn-enhance" onclick="enhancePrompt('gen-prompt')">✦ Enhance Prompt</button>
+          <textarea id="gen-prompt" class="input-area" placeholder="Describe the scene (kira, sitting on a couch, bedroom...)"></textarea>
+          <button class="btn-enhance" onclick="enhancePrompt('gen-prompt')">✨ Enhance Prompt</button>
         </div>
         <div class="card">
           <label class="label">SUB-MODE</label>
           <div class="btn-group">
-            <button class="btn-toggle active" data-group="gen-sub" data-val="default">Default</button>
-            <button class="btn-toggle" data-group="gen-sub" data-val="faceswap">Face Swap</button>
+            <button class="btn-toggle active" data-group="gen-sub" data-val="default" onclick="toggleFacePhoto()">Default</button>
+            <button class="btn-toggle" data-group="gen-sub" data-val="faceswap" onclick="toggleFacePhoto()">Face Swap</button>
+          </div>
+        </div>
+        <!-- Face photo - only visible when Face Swap selected -->
+        <div class="card" id="gen-face-card" style="display:none">
+          <label class="label">FACE PHOTO</label>
+          <div class="upload-zone" id="gen-face-upload" onclick="pickPhoto('gen-face')">
+            <span class="upload-plus">+</span>
+            <span class="upload-text">Tap to upload face photo</span>
           </div>
         </div>
         <div class="card">
@@ -80,11 +88,11 @@
         </div>
         <div class="card">
           <label class="label">COUNT</label>
-          <div class="btn-group">
-            <button class="btn-toggle active" data-group="gen-count" data-val="1">1</button>
-            <button class="btn-toggle" data-group="gen-count" data-val="2">2</button>
-            <button class="btn-toggle" data-group="gen-count" data-val="3">3</button>
-            <button class="btn-toggle" data-group="gen-count" data-val="4">4</button>
+          <div class="count-group">
+            <span class="count-dot active" data-group="gen-count" data-val="1">1</span>
+            <span class="count-dot" data-group="gen-count" data-val="2">2</span>
+            <span class="count-dot" data-group="gen-count" data-val="3">3</span>
+            <span class="count-dot" data-group="gen-count" data-val="4">4</span>
           </div>
         </div>
         <button class="btn-main" onclick="generate()">G E N E R A T E</button>
@@ -99,9 +107,8 @@
             <span class="upload-text">Tap to upload or paste</span>
           </div>
         </div>
-        <!-- Everything below hidden until photo uploaded -->
         <div id="inp-after-photo" style="display:none">
-          <div class="card" id="inp-mask-card">
+          <div class="card">
             <label class="label">MASK</label>
             <canvas id="mask-canvas" class="mask-canvas"></canvas>
             <div class="brush-tools">
@@ -150,50 +157,35 @@
         <div class="card">
           <label class="label">PHOTO</label>
           <div class="upload-zone" id="vid-upload" onclick="pickPhoto('vid')">
-            <span>tap to upload photo</span>
+            <span class="upload-plus">+</span>
+            <span class="upload-text">Tap to upload or paste</span>
           </div>
         </div>
-        <div class="card">
-          <label class="label">SCENES <span class="dim">(6 max)</span></label>
-          <div class="tags">
-            <button class="tag" onclick="addPreset('missionary')">Missionary</button>
-            <button class="tag" onclick="addPreset('blowjob')">Blowjob</button>
-            <button class="tag" onclick="addPreset('doggy')">Doggy</button>
-            <button class="tag" onclick="addPreset('cowgirl')">Cowgirl</button>
-            <button class="tag" onclick="addPreset('handjob')">Handjob</button>
-          </div>
-          <div id="scene-list">
-            <div class="scene-slot" data-idx="1">
-              <span class="scene-label">SCENE 1</span>
-              <input type="text" class="scene-input" placeholder="Scene 1 prompt...">
+        <div id="vid-after-photo" style="display:none">
+          <div class="card">
+            <label class="label">SCENES <span class="dim">(6 max)</span></label>
+            <div class="tags">
+              <button class="tag" onclick="addPreset('missionary')">Missionary</button>
+              <button class="tag" onclick="addPreset('blowjob')">Blowjob</button>
+              <button class="tag" onclick="addPreset('doggy')">Doggy</button>
+              <button class="tag" onclick="addPreset('cowgirl')">Cowgirl</button>
+              <button class="tag" onclick="addPreset('handjob')">Handjob</button>
             </div>
-            <div class="scene-slot" data-idx="2">
-              <span class="scene-label">SCENE 2</span>
-              <input type="text" class="scene-input" placeholder="Scene 2 prompt...">
-            </div>
-            <div class="scene-slot" data-idx="3">
-              <span class="scene-label">SCENE 3</span>
-              <input type="text" class="scene-input" placeholder="Scene 3 prompt...">
-            </div>
-            <div class="scene-slot" data-idx="4">
-              <span class="scene-label">SCENE 4</span>
-              <input type="text" class="scene-input" placeholder="Scene 4 prompt...">
-            </div>
-            <div class="scene-slot" data-idx="5">
-              <span class="scene-label">SCENE 5</span>
-              <input type="text" class="scene-input" placeholder="Scene 5 prompt...">
-            </div>
-            <div class="scene-slot" data-idx="6">
-              <span class="scene-label">SCENE 6</span>
-              <input type="text" class="scene-input" placeholder="Scene 6 prompt...">
+            <div id="scene-list">
+              <div class="scene-slot"><span class="scene-label">SCENE 1</span><input type="text" class="scene-input" placeholder="Scene 1 prompt..."></div>
+              <div class="scene-slot"><span class="scene-label">SCENE 2</span><input type="text" class="scene-input" placeholder="Scene 2 prompt..."></div>
+              <div class="scene-slot"><span class="scene-label">SCENE 3</span><input type="text" class="scene-input" placeholder="Scene 3 prompt..."></div>
+              <div class="scene-slot"><span class="scene-label">SCENE 4</span><input type="text" class="scene-input" placeholder="Scene 4 prompt..."></div>
+              <div class="scene-slot"><span class="scene-label">SCENE 5</span><input type="text" class="scene-input" placeholder="Scene 5 prompt..."></div>
+              <div class="scene-slot"><span class="scene-label">SCENE 6</span><input type="text" class="scene-input" placeholder="Scene 6 prompt..."></div>
             </div>
           </div>
+          <div class="card">
+            <label class="label">NEGATIVE</label>
+            <textarea id="vid-negative" class="input-area small">blurry, ugly, deformed, text, watermark, low quality, cartoon</textarea>
+          </div>
+          <button class="btn-main" onclick="generateVideo()">G E N E R A T E &nbsp; V I D E O</button>
         </div>
-        <div class="card">
-          <label class="label">NEGATIVE</label>
-          <textarea id="vid-negative" class="input-area small">blurry, ugly, deformed, text, watermark, low quality, cartoon</textarea>
-        </div>
-        <button class="btn-main" onclick="generateVideo()">G E N E R A T E &nbsp; V I D E O</button>
       </div>
 
       <!-- === EDIT EASY MODE === -->
@@ -201,64 +193,68 @@
         <div class="card">
           <label class="label">PHOTO</label>
           <div class="upload-zone" id="easy-upload" onclick="pickPhoto('easy')">
-            <span>tap to upload photo</span>
+            <span class="upload-plus">+</span>
+            <span class="upload-text">Tap to upload or paste</span>
           </div>
         </div>
-        <div class="card">
-          <label class="label">REFERENCE <span class="dim">(combine two girls)</span></label>
-          <div class="upload-zone small-upload" id="easy-ref-upload" onclick="pickPhoto('easy-ref')">
-            <span>+ tap to add 2nd photo</span>
+        <div id="easy-after-photo" style="display:none">
+          <div class="card">
+            <label class="label">REFERENCE <span class="dim">(combine two girls)</span></label>
+            <div class="upload-zone small-upload" id="easy-ref-upload" onclick="pickPhoto('easy-ref')">
+              <span class="upload-plus">+</span>
+              <span class="upload-text">Tap to add 2nd photo</span>
+            </div>
           </div>
-        </div>
-        <div class="card">
-          <label class="label">PROMPT</label>
-          <div class="tags">
-            <button class="tag" onclick="appendTag('easy-prompt','cum')">Cum</button>
-            <button class="tag" onclick="appendTag('easy-prompt','shit')">Shit</button>
-            <button class="tag" onclick="appendTag('easy-prompt','nude')">Nude</button>
-            <button class="tag" onclick="appendTag('easy-prompt','anal')">Anal</button>
+          <div class="card">
+            <label class="label">PROMPT</label>
+            <div class="tags">
+              <button class="tag" onclick="appendTag('easy-prompt','cum')">Cum</button>
+              <button class="tag" onclick="appendTag('easy-prompt','shit')">Shit</button>
+              <button class="tag" onclick="appendTag('easy-prompt','nude')">Nude</button>
+              <button class="tag" onclick="appendTag('easy-prompt','anal')">Anal</button>
+            </div>
+            <textarea id="easy-prompt" class="input-area" placeholder="Describe the edit (put face from ref on t-shirt, change background...)"></textarea>
+            <button class="btn-enhance" onclick="enhancePrompt('easy-prompt')">✨ Enhance Prompt</button>
           </div>
-          <textarea id="easy-prompt" class="input-area" placeholder="describe the edit (put face from ref on t-shirt, change background...)"></textarea>
-          <button class="btn-enhance" onclick="enhancePrompt('easy-prompt')">✦ Enhance Prompt</button>
-        </div>
-        <div class="card">
-          <label class="label">NEGATIVE</label>
-          <textarea id="easy-negative" class="input-area small">blurry, ugly, deformed, watermark, text, low quality, cartoon</textarea>
-        </div>
-        <div class="card">
-          <label class="label">EDIT MODE</label>
-          <div class="btn-group">
-            <button class="btn-toggle active" data-group="easy-mode" data-val="default">⚡ Default</button>
-            <button class="btn-toggle" data-group="easy-mode" data-val="depth">🎯 Depth</button>
+          <div class="card">
+            <label class="label">NEGATIVE</label>
+            <textarea id="easy-negative" class="input-area small">blurry, ugly, deformed, watermark, text, low quality, cartoon</textarea>
           </div>
-        </div>
-        <div class="card row">
-          <div class="half">
-            <label class="label">DENOISE: <span id="easy-denoise-val">0.85</span></label>
-            <input type="range" class="slider" id="easy-denoise" min="0.1" max="1" step="0.05" value="0.85">
+          <div class="card">
+            <label class="label">EDIT MODE</label>
+            <div class="btn-group">
+              <button class="btn-toggle active" data-group="easy-mode" data-val="default">⚡ Default</button>
+              <button class="btn-toggle" data-group="easy-mode" data-val="depth">🎯 Depth</button>
+            </div>
           </div>
-          <div class="half">
-            <label class="label">STEPS: <span id="easy-steps-val">5</span></label>
-            <input type="range" class="slider" id="easy-steps" min="1" max="50" step="1" value="5">
+          <div class="card row">
+            <div class="half">
+              <label class="label">DENOISE: <span id="easy-denoise-val">0.85</span></label>
+              <input type="range" class="slider" id="easy-denoise" min="0.1" max="1" step="0.05" value="0.85">
+            </div>
+            <div class="half">
+              <label class="label">STEPS: <span id="easy-steps-val">5</span></label>
+              <input type="range" class="slider" id="easy-steps" min="1" max="50" step="1" value="5">
+            </div>
           </div>
-        </div>
-        <div class="card">
-          <label class="label">QUALITY</label>
-          <div class="btn-group">
-            <button class="btn-toggle active" data-group="easy-quality" data-val="fast">Fast</button>
-            <button class="btn-toggle" data-group="easy-quality" data-val="detailed">Detailed</button>
+          <div class="card">
+            <label class="label">QUALITY</label>
+            <div class="btn-group">
+              <button class="btn-toggle active" data-group="easy-quality" data-val="fast">Fast</button>
+              <button class="btn-toggle" data-group="easy-quality" data-val="detailed">Detailed</button>
+            </div>
           </div>
-        </div>
-        <div class="card">
-          <label class="label">COUNT</label>
-          <div class="btn-group">
-            <button class="btn-toggle active" data-group="easy-count" data-val="1">1</button>
-            <button class="btn-toggle" data-group="easy-count" data-val="2">2</button>
-            <button class="btn-toggle" data-group="easy-count" data-val="3">3</button>
-            <button class="btn-toggle" data-group="easy-count" data-val="4">4</button>
+          <div class="card">
+            <label class="label">COUNT</label>
+            <div class="count-group">
+              <span class="count-dot active" data-group="easy-count" data-val="1">1</span>
+              <span class="count-dot" data-group="easy-count" data-val="2">2</span>
+              <span class="count-dot" data-group="easy-count" data-val="3">3</span>
+              <span class="count-dot" data-group="easy-count" data-val="4">4</span>
+            </div>
           </div>
+          <button class="btn-main" onclick="editImage()">E D I T &nbsp; I M A G E</button>
         </div>
-        <button class="btn-main" onclick="editImage()">E D I T &nbsp; I M A G E</button>
       </div>
 
       <!-- === EDIT DARK MODE === -->
@@ -266,32 +262,8 @@
         <div class="card">
           <label class="label">PHOTO</label>
           <div class="upload-zone" id="dark-upload" onclick="pickPhoto('dark')">
-            <span>tap to upload photo</span>
-          </div>
-        </div>
-        <div class="card">
-          <label class="label">PROMPT</label>
-          <div class="tags">
-            <button class="tag" onclick="appendTag('dark-prompt','cum')">Cum</button>
-            <button class="tag" onclick="appendTag('dark-prompt','shit')">Shit</button>
-            <button class="tag" onclick="appendTag('dark-prompt','nude')">Nude</button>
-            <button class="tag" onclick="appendTag('dark-prompt','anal')">Anal</button>
-          </div>
-          <textarea id="dark-prompt" class="input-area" placeholder="Dark Beast: describe NSFW edit..."></textarea>
-          <button class="btn-enhance" onclick="enhancePrompt('dark-prompt')">✦ Enhance Prompt</button>
-        </div>
-        <div class="card">
-          <label class="label">NEGATIVE</label>
-          <textarea id="dark-negative" class="input-area small">blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy</textarea>
-        </div>
-        <div class="card row">
-          <div class="half">
-            <label class="label">DENOISE: <span id="dark-denoise-val">0.85</span></label>
-            <input type="range" class="slider" id="dark-denoise" min="0.1" max="1" step="0.05" value="0.85">
-          </div>
-          <div class="half">
-            <label class="label">STEPS: <span id="dark-steps-val">5</span></label>
-            <input type="range" class="slider" id="dark-steps" min="1" max="50" step="1" value="5">
+            <span class="upload-plus">+</span>
+            <span class="upload-text">Tap to upload or paste</span>
           </div>
         </div>
         <div class="card">
@@ -301,16 +273,43 @@
             <button class="btn-toggle" data-group="dark-quality" data-val="detailed">Detailed</button>
           </div>
         </div>
-        <div class="card">
-          <label class="label">COUNT</label>
-          <div class="btn-group">
-            <button class="btn-toggle active" data-group="dark-count" data-val="1">1</button>
-            <button class="btn-toggle" data-group="dark-count" data-val="2">2</button>
-            <button class="btn-toggle" data-group="dark-count" data-val="3">3</button>
-            <button class="btn-toggle" data-group="dark-count" data-val="4">4</button>
+        <div id="dark-after-photo" style="display:none">
+          <div class="card">
+            <label class="label">PROMPT</label>
+            <div class="tags">
+              <button class="tag" onclick="appendTag('dark-prompt','cum')">Cum</button>
+              <button class="tag" onclick="appendTag('dark-prompt','shit')">Shit</button>
+              <button class="tag" onclick="appendTag('dark-prompt','nude')">Nude</button>
+              <button class="tag" onclick="appendTag('dark-prompt','anal')">Anal</button>
+            </div>
+            <textarea id="dark-prompt" class="input-area" placeholder="Dark Beast: describe NSFW edit..."></textarea>
+            <button class="btn-enhance" onclick="enhancePrompt('dark-prompt')">✨ Enhance Prompt</button>
           </div>
+          <div class="card">
+            <label class="label">NEGATIVE</label>
+            <textarea id="dark-negative" class="input-area small">blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy</textarea>
+          </div>
+          <div class="card row">
+            <div class="half">
+              <label class="label">DENOISE: <span id="dark-denoise-val">0.85</span></label>
+              <input type="range" class="slider" id="dark-denoise" min="0.1" max="1" step="0.05" value="0.85">
+            </div>
+            <div class="half">
+              <label class="label">STEPS: <span id="dark-steps-val">5</span></label>
+              <input type="range" class="slider" id="dark-steps" min="1" max="50" step="1" value="5">
+            </div>
+          </div>
+          <div class="card">
+            <label class="label">COUNT</label>
+            <div class="count-group">
+              <span class="count-dot active" data-group="dark-count" data-val="1">1</span>
+              <span class="count-dot" data-group="dark-count" data-val="2">2</span>
+              <span class="count-dot" data-group="dark-count" data-val="3">3</span>
+              <span class="count-dot" data-group="dark-count" data-val="4">4</span>
+            </div>
+          </div>
+          <button class="btn-main btn-dark" onclick="darkBeast()">D A R K &nbsp; B E A S T</button>
         </div>
-        <button class="btn-main btn-dark" onclick="darkBeast()">D A R K &nbsp; B E A S T</button>
       </div>
 
     </div>
@@ -346,9 +345,7 @@
 
   </div>
 
-  <!-- Hidden file input -->
   <input type="file" id="file-input" accept="image/*" style="display:none">
-
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
