@@ -21,8 +21,8 @@ document.querySelectorAll('.tab').forEach(btn => {
     state.tab = tab;
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
-    document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
-    document.getElementById(`page-${tab}`).classList.remove('hidden');
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    document.getElementById(`page-${tab}`).style.display = 'block';
   });
 });
 
@@ -30,8 +30,8 @@ document.querySelectorAll('.tab').forEach(btn => {
 document.getElementById('mode-select').addEventListener('change', (e) => {
   const mode = e.target.value;
   state.mode = mode;
-  document.querySelectorAll('.mode-panel').forEach(p => p.classList.add('hidden'));
-  document.getElementById(`mode-${mode}`).classList.remove('hidden');
+  document.querySelectorAll('.mode-panel').forEach(p => p.style.display = 'none');
+  document.getElementById(`mode-${mode}`).style.display = 'block';
 });
 
 // ── Toggle Buttons (btn-toggle) ──
