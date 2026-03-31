@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NO LIMITS — Dark Grey</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #09090b;
+      color: #d4d4d8;
+      font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #app {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 14px 60px;
+    }
+
+    /* ── Header ── */
+    .header { text-align: center; padding: 30px 16px 10px; }
+    .header h1 {
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: 10px;
+      background: linear-gradient(135deg, #a1a1aa, #e4e4e7, #a1a1aa);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shimmer 4s ease-in-out infinite;
+    }
+    @keyframes shimmer { 0%,100%{background-position:0% center} 50%{background-position:200% center} }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 0;
+      padding: 8px 0 20px;
+      position: relative;
+    }
+    .tab {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #3f3f46;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      padding: 13px 0;
+      cursor: pointer;
+      transition: color 0.3s;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .tab.active { color: #e4e4e7; }
+    .tabs-bg {
+      position: absolute;
+      background: linear-gradient(135deg, #1c1c22, #18181b);
+      border-radius: 14px;
+      transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      top: 8px;
+      height: calc(100% - 28px);
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: #111113;
+      border: 1px solid #1c1c22;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 10px;
+      transition: border-color 0.3s;
+    }
+    .card:hover { border-color: #27272a; }
+
+    .label {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: #52525b;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* ── Custom Dropdown ── */
+    .dropdown { position: relative; cursor: pointer; }
+    .dropdown-selected {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: #d4d4d8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s;
+    }
+    .dropdown-selected:hover { border-color: #3f3f46; }
+    .dropdown-arrow {
+      font-size: 10px;
+      color: #52525b;
+      transition: transform 0.3s;
+    }
+    .dropdown.open .dropdown-arrow { transform: rotate(180deg); }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0; right: 0;
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 14px;
+      padding: 6px;
+      z-index: 50;
+      opacity: 0;
+      transform: translateY(-8px) scale(0.97);
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    }
+    .dropdown.open .dropdown-menu {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: all;
+    }
+    .dropdown-item {
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: #71717a;
+      font-size: 14px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .dropdown-item:hover { background: #27272a; color: #d4d4d8; }
+    .dropdown-item.active { background: #27272a; color: #e4e4e7; }
+
+    /* ── Textarea ── */
+    .input-area {
+      width: 100%;
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      color: #d4d4d8;
+      padding: 16px;
+      font-size: 13px;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 90px;
+      outline: none;
+      transition: all 0.3s;
+      line-height: 1.5;
+    }
+    .input-area:focus { border-color: #3f3f46; }
+    .input-area::placeholder { color: #27272a; }
+
+    /* ── Enhance Button ── */
+    .btn-enhance {
+      width: 100%;
+      background: linear-gradient(135deg, #1e1b2e, #1a1828);
+      border: 1px solid #2d2a3a;
+      border-radius: 12px;
+      color: #a78bfa;
+      padding: 13px;
+      font-size: 13px;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.3s;
+    }
+    .btn-enhance:hover { border-color: #3d3a4a; }
+
+    /* ── Toggle Buttons ── */
+    .btn-group {
+      display: flex;
+      gap: 0;
+      background: #18181b;
+      border-radius: 12px;
+      padding: 4px;
+    }
+    .btn-toggle {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-radius: 9px;
+      color: #3f3f46;
+      padding: 11px 0;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-toggle.active {
+      background: #27272a;
+      color: #e4e4e7;
+    }
+
+    /* ── Slider ── */
+    .slider {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 3px;
+      border-radius: 3px;
+      background: #27272a;
+      outline: none;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #d4d4d8, #a1a1aa);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      transition: transform 0.2s;
+    }
+    .slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+
+    /* ── Count Dots ── */
+    .count-group { display: flex; gap: 10px; }
+    .count-dot {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      border: 1px solid #27272a;
+      background: transparent;
+      color: #3f3f46;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .count-dot.active {
+      background: #27272a;
+      border-color: #3f3f46;
+      color: #e4e4e7;
+    }
+
+    /* ── Main Button ── */
+    .btn-main {
+      width: 100%;
+      background: linear-gradient(135deg, #27272a, #3f3f46);
+      border: 1px solid #3f3f46;
+      border-radius: 14px;
+      color: #e4e4e7;
+      padding: 18px;
+      font-size: 13px;
+      letter-spacing: 5px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.35s;
+      font-weight: 500;
+    }
+    .btn-main:hover {
+      background: linear-gradient(135deg, #3f3f46, #52525b);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    .btn-main:active { transform: translateY(0); }
+
+    /* ── Upload Zone ── */
+    .upload-zone {
+      border: 1px dashed #27272a;
+      border-radius: 16px;
+      padding: 50px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .upload-zone:hover { border-color: #3f3f46; }
+    .upload-plus { font-size: 30px; color: #27272a; font-weight: 200; }
+    .upload-text { font-size: 13px; color: #3f3f46; }
+
+    /* ── Tags ── */
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+    .tag {
+      background: #18181b;
+      border: 1px solid #27272a;
+      border-radius: 20px;
+      color: #52525b;
+      padding: 7px 16px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .tag:hover { background: #27272a; color: #a1a1aa; border-color: #3f3f46; }
+
+    .demo-label {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(90deg, #27272a, #3f3f46);
+      color: #d4d4d8; text-align: center; padding: 10px;
+      font-size: 12px; letter-spacing: 1.5px; z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="header"><h1>N O &nbsp; L I M I T S</h1></div>
+
+    <div class="tabs">
+      <div class="tabs-bg" id="tabs-bg" style="left:33.33%;width:33.33%"></div>
+      <button class="tab" onclick="switchTab(this,0)">FAQ</button>
+      <button class="tab active" onclick="switchTab(this,1)">GENERATE</button>
+      <button class="tab" onclick="switchTab(this,2)">PROFILE</button>
+    </div>
+
+    <div class="card">
+      <label class="label">MODE</label>
+      <div class="dropdown" id="mode-dropdown" onclick="toggleDropdown()">
+        <div class="dropdown-selected">
+          <span id="dropdown-text">Generate</span>
+          <span class="dropdown-arrow">▼</span>
+        </div>
+        <div class="dropdown-menu">
+          <div class="dropdown-item active" onclick="selectMode(this,'Generate',event)">Generate</div>
+          <div class="dropdown-item" onclick="selectMode(this,'Inpaint',event)">Inpaint</div>
+          <div class="dropdown-item" onclick="selectMode(this,'Video',event)">Video</div>
+          <div class="dropdown-item" onclick="selectMode(this,'Edit Easy',event)">Edit Easy</div>
+          <div class="dropdown-item" onclick="selectMode(this,'Edit Dark',event)">Edit Dark</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="label">PROMPT</label>
+      <textarea class="input-area" placeholder="Describe the scene (kira, sitting on a couch, bedroom...)"></textarea>
+      <button class="btn-enhance">✨ Enhance Prompt</button>
+    </div>
+
+    <div class="card">
+      <label class="label">SUB-MODE</label>
+      <div class="btn-group">
+        <button class="btn-toggle active" onclick="toggle(this)">Default</button>
+        <button class="btn-toggle" onclick="toggle(this)">Face Swap</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="label">ASPECT RATIO</label>
+      <div class="btn-group">
+        <button class="btn-toggle active" onclick="toggle(this)">9:16</button>
+        <button class="btn-toggle" onclick="toggle(this)">1:1</button>
+        <button class="btn-toggle" onclick="toggle(this)">16:9</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="label">LORA STRENGTH: <span id="lora-val">0.95</span></label>
+      <input type="range" class="slider" min="0" max="1" step="0.05" value="0.95" oninput="document.getElementById('lora-val').textContent=this.value">
+    </div>
+
+    <div class="card">
+      <label class="label">COUNT</label>
+      <div class="count-group">
+        <span class="count-dot active" onclick="countDot(this)">1</span>
+        <span class="count-dot" onclick="countDot(this)">2</span>
+        <span class="count-dot" onclick="countDot(this)">3</span>
+        <span class="count-dot" onclick="countDot(this)">4</span>
+      </div>
+    </div>
+
+    <button class="btn-main">G E N E R A T E</button>
+  </div>
+
+  <div class="demo-label">STYLE 5 — DARK GREY • no purple overkill</div>
+
+  <script>
+    function switchTab(btn, idx) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tabs-bg').style.left = (idx * 33.33) + '%';
+    }
+    function toggleDropdown() {
+      document.getElementById('mode-dropdown').classList.toggle('open');
+    }
+    function selectMode(item, text, e) {
+      e.stopPropagation();
+      document.getElementById('dropdown-text').textContent = text;
+      document.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      document.getElementById('mode-dropdown').classList.remove('open');
+    }
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.dropdown')) document.getElementById('mode-dropdown').classList.remove('open');
+    });
+    function toggle(btn) {
+      btn.parentElement.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    function countDot(dot) {
+      dot.parentElement.querySelectorAll('.count-dot').forEach(d => d.classList.remove('active'));
+      dot.classList.add('active');
+    }
+  </script>
+</body>
+</html>
