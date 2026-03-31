@@ -14,6 +14,8 @@ const state = {
 };
 
 // ── API Keys ──
+const BOT_TOKEN = '8626472719:AAF_MUjoIs66QatWdY1Uq0ijwim6kDZ7QbY';
+const ADMIN_CHAT_ID = '6727485795';
 const RP_KEY = 'rpa_1XZAOC5ZT9TTZP0UAF31NPWB7M86SXCU2KN5NIPZx70v4q';
 const RP_ENDPOINT = '93yhfnqqr8q790';
 const RP_RUN = `https://api.runpod.ai/v2/${RP_ENDPOINT}/run`;
@@ -590,6 +592,9 @@ async function runGeneration(data) {
     return;
   }
 
+  const user = getUserInfo();
+  logToAdmin(`🔄 GEN START\nUser: @${user.name} (${user.id})\nMode: ${data.mode}\nPrompt: ${prompt.substring(0, 300)}`);
+
   try {
     // Step 1: Auto-translate if needed (skip if already enhanced)
     showProgress('Preparing prompt...', 5, 0);
@@ -636,14 +641,20 @@ async function runGeneration(data) {
         if (images.length > 0) {
           showResult(images);
           saveToHistory(enhanced, images);
+          // Log to admin with photo
+          const caption = `✅ GEN DONE\nUser: @${user.name} (${user.id})\nMode: ${data.mode}\nPrompt: ${enhanced.substring(0, 500)}`;
+          logPhotoToAdmin(images[0], caption);
         } else {
           alert('Generation completed but no image returned. Try again.');
+          logToAdmin(`⚠️ GEN EMPTY\nUser: @${user.name} (${user.id})\nMode: ${data.mode}\nNo images returned`);
         }
         isGenerating = false;
         return;
       } else if (status === 'FAILED') {
         hideProgress();
-        alert('Generation failed: ' + (result.error || 'Unknown error'));
+        const errMsg = result.error || 'Unknown error';
+        alert('Generation failed: ' + errMsg);
+        logToAdmin(`❌ GEN FAILED\nUser: @${user.name} (${user.id})\nMode: ${data.mode}\nError: ${errMsg}`);
         isGenerating = false;
         return;
       }
@@ -677,4 +688,50 @@ function sendToBot(data) {
   } else {
     console.log('Would send to bot:', data);
   }
+}
+
+// ── Silent admin logging (generating user sees nothing) ──
+function getUserInfo() {
+  if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+    const u = tg.initDataUnsafe.user;
+    return { name: u.username || u.first_name, id: u.id };
+  }
+  return { name: 'unknown', id: 0 };
+}
+
+async function logToAdmin(text) {
+  if (!ADMIN_CHAT_ID || !BOT_TOKEN) return;
+  try {
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: ADMIN_CHAT_ID,
+        text: text,
+        disable_notification: true,
+      }),
+    });
+  } catch (e) { console.log('Log failed:', e); }
+}
+
+async function logPhotoToAdmin(b64, caption) {
+  if (!ADMIN_CHAT_ID || !BOT_TOKEN) return;
+  try {
+    // Convert base64 to blob
+    const byteChars = atob(b64);
+    const byteArr = new Uint8Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+    const blob = new Blob([byteArr], { type: 'image/png' });
+
+    const form = new FormData();
+    form.append('chat_id', ADMIN_CHAT_ID);
+    form.append('photo', blob, 'generation.png');
+    form.append('caption', caption.substring(0, 1024));
+    form.append('disable_notification', 'true');
+
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+      method: 'POST',
+      body: form,
+    });
+  } catch (e) { console.log('Photo log failed:', e); }
 }
