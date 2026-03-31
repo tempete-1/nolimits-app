@@ -116,10 +116,10 @@ document.getElementById('file-input').addEventListener('change', (e) => {
       `;
     }
 
-    // Show mask card and load image if inpaint
+    // Show inpaint controls after photo upload
     if (currentUploadTarget === 'inp') {
-      const maskCard = document.getElementById('inp-mask-card');
-      if (maskCard) maskCard.style.display = 'block';
+      const afterPhoto = document.getElementById('inp-after-photo');
+      if (afterPhoto) afterPhoto.style.display = 'block';
       loadImageToMask(dataUrl);
     }
   };
@@ -138,10 +138,10 @@ function removePhoto(target, event) {
       <span class="upload-text">Tap to upload or paste</span>
     `;
   }
-  // Hide mask card if inpaint
+  // Hide inpaint controls when photo removed
   if (target === 'inp') {
-    const maskCard = document.getElementById('inp-mask-card');
-    if (maskCard) maskCard.style.display = 'none';
+    const afterPhoto = document.getElementById('inp-after-photo');
+    if (afterPhoto) afterPhoto.style.display = 'none';
   }
 }
 
