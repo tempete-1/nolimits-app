@@ -281,6 +281,8 @@ async function enhancePrompt(inputId) {
       headers: {
         'Authorization': `Bearer ${OR_KEY}`,
         'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://tempete-1.github.io/nolimits-app/',
+        'X-Title': 'NO LIMITS',
       },
       body: JSON.stringify({
         model: OR_MODEL,
