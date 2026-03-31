@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NO LIMITS — Style 3: Clean</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0c0c0e;
+      color: #e0e0e0;
+      font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.4s, color 0.4s;
+    }
+    body.light { background: #ffffff; color: #1a1a1a; }
+    #app { max-width: 480px; margin: 0 auto; padding: 0 12px 60px; }
+
+    .header { text-align: center; padding: 28px 16px 6px; }
+    .header h1 { font-size: 20px; font-weight: 600; letter-spacing: 8px; color: #fff; transition: color 0.4s; }
+    body.light .header h1 { color: #111; }
+
+    .theme-toggle {
+      position: absolute; top: 16px; right: 16px;
+      background: #161618; border: none; border-radius: 10px;
+      padding: 7px 14px; color: #888; font-size: 12px; cursor: pointer;
+      transition: all 0.3s;
+    }
+    body.light .theme-toggle { background: #f0f0f0; color: #666; }
+
+    .tabs { display: flex; gap: 0; padding: 10px 0 18px; background: #161618; border-radius: 14px; overflow: hidden; }
+    .tab {
+      flex: 1; background: transparent; border: none;
+      color: #555; font-size: 11px; letter-spacing: 2px; padding: 12px 0;
+      cursor: pointer; transition: all 0.3s; text-align: center; position: relative;
+    }
+    .tab.active { color: #fff; background: #222225; }
+    body.light .tabs { background: #f0f0f2; }
+    body.light .tab { color: #aaa; }
+    body.light .tab.active { background: #fff; color: #111; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+
+    .card {
+      background: #161618; border: none; border-radius: 16px;
+      padding: 18px; margin-bottom: 8px; transition: all 0.3s;
+    }
+    body.light .card { background: #f7f7f8; }
+
+    .label { display: block; font-size: 10px; letter-spacing: 2.5px; color: #555; margin-bottom: 12px; text-transform: uppercase; }
+    body.light .label { color: #999; }
+
+    .select {
+      width: 100%; background: #0c0c0e; border: none; border-radius: 10px;
+      color: #e0e0e0; padding: 12px 14px; font-size: 14px;
+      outline: none; cursor: pointer; -webkit-appearance: none; transition: all 0.3s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23555' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+    }
+    .select option { background: #161618; }
+    body.light .select { background: #fff; color: #333; border: 1px solid #e8e8ea; }
+
+    .input-area {
+      width: 100%; background: #0c0c0e; border: none; border-radius: 10px;
+      color: #ccc; padding: 14px; font-size: 13px; font-family: inherit;
+      resize: vertical; min-height: 80px; outline: none; transition: all 0.3s;
+    }
+    .input-area::placeholder { color: #2a2a2d; }
+    body.light .input-area { background: #fff; color: #333; border: 1px solid #e8e8ea; }
+    body.light .input-area::placeholder { color: #ccc; }
+
+    .btn-group { display: flex; gap: 4px; background: #0c0c0e; border-radius: 12px; padding: 3px; }
+    .btn-toggle {
+      flex: 1; background: transparent; border: none; border-radius: 10px;
+      color: #555; padding: 10px 0; font-size: 12px; cursor: pointer; transition: all 0.25s;
+    }
+    .btn-toggle.active { background: #222225; color: #fff; }
+    body.light .btn-group { background: #ededef; }
+    body.light .btn-toggle.active { background: #fff; color: #111; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+
+    .btn-enhance {
+      width: 100%; background: linear-gradient(135deg, #2d1b4e, #1b1b35);
+      border: none; border-radius: 10px; color: #b388ff; padding: 12px;
+      font-size: 13px; cursor: pointer; margin-top: 10px; transition: all 0.3s;
+    }
+    .btn-enhance:hover { opacity: 0.85; }
+    body.light .btn-enhance { background: linear-gradient(135deg, #ede5ff, #e0e0ff); color: #7c3aed; }
+
+    .btn-main {
+      width: 100%; background: #fff; border: none; border-radius: 14px;
+      color: #0c0c0e; padding: 16px; font-size: 13px; font-weight: 600;
+      letter-spacing: 5px; cursor: pointer; margin-top: 6px; transition: all 0.3s;
+    }
+    .btn-main:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-main:active { transform: translateY(0); }
+    body.light .btn-main { background: #111; color: #fff; }
+
+    .slider {
+      width: 100%; -webkit-appearance: none; height: 4px; border-radius: 4px;
+      background: #222225; outline: none;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+      background: #fff; cursor: pointer; transition: transform 0.2s;
+    }
+    .slider::-webkit-slider-thumb:hover { transform: scale(1.1); }
+    body.light .slider { background: #e0e0e2; }
+    body.light .slider::-webkit-slider-thumb { background: #111; }
+
+    .count-group { display: flex; gap: 8px; }
+    .count-dot {
+      width: 36px; height: 36px; border-radius: 10px; border: none;
+      background: #0c0c0e; color: #444; font-size: 13px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.25s;
+    }
+    .count-dot.active { background: #222225; color: #fff; }
+    body.light .count-dot { background: #ededef; color: #bbb; }
+    body.light .count-dot.active { background: #111; color: #fff; }
+
+    .upload-zone {
+      border: 2px dashed #222225; border-radius: 14px;
+      padding: 50px 20px; text-align: center; cursor: pointer;
+      transition: all 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .upload-zone:hover { border-color: #333; }
+    .upload-plus { font-size: 28px; color: #333; font-weight: 300; }
+    .upload-text { font-size: 13px; color: #333; }
+    body.light .upload-zone { border-color: #ddd; }
+    body.light .upload-plus, body.light .upload-text { color: #bbb; }
+
+    .demo-label {
+      position: fixed; bottom: 0; left: 0; right: 0; background: #fff;
+      color: #111; text-align: center; padding: 10px; font-size: 13px;
+      letter-spacing: 1px; z-index: 100; font-weight: 600;
+    }
+    body.light .demo-label { background: #111; color: #fff; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <button class="theme-toggle" onclick="document.body.classList.toggle('light')">☀ / ☾</button>
+    <div class="header"><h1>N O &nbsp; L I M I T S</h1></div>
+    <div class="tabs">
+      <button class="tab" onclick="this.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">FAQ</button>
+      <button class="tab active" onclick="this.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">GENERATE</button>
+      <button class="tab" onclick="this.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">PROFILE</button>
+    </div>
+    <div class="card">
+      <label class="label">MODE</label>
+      <select class="select"><option>Generate</option><option>Inpaint</option><option>Video</option><option>Edit Easy</option><option>Edit Dark</option></select>
+    </div>
+    <div class="card">
+      <label class="label">PROMPT</label>
+      <textarea class="input-area" placeholder="Describe the scene (kira, sitting on a couch, bedroom...)"></textarea>
+      <button class="btn-enhance">✨ Enhance Prompt</button>
+    </div>
+    <div class="card">
+      <label class="label">SUB-MODE</label>
+      <div class="btn-group">
+        <button class="btn-toggle active" onclick="this.parentElement.querySelectorAll('.btn-toggle').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Default</button>
+        <button class="btn-toggle" onclick="this.parentElement.querySelectorAll('.btn-toggle').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Face Swap</button>
+      </div>
+    </div>
+    <div class="card">
+      <label class="label">ASPECT RATIO</label>
+      <div class="btn-group">
+        <button class="btn-toggle active" onclick="this.parentElement.querySelectorAll('.btn-toggle').forEach(b=>b.classList.remove('active'));this.classList.add('active')">9:16</button>
+        <button class="btn-toggle" onclick="this.parentElement.querySelectorAll('.btn-toggle').forEach(b=>b.classList.remove('active'));this.classList.add('active')">1:1</button>
+        <button class="btn-toggle" onclick="this.parentElement.querySelectorAll('.btn-toggle').forEach(b=>b.classList.remove('active'));this.classList.add('active')">16:9</button>
+      </div>
+    </div>
+    <div class="card">
+      <label class="label">LORA STRENGTH: 0.95</label>
+      <input type="range" class="slider" min="0" max="1" step="0.05" value="0.95">
+    </div>
+    <div class="card">
+      <label class="label">COUNT</label>
+      <div class="count-group">
+        <span class="count-dot active" onclick="this.parentElement.querySelectorAll('.count-dot').forEach(d=>d.classList.remove('active'));this.classList.add('active')">1</span>
+        <span class="count-dot" onclick="this.parentElement.querySelectorAll('.count-dot').forEach(d=>d.classList.remove('active'));this.classList.add('active')">2</span>
+        <span class="count-dot" onclick="this.parentElement.querySelectorAll('.count-dot').forEach(d=>d.classList.remove('active'));this.classList.add('active')">3</span>
+        <span class="count-dot" onclick="this.parentElement.querySelectorAll('.count-dot').forEach(d=>d.classList.remove('active'));this.classList.add('active')">4</span>
+      </div>
+    </div>
+    <button class="btn-main">G E N E R A T E</button>
+  </div>
+  <div class="demo-label">STYLE 3 — CLEAN SOLID • tap ☀/☾ for theme</div>
+</body>
+</html>

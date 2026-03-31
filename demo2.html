@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NO LIMITS — Style 2: Neon</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #05050a;
+      color: #e0e0e0;
+      font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.5s, color 0.5s;
+    }
+    body.light {
+      background: #fafafa;
+      color: #1a1a1a;
+    }
+    #app { max-width: 480px; margin: 0 auto; padding: 0 12px 60px; }
+
+    .header { text-align: center; padding: 28px 16px 6px; }
+    .header h1 {
+      font-size: 20px; font-weight: 200; letter-spacing: 8px;
+      background: linear-gradient(90deg, #a855f7, #6366f1, #a855f7);
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shimmer 3s linear infinite;
+    }
+    @keyframes shimmer { to { background-position: 200% center; } }
+    body.light .header h1 {
+      background: linear-gradient(90deg, #7c3aed, #4f46e5, #7c3aed);
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+
+    .theme-toggle {
+      position: absolute; top: 16px; right: 16px;
+      background: rgba(168,85,247,0.08); border: 1px solid rgba(168,85,247,0.15);
+      border-radius: 20px; padding: 6px 14px; color: #a855f7; font-size: 12px;
+      cursor: pointer; transition: all 0.3s;
+    }
+    body.light .theme-toggle { background: rgba(124,58,237,0.06); border-color: rgba(124,58,237,0.12); color: #7c3aed; }
+
+    .tabs { display: flex; gap: 4px; padding: 10px 4px 18px; }
+    .tab {
+      flex: 1; background: transparent; border: 1px solid rgba(168,85,247,0.08);
+      color: #555; font-size: 11px; letter-spacing: 2px; padding: 11px 0;
+      cursor: pointer; transition: all 0.35s; border-radius: 14px; text-align: center;
+    }
+    .tab.active {
+      background: rgba(168,85,247,0.1); color: #d8b4fe;
+      border-color: rgba(168,85,247,0.25);
+      box-shadow: 0 0 20px rgba(168,85,247,0.1);
+    }
+    body.light .tab { border-color: rgba(124,58,237,0.08); color: #aaa; }
+    body.light .tab.active { background: rgba(124,58,237,0.06); color: #7c3aed; border-color: rgba(124,58,237,0.2); }
+
+    .card {
+      background: rgba(168,85,247,0.02); border: 1px solid rgba(168,85,247,0.06);
+      border-radius: 16px; padding: 18px; margin-bottom: 10px;
+      transition: all 0.35s;
+    }
+    .card:hover { border-color: rgba(168,85,247,0.12); box-shadow: 0 0 20px rgba(168,85,247,0.03); }
+    body.light .card { background: #fff; border-color: rgba(124,58,237,0.08); }
+
+    .label { display: block; font-size: 10px; letter-spacing: 2.5px; color: rgba(168,85,247,0.4); margin-bottom: 12px; text-transform: uppercase; transition: color 0.3s; }
+    body.light .label { color: rgba(124,58,237,0.5); }
+
+    .select {
+      width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(168,85,247,0.1);
+      border-radius: 12px; color: #d8b4fe; padding: 12px 14px; font-size: 14px;
+      outline: none; cursor: pointer; -webkit-appearance: none; transition: all 0.3s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a855f7' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+    }
+    .select option { background: #0a0a12; }
+    body.light .select { background: #f8f5ff; border-color: rgba(124,58,237,0.12); color: #5b21b6; }
+
+    .input-area {
+      width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(168,85,247,0.06);
+      border-radius: 12px; color: #d8b4fe; padding: 14px; font-size: 13px;
+      font-family: inherit; resize: vertical; min-height: 80px; outline: none; transition: all 0.3s;
+    }
+    .input-area:focus { border-color: rgba(168,85,247,0.2); box-shadow: 0 0 15px rgba(168,85,247,0.05); }
+    .input-area::placeholder { color: rgba(168,85,247,0.15); }
+    body.light .input-area { background: #f8f5ff; border-color: rgba(124,58,237,0.08); color: #333; }
+
+    .btn-group { display: flex; gap: 6px; }
+    .btn-toggle {
+      flex: 1; background: rgba(0,0,0,0.2); border: 1px solid rgba(168,85,247,0.06);
+      border-radius: 12px; color: #555; padding: 10px 0; font-size: 12px;
+      cursor: pointer; transition: all 0.35s;
+    }
+    .btn-toggle.active {
+      background: rgba(168,85,247,0.12); border-color: rgba(168,85,247,0.3);
+      color: #d8b4fe; box-shadow: 0 0 15px rgba(168,85,247,0.08);
+    }
+    body.light .btn-toggle { background: #f0ecf9; border-color: rgba(124,58,237,0.06); color: #aaa; }
+    body.light .btn-toggle.active { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.2); color: #7c3aed; }
+
+    .btn-enhance {
+      width: 100%; background: linear-gradient(135deg, rgba(168,85,247,0.12), rgba(99,102,241,0.12));
+      border: 1px solid rgba(168,85,247,0.2); border-radius: 12px;
+      color: #c084fc; padding: 12px; font-size: 13px; cursor: pointer;
+      margin-top: 10px; transition: all 0.3s;
+    }
+    .btn-enhance:hover { background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(99,102,241,0.2)); }
+
+    .btn-main {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(99,102,241,0.15));
+      border: 1px solid rgba(168,85,247,0.2);
+      border-radius: 16px; color: #d8b4fe; padding: 18px; font-size: 13px;
+      letter-spacing: 5px; cursor: pointer; margin-top: 6px;
+      transition: all 0.35s;
+    }
+    .btn-main:hover {
+      background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(99,102,241,0.25));
+      box-shadow: 0 0 30px rgba(168,85,247,0.12);
+      transform: translateY(-1px);
+    }
+    body.light .btn-main { background: linear-gradient(135deg, #7c3aed, #6366f1); color: #fff; border: none; }
+
+    .slider {
+      width: 100%; -webkit-appearance: none; height: 4px; border-radius: 4px;
+      background: rgba(168,85,247,0.1); outline: none;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%;
+      background: #a855f7; cursor: pointer; box-shadow: 0 0 10px rgba(168,85,247,0.4);
+      transition: transform 0.2s;
+    }
+    .slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+    body.light .slider { background: rgba(124,58,237,0.12); }
+    body.light .slider::-webkit-slider-thumb { background: #7c3aed; }
+
+    .count-group { display: flex; gap: 10px; }
+    .count-dot {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 1px solid rgba(168,85,247,0.12); background: transparent;
+      color: #444; font-size: 13px; display: flex; align-items: center;
+      justify-content: center; cursor: pointer; transition: all 0.35s;
+    }
+    .count-dot.active {
+      background: rgba(168,85,247,0.15); border-color: rgba(168,85,247,0.3);
+      color: #d8b4fe; box-shadow: 0 0 12px rgba(168,85,247,0.1);
+    }
+    body.light .count-dot { border-color: rgba(124,58,237,0.12); color: #ccc; }
+    body.light .count-dot.active { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+
+    .upload-zone {
+      border: 1px dashed rgba(168,85,247,0.12); border-radius: 16px;
+      padding: 50px 20px; text-align: center; cursor: pointer;
+      transition: all 0.3s; display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .upload-zone:hover { border-color: rgba(168,85,247,0.25); }
+    .upload-plus { font-size: 28px; color: rgba(168,85,247,0.25); font-weight: 200; }
+    .upload-text { font-size: 13px; color: rgba(168,85,247,0.25); }
+
+    .demo-label {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(90deg, #a855f7, #6366f1);
+      color: #fff; text-align: center; padding: 10px; font-size: 13px; letter-spacing: 1px; z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <button class="theme-toggle" onclick="document.body.classList.toggle('light')">☀ / ☾</button>
+    <div class="header"><h1>N O &nbsp; L I M I T S</h1></div>
+    <div class="tabs">
+      <button class="tab" onclick="this.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">FAQ</button>
+      <button class="tab active" onclick="this.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">GENERATE</button>
+      <button class="tab" onclick="this.parentElement.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">PROFILE</button>
+    </div>
+    <div class="card">
+      <label class="label">MODE</label>
+      <select class="select"><option>Generate</option><option>Inpaint</option><option>Video</option><option>Edit Easy</option><option>Edit Dark</option></select>
+    </div>
+    <div class="card">
+      <label class="label">PROMPT</label>
+      <textarea class="input-area" placeholder="Describe the scene (kira, sitting on a couch, bedroom...)"></textarea>
+      <button class="btn-enhance">✨ Enhance Prompt</button>
+    </div>
+    <div class="card">
+      <label class="label">SUB-MODE</label>
+      <div class="btn-group">
+        <button class="btn-toggle active" onclick="this.parentElement.querySelectorAll('.btn-toggle').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Default</button>
+        <button class="btn-toggle" onclick="this.parentElement.querySelectorAll('.btn-toggle').forEach(b=>b.classList.remove('active'));this.classList.add('active')">Face Swap</button>
+      </div>
+    </div>
+    <div class="card">
+      <label class="label">ASPECT RATIO</label>
+      <div class="btn-group">
+        <button class="btn-toggle active" onclick="this.parentElement.querySelectorAll('.btn-toggle').forEach(b=>b.classList.remove('active'));this.classList.add('active')">9:16</button>
+        <button class="btn-toggle" onclick="this.parentElement.querySelectorAll('.btn-toggle').forEach(b=>b.classList.remove('active'));this.classList.add('active')">1:1</button>
+        <button class="btn-toggle" onclick="this.parentElement.querySelectorAll('.btn-toggle').forEach(b=>b.classList.remove('active'));this.classList.add('active')">16:9</button>
+      </div>
+    </div>
+    <div class="card">
+      <label class="label">LORA STRENGTH: 0.95</label>
+      <input type="range" class="slider" min="0" max="1" step="0.05" value="0.95">
+    </div>
+    <div class="card">
+      <label class="label">COUNT</label>
+      <div class="count-group">
+        <span class="count-dot active" onclick="this.parentElement.querySelectorAll('.count-dot').forEach(d=>d.classList.remove('active'));this.classList.add('active')">1</span>
+        <span class="count-dot" onclick="this.parentElement.querySelectorAll('.count-dot').forEach(d=>d.classList.remove('active'));this.classList.add('active')">2</span>
+        <span class="count-dot" onclick="this.parentElement.querySelectorAll('.count-dot').forEach(d=>d.classList.remove('active'));this.classList.add('active')">3</span>
+        <span class="count-dot" onclick="this.parentElement.querySelectorAll('.count-dot').forEach(d=>d.classList.remove('active'));this.classList.add('active')">4</span>
+      </div>
+    </div>
+    <button class="btn-main">G E N E R A T E</button>
+  </div>
+  <div class="demo-label">STYLE 2 — NEON PURPLE • tap ☀/☾ for theme</div>
+</body>
+</html>
