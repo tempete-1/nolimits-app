@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>NO LIMITS</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
   <div id="app">
@@ -43,13 +43,19 @@
       <!-- Mode Select -->
       <div class="card">
         <label class="label">MODE</label>
-        <select id="mode-select" class="select">
-          <option value="generate">Generate</option>
-          <option value="inpaint">Inpaint</option>
-          <option value="video">Video</option>
-          <option value="edit_easy">Edit Easy</option>
-          <option value="edit_dark">Edit Dark</option>
-        </select>
+        <div class="dropdown" id="mode-dropdown">
+          <div class="dropdown-selected" onclick="toggleDropdown()">
+            <span id="dropdown-text">Generate</span>
+            <span class="dropdown-arrow">▼</span>
+          </div>
+          <div class="dropdown-menu">
+            <div class="dropdown-item active" data-val="generate" onclick="selectMode(this)">Generate</div>
+            <div class="dropdown-item" data-val="inpaint" onclick="selectMode(this)">Inpaint</div>
+            <div class="dropdown-item" data-val="video" onclick="selectMode(this)">Video</div>
+            <div class="dropdown-item" data-val="edit_easy" onclick="selectMode(this)">Edit Easy</div>
+            <div class="dropdown-item" data-val="edit_dark" onclick="selectMode(this)">Edit Dark</div>
+          </div>
+        </div>
       </div>
 
       <!-- === GENERATE MODE === -->
@@ -346,6 +352,6 @@
   </div>
 
   <input type="file" id="file-input" accept="image/*" style="display:none">
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>

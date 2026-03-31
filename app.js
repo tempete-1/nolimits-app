@@ -25,12 +25,27 @@ document.querySelectorAll('.tab').forEach(btn => {
   });
 });
 
-// ── Mode Select ──
-document.getElementById('mode-select').addEventListener('change', (e) => {
-  const mode = e.target.value;
+// ── Custom Dropdown ──
+function toggleDropdown() {
+  document.getElementById('mode-dropdown').classList.toggle('open');
+}
+
+function selectMode(item) {
+  const mode = item.dataset.val;
   state.mode = mode;
+  document.getElementById('dropdown-text').textContent = item.textContent;
+  document.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
+  item.classList.add('active');
+  document.getElementById('mode-dropdown').classList.remove('open');
   document.querySelectorAll('.mode-panel').forEach(p => p.style.display = 'none');
   document.getElementById(`mode-${mode}`).style.display = 'block';
+}
+
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.dropdown')) {
+    const dd = document.getElementById('mode-dropdown');
+    if (dd) dd.classList.remove('open');
+  }
 });
 
 // ── Toggle Buttons ──
