@@ -221,11 +221,21 @@ function appendTag(inputId, tag) {
   }
 }
 
+const SCENE_PRESETS = {
+  missionary: "m15510n4ry, a woman is lying on her back with her legs spread looking up at the viewer, having violent sex with a man. Man's big penis immediately thrusting fully deep in and fully out of her vagina, so we can see it, he is piston fucking causing her body hips into a rocking motion while her breasts bounce from each thrust, she bounces forward, her breasts are bouncing. The camera zooms in on the woman's waist. She keeps looking at the camera. Authentic film look,High-fidelity details",
+  blowjob: "bl0wj0b, a woman is on her knees giving oral sex to a man, her lips wrapped around his big penis, she is sucking and bobbing her head back and forth, her hand gripping the base, saliva dripping, she looks up at the camera with lustful eyes, close-up angle on her face, Authentic film look, High-fidelity details",
+  doggy: "d0ggy, a woman is on all fours being taken from behind by a man, his big penis thrusting deep inside her vagina, her back arched, her breasts swinging with each powerful thrust, she grips the sheets, looking back at the camera over her shoulder, the man grabs her hips pulling her back into each thrust, Authentic film look, High-fidelity details",
+  cowgirl: "c0wg1rl, a woman is straddling a man riding him, bouncing up and down on his big penis, her breasts bouncing freely with each movement, she throws her head back in pleasure, her hands on his chest for support, the camera captures her full body from the front, Authentic film look, High-fidelity details",
+  handjob: "h4ndj0b, a woman is stroking a man's big penis with her hand, gripping firmly and moving up and down rhythmically, her other hand caressing, she looks at the camera with a seductive expression, close-up on her hands and face, Authentic film look, High-fidelity details",
+};
+
 function addPreset(preset) {
+  const prompt = SCENE_PRESETS[preset];
+  if (!prompt) return;
   const inputs = document.querySelectorAll('.scene-input');
-  for (const input of inputs) {
-    if (!input.value.trim()) { input.value = preset; break; }
-  }
+  inputs.forEach(input => {
+    input.value = prompt;
+  });
 }
 
 // ── Enhance Prompt ──
