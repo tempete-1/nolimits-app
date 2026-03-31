@@ -555,10 +555,13 @@ async function runGeneration(data) {
   }
 
   try {
-    // Step 1: Auto-translate and enhance prompt
+    // Step 1: Auto-translate if needed (skip if already enhanced)
     showProgress('Preparing prompt...', 5, 0);
-    const enhanced = translateAndEnhance(prompt);
-    console.log('Enhanced prompt:', enhanced);
+    let enhanced = prompt;
+    if (!prompt.startsWith('AIARTY')) {
+      enhanced = translateAndEnhance(prompt);
+    }
+    console.log('Final prompt:', enhanced);
 
     // Step 2: Submit to RunPod
     showProgress('Submitting to GPU...', 10, 0);
