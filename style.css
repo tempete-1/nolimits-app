@@ -17,9 +17,9 @@ body {
 /* ── Header ── */
 .header { text-align: center; padding: 28px 16px 8px; }
 .header h1 {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 300;
-  letter-spacing: 10px;
+  letter-spacing: 7px;
   background: linear-gradient(135deg, #a1a1aa, #e4e4e7, #a1a1aa);
   background-size: 200% auto;
   -webkit-background-clip: text;
