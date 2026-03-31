@@ -357,7 +357,7 @@
           <span class="stat-num" id="stat-tokens">0</span>
           <span class="stat-label">TOKENS</span>
         </div>
-        <div class="stat">
+        <div class="stat stat-clickable" onclick="openHistory()">
           <span class="stat-num" id="stat-gens">0</span>
           <span class="stat-label">GENERATIONS</span>
         </div>
@@ -381,7 +381,48 @@
 
   </div>
 
+  <!-- Result Overlay -->
+  <div id="result-overlay" class="result-overlay" style="display:none">
+    <div class="result-panel">
+      <div class="result-header">
+        <span class="result-title">RESULT</span>
+        <button class="result-close" onclick="closeResult()">&times;</button>
+      </div>
+      <div id="result-content" class="result-content">
+        <!-- Images will be inserted here -->
+      </div>
+      <div class="result-actions">
+        <button class="btn-main" onclick="regenerate()">R E G E N E R A T E</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Overlay -->
+  <div id="progress-overlay" class="progress-overlay" style="display:none">
+    <div class="progress-panel">
+      <div id="progress-status" class="progress-status">Enhancing prompt...</div>
+      <div class="progress-bar-track">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width:0%"></div>
+      </div>
+      <div id="progress-pct" class="progress-pct">0%</div>
+      <div id="progress-time" class="progress-time"></div>
+    </div>
+  </div>
+
+  <!-- History Modal -->
+  <div id="history-modal" class="history-modal" style="display:none">
+    <div class="history-panel">
+      <div class="result-header">
+        <span class="result-title">HISTORY</span>
+        <button class="result-close" onclick="closeHistory()">&times;</button>
+      </div>
+      <div id="history-list" class="history-list">
+        <div class="dim-text" style="text-align:center;padding:40px">No generations yet</div>
+      </div>
+    </div>
+  </div>
+
   <input type="file" id="file-input" accept="image/*" style="display:none">
-  <script src="app.js?v=7"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>
