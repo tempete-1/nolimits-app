@@ -674,3 +674,39 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.history-actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 14px;
+}
+.history-btn {
+  flex: 1;
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 10px;
+  color: #a1a1aa;
+  padding: 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.history-btn:hover { background: #27272a; color: #e4e4e7; }
+.history-btn-del { color: #ef4444; }
+.history-btn-del:hover { background: #2a1515; border-color: #ef4444; }
+
+/* Result save button */
+.result-img-wrap { position: relative; }
+.result-save-btn {
+  position: absolute;
+  bottom: 16px;
+  right: 12px;
+  background: rgba(0,0,0,0.7);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 10px;
+  color: #e4e4e7;
+  padding: 8px 20px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.result-save-btn:hover { background: rgba(0,0,0,0.9); border-color: rgba(255,255,255,0.4); }

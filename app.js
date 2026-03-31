@@ -430,17 +430,32 @@ function hideProgress() {
 // ── Result UI ──
 let lastCollectedState = null;
 
+let lastResultImages = [];
+
 function showResult(images) {
+  lastResultImages = images;
   const overlay = document.getElementById('result-overlay');
   const content = document.getElementById('result-content');
   content.innerHTML = '';
-  images.forEach(b64 => {
-    const img = document.createElement('img');
-    img.src = 'data:image/png;base64,' + b64;
-    img.className = 'result-img';
-    content.appendChild(img);
+  images.forEach((b64, i) => {
+    const wrap = document.createElement('div');
+    wrap.className = 'result-img-wrap';
+    wrap.innerHTML = `
+      <img src="data:image/png;base64,${b64}" class="result-img" alt="result">
+      <button class="result-save-btn" onclick="saveResultImage(${i})">Save</button>
+    `;
+    content.appendChild(wrap);
   });
   overlay.style.display = 'block';
+}
+
+function saveResultImage(index) {
+  const b64 = lastResultImages[index];
+  if (!b64) return;
+  const a = document.createElement('a');
+  a.href = 'data:image/png;base64,' + b64;
+  a.download = `nolimits_${Date.now()}.png`;
+  a.click();
 }
 
 function closeResult() {
@@ -486,12 +501,16 @@ function openHistory() {
   if (!history.length) {
     list.innerHTML = '<div class="dim-text" style="text-align:center;padding:40px">No generations yet</div>';
   } else {
-    list.innerHTML = history.map(h => `
+    list.innerHTML = history.map((h, i) => `
       <div class="history-item">
         <img src="data:image/png;base64,${h.image}" alt="gen">
         <div class="history-meta">
           <div>${h.mode} — ${new Date(h.date).toLocaleDateString()}</div>
           <div class="history-prompt">${h.prompt}</div>
+        </div>
+        <div class="history-actions">
+          <button class="history-btn" onclick="saveImage(${i})">Save</button>
+          <button class="history-btn history-btn-del" onclick="deleteFromHistory(${i})">Delete</button>
         </div>
       </div>
     `).join('');
@@ -501,6 +520,23 @@ function openHistory() {
 
 function closeHistory() {
   document.getElementById('history-modal').style.display = 'none';
+}
+
+function deleteFromHistory(index) {
+  const history = getHistory();
+  history.splice(index, 1);
+  localStorage.setItem('gen_history', JSON.stringify(history));
+  openHistory(); // refresh
+}
+
+function saveImage(index) {
+  const history = getHistory();
+  const h = history[index];
+  if (!h) return;
+  const a = document.createElement('a');
+  a.href = 'data:image/png;base64,' + h.image;
+  a.download = `nolimits_${h.mode}_${Date.now()}.png`;
+  a.click();
 }
 
 function loadProfileStats() {
