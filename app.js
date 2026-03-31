@@ -307,6 +307,36 @@ async function enhancePrompt(inputId) {
   btn.disabled = false;
 }
 
+// ── Image utils ──
+function stripDataUrl(dataUrl) {
+  if (!dataUrl) return null;
+  const idx = dataUrl.indexOf(',');
+  return idx >= 0 ? dataUrl.substring(idx + 1) : dataUrl;
+}
+
+function resizeImage(dataUrl, maxSize = 1024) {
+  return new Promise((resolve) => {
+    if (!dataUrl) { resolve(null); return; }
+    const img = new Image();
+    img.onload = () => {
+      let w = img.width, h = img.height;
+      if (w <= maxSize && h <= maxSize) {
+        resolve(stripDataUrl(dataUrl));
+        return;
+      }
+      const ratio = Math.min(maxSize / w, maxSize / h);
+      w = Math.round(w * ratio);
+      h = Math.round(h * ratio);
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(stripDataUrl(c.toDataURL('image/jpeg', 0.85)));
+    };
+    img.onerror = () => resolve(stripDataUrl(dataUrl));
+    img.src = dataUrl;
+  });
+}
+
 // ── Collect State ──
 function getActiveVal(group) {
   const el = document.querySelector(`.btn-toggle.active[data-group="${group}"]`);
@@ -317,7 +347,7 @@ function getCountVal(group) {
   return el ? parseInt(el.dataset.val) : 1;
 }
 
-function collectState() {
+async function collectState() {
   const mode = state.mode;
   const base = { mode };
 
@@ -328,7 +358,7 @@ function collectState() {
       aspect: getActiveVal('gen-aspect'),
       lora_strength: parseFloat(document.getElementById('gen-lora').value),
       count: getCountVal('gen-count'),
-      face_photo: state.photos['gen-face'] || null,
+      face_photo: await resizeImage(state.photos['gen-face']),
     };
   }
   if (mode === 'inpaint') {
@@ -338,8 +368,8 @@ function collectState() {
       cfg: parseFloat(document.getElementById('inp-cfg').value),
       steps: parseInt(document.getElementById('inp-steps').value),
       count: getCountVal('inp-count'),
-      photo: state.photos['inp'] || null,
-      mask: maskCanvas ? maskCanvas.toDataURL() : null,
+      photo: await resizeImage(state.photos['inp']),
+      mask: maskCanvas ? stripDataUrl(maskCanvas.toDataURL()) : null,
     };
   }
   if (mode === 'video') {
@@ -347,7 +377,7 @@ function collectState() {
     document.querySelectorAll('.scene-input').forEach(input => {
       if (input.value.trim()) scenes.push(input.value.trim());
     });
-    return { ...base, scenes, negative: document.getElementById('vid-negative').value, photo: state.photos['vid'] || null };
+    return { ...base, scenes, negative: document.getElementById('vid-negative').value, photo: await resizeImage(state.photos['vid']) };
   }
   if (mode === 'edit_easy') {
     return { ...base,
@@ -358,8 +388,8 @@ function collectState() {
       steps: parseInt(document.getElementById('easy-steps').value),
       quality: getActiveVal('easy-quality'),
       count: getCountVal('easy-count'),
-      photo: state.photos['easy'] || null,
-      ref_photo: state.photos['easy-ref'] || null,
+      photo: await resizeImage(state.photos['easy']),
+      ref_photo: await resizeImage(state.photos['easy-ref']),
     };
   }
   if (mode === 'edit_dark') {
@@ -370,7 +400,7 @@ function collectState() {
       steps: parseInt(document.getElementById('dark-steps').value),
       quality: getActiveVal('dark-quality'),
       count: getCountVal('dark-count'),
-      photo: state.photos['dark'] || null,
+      photo: await resizeImage(state.photos['dark']),
     };
   }
   return base;
@@ -473,14 +503,25 @@ function loadProfileStats() {
 
 // ── RunPod Direct API ──
 async function submitRunPod(payload) {
+  // Remove null values to reduce payload size
+  const clean = Object.fromEntries(
+    Object.entries(payload).filter(([_, v]) => v != null)
+  );
+  const body = JSON.stringify({ input: clean });
+  console.log('RunPod payload size:', (body.length / 1024).toFixed(1) + 'KB');
+
   const resp = await fetch(RP_RUN, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${RP_KEY}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ input: payload }),
+    body,
   });
+  if (!resp.ok) {
+    const text = await resp.text();
+    throw new Error(`RunPod ${resp.status}: ${text.substring(0, 200)}`);
+  }
   const data = await resp.json();
   return data.id;
 }
@@ -599,12 +640,12 @@ async function runGeneration(data) {
 }
 
 // ── Actions ──
-function generate() { runGeneration({ ...collectState(), action: 'generate' }); }
+async function generate() { runGeneration({ ...(await collectState()), action: 'generate' }); }
 function generateVideo() {
   alert('Video generation is not available yet.');
 }
-function editImage() { runGeneration({ ...collectState(), action: 'edit' }); }
-function darkBeast() { runGeneration({ ...collectState(), action: 'dark_beast' }); }
+async function editImage() { runGeneration({ ...(await collectState()), action: 'edit' }); }
+async function darkBeast() { runGeneration({ ...(await collectState()), action: 'dark_beast' }); }
 function buyTokens(amount, stars) { sendToBot({ action: 'buy_tokens', amount, stars }); }
 function buyPremium() { sendToBot({ action: 'buy_premium', stars: 1500 }); }
 
