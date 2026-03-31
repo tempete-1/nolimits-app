@@ -11,7 +11,6 @@ if (tg) {
 const state = {
   mode: 'generate',
   tab: 'generate',
-  // photos stored as data URLs
   photos: {},
 };
 
@@ -35,14 +34,39 @@ document.getElementById('mode-select').addEventListener('change', (e) => {
   document.getElementById(`mode-${mode}`).classList.remove('hidden');
 });
 
-// ── Toggle Buttons ──
+// ── Toggle Buttons (btn-toggle) ──
 document.querySelectorAll('.btn-toggle').forEach(btn => {
   btn.addEventListener('click', () => {
     const group = btn.dataset.group;
+    if (!group) return;
     document.querySelectorAll(`.btn-toggle[data-group="${group}"]`).forEach(b => {
       b.classList.remove('active');
     });
     btn.classList.add('active');
+  });
+});
+
+// ── Count Dots ──
+document.querySelectorAll('.count-dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    const group = dot.dataset.group;
+    if (!group) return;
+    document.querySelectorAll(`.count-dot[data-group="${group}"]`).forEach(d => {
+      d.classList.remove('active');
+    });
+    dot.classList.add('active');
+  });
+});
+
+// ── Brush buttons ──
+document.querySelectorAll('.brush-btn[data-group="brush"]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!btn.dataset.val) return;
+    document.querySelectorAll('.brush-btn[data-group="brush"]').forEach(b => {
+      b.classList.remove('active');
+    });
+    btn.classList.add('active');
+    brushMode = btn.dataset.val;
   });
 });
 
@@ -92,8 +116,10 @@ document.getElementById('file-input').addEventListener('change', (e) => {
       `;
     }
 
-    // Load to mask canvas if inpaint
+    // Show mask card and load image if inpaint
     if (currentUploadTarget === 'inp') {
+      const maskCard = document.getElementById('inp-mask-card');
+      if (maskCard) maskCard.style.display = 'block';
       loadImageToMask(dataUrl);
     }
   };
@@ -107,7 +133,15 @@ function removePhoto(target, event) {
   const zone = document.getElementById(`${target}-upload`);
   if (zone) {
     zone.classList.remove('has-image');
-    zone.innerHTML = '<span>tap to upload photo</span>';
+    zone.innerHTML = `
+      <span class="upload-plus">+</span>
+      <span class="upload-text">Tap to upload or paste</span>
+    `;
+  }
+  // Hide mask card if inpaint
+  if (target === 'inp') {
+    const maskCard = document.getElementById('inp-mask-card');
+    if (maskCard) maskCard.style.display = 'none';
   }
 }
 
@@ -127,8 +161,12 @@ if (maskCanvas) {
 function loadImageToMask(dataUrl) {
   const img = new Image();
   img.onload = () => {
-    maskCanvas.width = maskCanvas.offsetWidth;
-    maskCanvas.height = maskCanvas.offsetHeight;
+    // Set canvas size to match image aspect ratio
+    const containerWidth = maskCanvas.offsetWidth;
+    const ratio = img.height / img.width;
+    maskCanvas.width = containerWidth;
+    maskCanvas.height = containerWidth * ratio;
+    maskCanvas.style.height = (containerWidth * ratio) + 'px';
     maskCtx.drawImage(img, 0, 0, maskCanvas.width, maskCanvas.height);
   };
   img.src = dataUrl;
@@ -142,9 +180,11 @@ function startDraw(e) {
 function draw(e) {
   if (!isDrawing) return;
   const rect = maskCanvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-  const size = parseInt(document.getElementById('brush-size').value);
+  const scaleX = maskCanvas.width / rect.width;
+  const scaleY = maskCanvas.height / rect.height;
+  const x = (e.clientX - rect.left) * scaleX;
+  const y = (e.clientY - rect.top) * scaleY;
+  const size = parseInt(document.getElementById('brush-size').value) * scaleX;
 
   maskCtx.beginPath();
   maskCtx.arc(x, y, size / 2, 0, Math.PI * 2);
@@ -165,18 +205,10 @@ function stopDraw() {
 function clearMask() {
   if (!maskCtx) return;
   maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
-  // reload image if exists
   if (state.photos['inp']) {
     loadImageToMask(state.photos['inp']);
   }
 }
-
-// brush mode toggle
-document.querySelectorAll('.btn-toggle[data-group="brush"]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    brushMode = btn.dataset.val;
-  });
-});
 
 // ── Tags / Presets ──
 function appendTag(inputId, tag) {
@@ -208,7 +240,6 @@ async function enhancePrompt(inputId) {
   btn.disabled = true;
 
   try {
-    // Send to bot backend for enhancement
     if (tg) {
       tg.sendData(JSON.stringify({
         action: 'enhance',
@@ -220,7 +251,6 @@ async function enhancePrompt(inputId) {
     console.error(e);
   }
 
-  // Reset button after delay (actual result comes from bot)
   setTimeout(() => {
     btn.textContent = original;
     btn.disabled = false;
@@ -231,6 +261,11 @@ async function enhancePrompt(inputId) {
 function getActiveVal(group) {
   const active = document.querySelector(`.btn-toggle.active[data-group="${group}"]`);
   return active ? active.dataset.val : null;
+}
+
+function getCountVal(group) {
+  const active = document.querySelector(`.count-dot.active[data-group="${group}"]`);
+  return active ? parseInt(active.dataset.val) : 1;
 }
 
 function collectState() {
@@ -254,7 +289,7 @@ function collectState() {
       negative: document.getElementById('inp-negative').value,
       cfg: parseFloat(document.getElementById('inp-cfg').value),
       steps: parseInt(document.getElementById('inp-steps').value),
-      count: parseInt(getActiveVal('inp-count')),
+      count: getCountVal('inp-count'),
       photo: state.photos['inp'] || null,
       mask: maskCanvas ? maskCanvas.toDataURL() : null,
     };

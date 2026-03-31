@@ -95,28 +95,30 @@
         <div class="card">
           <label class="label">PHOTO</label>
           <div class="upload-zone" id="inp-upload" onclick="pickPhoto('inp')">
-            <span>tap to upload photo</span>
+            <span class="upload-plus">+</span>
+            <span class="upload-text">Tap to upload or paste</span>
           </div>
         </div>
-        <div class="card">
+        <div class="card" id="inp-mask-card" style="display:none">
           <label class="label">MASK</label>
           <canvas id="mask-canvas" class="mask-canvas"></canvas>
           <div class="brush-tools">
-            <button class="btn-toggle active" data-group="brush" data-val="brush">Brush</button>
-            <button class="btn-toggle" data-group="brush" data-val="eraser">Eraser</button>
-            <button class="btn-sm" onclick="clearMask()">Clear</button>
-            <span class="label-sm">Size: <span id="brush-size-val">20</span>px</span>
+            <button class="brush-btn active" data-group="brush" data-val="brush">Brush</button>
+            <button class="brush-btn" data-group="brush" data-val="eraser">Eraser</button>
+            <button class="brush-btn" onclick="clearMask()">Clear</button>
+            <span class="brush-size-label">Size: <span id="brush-size-val">20</span>px</span>
             <input type="range" class="slider-sm" id="brush-size" min="5" max="80" value="20">
           </div>
         </div>
         <div class="card">
           <label class="label">PROMPT</label>
-          <textarea id="inp-prompt" class="input-area" placeholder="describe what to paint in the mask..."></textarea>
-          <button class="btn-enhance" onclick="enhancePrompt('inp-prompt')">✦ Enhance Prompt</button>
+          <button class="name-tag" onclick="appendTag('inp-prompt','kiraface')">Name</button>
+          <textarea id="inp-prompt" class="input-area" placeholder="Describe what to paint in the mask..."></textarea>
+          <button class="btn-enhance" onclick="enhancePrompt('inp-prompt')">✨ Enhance Prompt</button>
         </div>
         <div class="card">
           <label class="label">NEGATIVE</label>
-          <textarea id="inp-negative" class="input-area small" placeholder="blurry, ugly, deformed, watermark, text, low quality, cartoon">blurry, ugly, deformed, watermark, text, low quality, cartoon</textarea>
+          <textarea id="inp-negative" class="input-area small">blurry, ugly, deformed, watermark, text, low quality, cartoon</textarea>
         </div>
         <div class="card row">
           <div class="half">
@@ -129,12 +131,12 @@
           </div>
         </div>
         <div class="card">
-          <label class="label">COUNT</label>
-          <div class="btn-group">
-            <button class="btn-toggle active" data-group="inp-count" data-val="1">1</button>
-            <button class="btn-toggle" data-group="inp-count" data-val="2">2</button>
-            <button class="btn-toggle" data-group="inp-count" data-val="3">3</button>
-            <button class="btn-toggle" data-group="inp-count" data-val="4">4</button>
+          <label class="label">COUNT:</label>
+          <div class="count-group">
+            <span class="count-dot active" data-group="inp-count" data-val="1">1</span>
+            <span class="count-dot" data-group="inp-count" data-val="2">2</span>
+            <span class="count-dot" data-group="inp-count" data-val="3">3</span>
+            <span class="count-dot" data-group="inp-count" data-val="4">4</span>
           </div>
         </div>
         <button class="btn-main" onclick="generate()">G E N E R A T E</button>
