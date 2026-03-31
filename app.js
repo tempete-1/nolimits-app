@@ -576,7 +576,7 @@ async function runGeneration(data) {
 
     // Step 3: Poll for result
     const startTime = Date.now();
-    const maxWait = 300000; // 5 min
+    const maxWait = 600000; // 10 min (cold start can take a while)
 
     while (Date.now() - startTime < maxWait) {
       await new Promise(r => setTimeout(r, 3000));
