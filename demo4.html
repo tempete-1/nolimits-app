@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NO LIMITS — Gradient</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #0b0b10;
+      color: #e0e0e0;
+      font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    #app {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 14px 60px;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      padding: 30px 16px 10px;
+    }
+    .header h1 {
+      font-size: 22px;
+      font-weight: 300;
+      letter-spacing: 10px;
+      background: linear-gradient(135deg, #c084fc, #818cf8, #f472b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 0;
+      padding: 8px 0 20px;
+      position: relative;
+    }
+    .tab {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: #4a4a55;
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      padding: 13px 0;
+      cursor: pointer;
+      transition: color 0.3s;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+    .tab.active {
+      color: #fff;
+    }
+    .tabs-bg {
+      position: absolute;
+      background: linear-gradient(135deg, #1e1b2e, #1a1828);
+      border-radius: 16px;
+      height: 100%;
+      transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1), width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      top: 8px;
+      height: calc(100% - 28px);
+      border: 1px solid rgba(192, 132, 252, 0.1);
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: linear-gradient(145deg, #13121a, #0f0e16);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 10px;
+      transition: border-color 0.3s;
+    }
+    .card:hover {
+      border-color: rgba(255,255,255,0.07);
+    }
+
+    .label {
+      display: block;
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: #4a4a58;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    /* ── Custom Dropdown ── */
+    .dropdown {
+      position: relative;
+      cursor: pointer;
+    }
+    .dropdown-selected {
+      background: linear-gradient(135deg, #18172a, #141320);
+      border: 1px solid rgba(192, 132, 252, 0.08);
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 14px;
+      color: #e0d5f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s;
+    }
+    .dropdown-selected:hover {
+      border-color: rgba(192, 132, 252, 0.15);
+    }
+    .dropdown-arrow {
+      font-size: 10px;
+      color: #6a6a78;
+      transition: transform 0.3s;
+    }
+    .dropdown.open .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0; right: 0;
+      background: linear-gradient(145deg, #1a1930, #141322);
+      border: 1px solid rgba(192, 132, 252, 0.1);
+      border-radius: 14px;
+      padding: 6px;
+      z-index: 50;
+      opacity: 0;
+      transform: translateY(-8px) scale(0.97);
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      backdrop-filter: blur(20px);
+    }
+    .dropdown.open .dropdown-menu {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: all;
+    }
+    .dropdown-item {
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: #a09aaf;
+      font-size: 14px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .dropdown-item:hover {
+      background: rgba(192, 132, 252, 0.06);
+      color: #d8cef0;
+    }
+    .dropdown-item.active {
+      background: linear-gradient(135deg, rgba(192,132,252,0.1), rgba(129,140,248,0.1));
+      color: #e0d5ff;
+    }
+
+    /* ── Textarea ── */
+    .input-area {
+      width: 100%;
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 14px;
+      color: #d0c8e0;
+      padding: 16px;
+      font-size: 13px;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 90px;
+      outline: none;
+      transition: all 0.3s;
+      line-height: 1.5;
+    }
+    .input-area:focus {
+      border-color: rgba(192, 132, 252, 0.15);
+      background: rgba(0,0,0,0.35);
+    }
+    .input-area::placeholder {
+      color: #2d2d3a;
+    }
+
+    /* ── Enhance Button ── */
+    .btn-enhance {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(192,132,252,0.1), rgba(244,114,182,0.08));
+      border: 1px solid rgba(192,132,252,0.12);
+      border-radius: 12px;
+      color: #c084fc;
+      padding: 13px;
+      font-size: 13px;
+      cursor: pointer;
+      margin-top: 12px;
+      transition: all 0.3s;
+      letter-spacing: 0.5px;
+    }
+    .btn-enhance:hover {
+      background: linear-gradient(135deg, rgba(192,132,252,0.16), rgba(244,114,182,0.12));
+      border-color: rgba(192,132,252,0.2);
+    }
+
+    /* ── Toggle Buttons ── */
+    .btn-group {
+      display: flex;
+      gap: 0;
+      background: rgba(0,0,0,0.25);
+      border-radius: 14px;
+      padding: 4px;
+    }
+    .btn-toggle {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-radius: 11px;
+      color: #4a4a58;
+      padding: 11px 0;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      letter-spacing: 0.5px;
+    }
+    .btn-toggle.active {
+      background: linear-gradient(135deg, rgba(192,132,252,0.12), rgba(129,140,248,0.1));
+      color: #e0d5f0;
+      box-shadow: 0 2px 10px rgba(192,132,252,0.08);
+    }
+
+    /* ── Slider ── */
+    .slider {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 4px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, rgba(192,132,252,0.15), rgba(129,140,248,0.1));
+      outline: none;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #c084fc, #818cf8);
+      cursor: pointer;
+      box-shadow: 0 0 12px rgba(192,132,252,0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 18px rgba(192,132,252,0.4);
+    }
+
+    /* ── Count Dots ── */
+    .count-group {
+      display: flex;
+      gap: 10px;
+    }
+    .count-dot {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+      background: rgba(0,0,0,0.2);
+      color: #3a3a48;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .count-dot.active {
+      background: linear-gradient(135deg, rgba(192,132,252,0.15), rgba(129,140,248,0.12));
+      border-color: rgba(192,132,252,0.2);
+      color: #e0d5f0;
+      box-shadow: 0 0 12px rgba(192,132,252,0.08);
+    }
+
+    /* ── Main Button ── */
+    .btn-main {
+      width: 100%;
+      background: linear-gradient(135deg, #7c3aed, #6366f1, #a855f7);
+      background-size: 200% auto;
+      border: none;
+      border-radius: 16px;
+      color: #fff;
+      padding: 18px;
+      font-size: 13px;
+      letter-spacing: 5px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.4s;
+      box-shadow: 0 4px 20px rgba(124,58,237,0.2);
+      font-weight: 500;
+    }
+    .btn-main:hover {
+      background-position: right center;
+      box-shadow: 0 6px 30px rgba(124,58,237,0.3);
+      transform: translateY(-2px);
+    }
+    .btn-main:active {
+      transform: translateY(0);
+    }
+
+    .btn-dark-beast {
+      background: linear-gradient(135deg, #991b1b, #7f1d1d, #dc2626);
+      background-size: 200% auto;
+      box-shadow: 0 4px 20px rgba(153,27,27,0.2);
+    }
+    .btn-dark-beast:hover {
+      box-shadow: 0 6px 30px rgba(153,27,27,0.3);
+    }
+
+    /* ── Upload Zone ── */
+    .upload-zone {
+      border: 1px dashed rgba(192,132,252,0.1);
+      border-radius: 16px;
+      padding: 50px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .upload-zone:hover {
+      border-color: rgba(192,132,252,0.2);
+      background: rgba(192,132,252,0.02);
+    }
+    .upload-plus {
+      font-size: 30px;
+      color: rgba(192,132,252,0.2);
+      font-weight: 200;
+    }
+    .upload-text {
+      font-size: 13px;
+      color: rgba(192,132,252,0.2);
+    }
+
+    /* ── Tags ── */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .tag {
+      background: rgba(192,132,252,0.05);
+      border: 1px solid rgba(192,132,252,0.08);
+      border-radius: 20px;
+      color: #7a7090;
+      padding: 7px 16px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .tag:hover {
+      background: rgba(192,132,252,0.1);
+      color: #c084fc;
+      border-color: rgba(192,132,252,0.15);
+    }
+
+    /* ── Scene Slots ── */
+    .scene-slot {
+      border: 1px solid rgba(255,255,255,0.03);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 6px;
+      transition: all 0.3s;
+      background: rgba(0,0,0,0.15);
+    }
+    .scene-slot:focus-within {
+      border-color: rgba(192,132,252,0.1);
+      background: rgba(0,0,0,0.25);
+    }
+    .scene-label {
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: #3a3a48;
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .scene-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: #c0b8d0;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+    }
+    .scene-input::placeholder { color: #1e1e28; }
+
+    /* ── Profile Stats ── */
+    .profile-stats {
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+    }
+    .stat-num {
+      display: block;
+      font-size: 26px;
+      font-weight: 300;
+      background: linear-gradient(135deg, #c084fc, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+    .stat-label {
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      color: #4a4a58;
+    }
+
+    /* ── Buy Buttons ── */
+    .btn-buy {
+      width: 100%;
+      background: rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.04);
+      border-radius: 14px;
+      color: #c0b8d0;
+      padding: 16px 18px;
+      font-size: 14px;
+      text-align: left;
+      cursor: pointer;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      transition: all 0.3s;
+    }
+    .btn-buy span { color: #4a4a58; }
+    .btn-buy:hover { border-color: rgba(192,132,252,0.1); background: rgba(192,132,252,0.03); }
+
+    .btn-premium {
+      width: 100%;
+      background: linear-gradient(135deg, rgba(192,132,252,0.08), rgba(244,114,182,0.06));
+      border: 1px solid rgba(192,132,252,0.12);
+      border-radius: 14px;
+      color: #d8b4fe;
+      padding: 18px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      transition: all 0.3s;
+    }
+    .btn-premium span { color: rgba(192,132,252,0.5); }
+    .btn-premium:hover { border-color: rgba(192,132,252,0.2); }
+
+    .dim { color: #3a3a48; }
+    .dim-text { color: #4a4a58; font-size: 13px; margin-bottom: 12px; }
+
+    /* ── Brush Tools ── */
+    .brush-btn {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 20px;
+      color: #5a5a68;
+      padding: 7px 16px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .brush-btn.active {
+      background: rgba(192,132,252,0.1);
+      border-color: rgba(192,132,252,0.15);
+      color: #c084fc;
+    }
+
+    /* ── Name Tag ── */
+    .name-tag {
+      display: inline-block;
+      background: rgba(192,132,252,0.06);
+      border: 1px solid rgba(192,132,252,0.1);
+      border-radius: 8px;
+      color: #9a8aaa;
+      padding: 5px 12px;
+      font-size: 11px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .name-tag:hover { background: rgba(192,132,252,0.1); }
+
+    .demo-label {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(90deg, #7c3aed, #a855f7, #f472b6);
+      color: #fff; text-align: center; padding: 10px; font-size: 12px;
+      letter-spacing: 1.5px; z-index: 100; font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="header"><h1>N O &nbsp; L I M I T S</h1></div>
+
+    <div class="tabs" id="tabs-container">
+      <div class="tabs-bg" id="tabs-bg" style="left:33.33%;width:33.33%"></div>
+      <button class="tab" data-idx="0" onclick="switchTab(this,0)">FAQ</button>
+      <button class="tab active" data-idx="1" onclick="switchTab(this,1)">GENERATE</button>
+      <button class="tab" data-idx="2" onclick="switchTab(this,2)">PROFILE</button>
+    </div>
+
+    <div class="card">
+      <label class="label">MODE</label>
+      <div class="dropdown" id="mode-dropdown" onclick="toggleDropdown()">
+        <div class="dropdown-selected">
+          <span id="dropdown-text">Generate</span>
+          <span class="dropdown-arrow">▼</span>
+        </div>
+        <div class="dropdown-menu">
+          <div class="dropdown-item active" onclick="selectMode(this,'Generate',event)">Generate</div>
+          <div class="dropdown-item" onclick="selectMode(this,'Inpaint',event)">Inpaint</div>
+          <div class="dropdown-item" onclick="selectMode(this,'Video',event)">Video</div>
+          <div class="dropdown-item" onclick="selectMode(this,'Edit Easy',event)">Edit Easy</div>
+          <div class="dropdown-item" onclick="selectMode(this,'Edit Dark',event)">Edit Dark</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="label">PROMPT</label>
+      <textarea class="input-area" placeholder="Describe the scene (kira, sitting on a couch, bedroom...)"></textarea>
+      <button class="btn-enhance">✨ Enhance Prompt</button>
+    </div>
+
+    <div class="card">
+      <label class="label">SUB-MODE</label>
+      <div class="btn-group">
+        <button class="btn-toggle active" onclick="toggle(this)">Default</button>
+        <button class="btn-toggle" onclick="toggle(this)">Face Swap</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="label">ASPECT RATIO</label>
+      <div class="btn-group">
+        <button class="btn-toggle active" onclick="toggle(this)">9:16</button>
+        <button class="btn-toggle" onclick="toggle(this)">1:1</button>
+        <button class="btn-toggle" onclick="toggle(this)">16:9</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <label class="label">LORA STRENGTH: <span id="lora-val">0.95</span></label>
+      <input type="range" class="slider" min="0" max="1" step="0.05" value="0.95" oninput="document.getElementById('lora-val').textContent=this.value">
+    </div>
+
+    <div class="card">
+      <label class="label">COUNT</label>
+      <div class="count-group">
+        <span class="count-dot active" onclick="countDot(this)">1</span>
+        <span class="count-dot" onclick="countDot(this)">2</span>
+        <span class="count-dot" onclick="countDot(this)">3</span>
+        <span class="count-dot" onclick="countDot(this)">4</span>
+      </div>
+    </div>
+
+    <button class="btn-main">G E N E R A T E</button>
+  </div>
+
+  <div class="demo-label">STYLE 4 — GRADIENT • custom dropdown</div>
+
+  <script>
+    function switchTab(btn, idx) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      const bg = document.getElementById('tabs-bg');
+      bg.style.left = (idx * 33.33) + '%';
+    }
+
+    function toggleDropdown() {
+      document.getElementById('mode-dropdown').classList.toggle('open');
+    }
+
+    function selectMode(item, text, e) {
+      e.stopPropagation();
+      document.getElementById('dropdown-text').textContent = text;
+      document.querySelectorAll('.dropdown-item').forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      document.getElementById('mode-dropdown').classList.remove('open');
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.dropdown')) {
+        document.getElementById('mode-dropdown').classList.remove('open');
+      }
+    });
+
+    function toggle(btn) {
+      btn.parentElement.querySelectorAll('.btn-toggle').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function countDot(dot) {
+      dot.parentElement.querySelectorAll('.count-dot').forEach(d => d.classList.remove('active'));
+      dot.classList.add('active');
+    }
+  </script>
+</body>
+</html>
