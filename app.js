@@ -510,21 +510,36 @@ function getHistory() {
   } catch { return []; }
 }
 
-function saveToHistory(prompt, images) {
+function makeThumbnail(b64, maxSize = 200) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const ratio = Math.min(maxSize / img.width, maxSize / img.height);
+      const w = Math.round(img.width * ratio);
+      const h = Math.round(img.height * ratio);
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(img, 0, 0, w, h);
+      resolve(c.toDataURL('image/jpeg', 0.6).split(',')[1]);
+    };
+    img.src = 'data:image/png;base64,' + b64;
+  });
+}
+
+async function saveToHistory(prompt, images) {
   const history = getHistory();
+  const thumb = await makeThumbnail(images[0]);
   history.unshift({
     prompt: prompt.substring(0, 200),
-    image: images[0], // store first image only (base64)
+    image: thumb,
     date: new Date().toISOString(),
     mode: state.mode,
   });
-  // Keep max 20 entries
-  if (history.length > 20) history.length = 20;
+  if (history.length > 30) history.length = 30;
   try {
     localStorage.setItem('gen_history', JSON.stringify(history));
   } catch {
-    // localStorage full — remove oldest
-    history.length = 10;
+    history.length = 5;
     localStorage.setItem('gen_history', JSON.stringify(history));
   }
 }
