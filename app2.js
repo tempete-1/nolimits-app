@@ -273,6 +273,39 @@ function appendTag(inputId, tag) {
   }
 }
 
+// ── Edit presets (prompt + negative) ──
+const EDIT_PRESETS = {
+  cum: {
+    prompt: 'thick white cum dripping on skin, semen splattered, creampie leaking, wet glistening cum drops, realistic bodily fluid, photorealistic',
+    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy',
+  },
+  shit: {
+    prompt: 'brown feces smeared on skin, dirty messy scat, soiled body, realistic texture, photorealistic',
+    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy',
+  },
+  nude: {
+    prompt: 'completely naked, fully nude, no clothes, bare breasts with erect nipples, exposed pussy, smooth skin, photorealistic',
+    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy, clothes, dressed, fabric',
+  },
+  anal: {
+    prompt: "man's thick cock deep inside her ass, anal penetration from behind, stretched anus around penis, doggy style anal sex, photorealistic",
+    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy, extra limbs',
+  },
+};
+
+function setEditPreset(preset, promptId, negativeId) {
+  const p = EDIT_PRESETS[preset];
+  if (!p) return;
+  const promptEl = document.getElementById(promptId);
+  const negEl = document.getElementById(negativeId);
+  if (promptEl) promptEl.value = p.prompt;
+  if (negEl) negEl.value = p.negative;
+  // Highlight active tag
+  const parent = promptEl?.closest('.mode-panel') || document;
+  parent.querySelectorAll('.tag').forEach(t => t.classList.remove('tag-active'));
+  event?.target?.classList?.add('tag-active');
+}
+
 function setInpaintNamePrompt() {
   const el = document.getElementById('inp-prompt');
   if (el) {
