@@ -273,6 +273,13 @@ function appendTag(inputId, tag) {
   }
 }
 
+function setInpaintNamePrompt() {
+  const el = document.getElementById('inp-prompt');
+  if (el) {
+    el.value = 'The word "NAME" handwritten in dark crimson lipstick on bare skin. Semi-transparent smeared lipstick, skin texture visible through the letters. Faded messy imperfect handwritten letters, slightly uneven and crooked. Dark burgundy red lipstick lightly applied on skin. Photorealistic.';
+  }
+}
+
 const SCENE_PRESETS = {
   missionary: "m15510n4ry, a woman is lying on her back with her legs spread looking up at the viewer, having violent sex with a man. Man's big penis immediately thrusting fully deep in and fully out of her vagina, so we can see it, he is piston fucking causing her body hips into a rocking motion while her breasts bounce from each thrust, she bounces forward, her breasts are bouncing. The camera zooms in on the woman's waist. She keeps looking at the camera. Authentic film look,High-fidelity details",
   blowjob: "bl0wj0b. She sensually starts performing a deepthroat blowjob. She is bobbing her head back and forth slowly while sucking the man's erect penis with the foreskin pulled back, the penis is going deep into her mouth and throat. She rams her head forward, swallowing the entire penis until her nose smashes against his hips, then pulls back gasping for air. The camera zooms in on the man's penis. She keeps looking at the man with eyes open. Authentic film look,High-fidelity details",

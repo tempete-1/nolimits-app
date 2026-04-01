@@ -157,7 +157,7 @@
           </div>
           <div class="card">
             <label class="label">PROMPT</label>
-            <button class="name-tag" onclick="appendTag('inp-prompt','kiraface')">Name</button>
+            <button class="name-tag" onclick="setInpaintNamePrompt()">Name</button>
             <textarea id="inp-prompt" class="input-area" placeholder="Describe what to paint in the mask..."></textarea>
             <button class="btn-enhance" onclick="enhancePrompt('inp-prompt')">✨ Enhance Prompt</button>
           </div>
@@ -423,6 +423,6 @@
   </div>
 
   <input type="file" id="file-input" accept="image/*" style="display:none">
-  <script src="app2.js"></script>
+  <script src="app2.js?v=2"></script>
 </body>
 </html>
