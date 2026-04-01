@@ -714,10 +714,14 @@ async function runGeneration(data) {
   logToAdmin(`🔄 GEN START\nUser: @${user.name} (${user.id})\nMode: ${data.mode}\nPrompt: ${prompt.substring(0, 300)}`);
 
   try {
-    // Step 1: Auto-enhance if needed (skip if already enhanced)
-    showProgress('Enhancing prompt...', 5, 0);
+    // Step 1: Auto-enhance for generate mode only (skip for edit/inpaint/dark)
+    showProgress('Preparing...', 5, 0);
     let enhanced = prompt;
-    if (prompt.length < 200) {
+    const skipEnhance = ['inpaint', 'edit_easy', 'edit_dark'].includes(data.mode);
+    if (!skipEnhance && prompt.length < 200 && OR_KEY) {
+      showProgress('Enhancing prompt...', 5, 0);
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 15000); // 15s timeout
       try {
         const resp = await fetch(OR_URL, {
           method: 'POST',
@@ -736,7 +740,9 @@ async function runGeneration(data) {
             max_tokens: 500,
             temperature: 0.85,
           }),
+          signal: controller.signal,
         });
+        clearTimeout(timeout);
         const d = await resp.json();
         let r = d.choices?.[0]?.message?.content?.trim() || '';
         r = r.replace(/^[`"']+|[`"']+$/g, '');
