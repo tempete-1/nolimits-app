@@ -182,6 +182,10 @@ const maskCanvas = document.getElementById('mask-canvas');
 const maskCtx = maskCanvas ? maskCanvas.getContext('2d') : null;
 let isDrawing = false;
 
+// Hidden canvas for pure black/white mask
+let pureMaskCanvas = null;
+let pureMaskCtx = null;
+
 if (maskCanvas) {
   maskCanvas.addEventListener('pointerdown', startDraw);
   maskCanvas.addEventListener('pointermove', draw);
@@ -198,6 +202,14 @@ function loadImageToMask(dataUrl) {
     maskCanvas.height = w * ratio;
     maskCanvas.style.height = (w * ratio) + 'px';
     maskCtx.drawImage(img, 0, 0, maskCanvas.width, maskCanvas.height);
+
+    // Init pure mask canvas (same size, all black)
+    pureMaskCanvas = document.createElement('canvas');
+    pureMaskCanvas.width = maskCanvas.width;
+    pureMaskCanvas.height = maskCanvas.height;
+    pureMaskCtx = pureMaskCanvas.getContext('2d');
+    pureMaskCtx.fillStyle = '#000000';
+    pureMaskCtx.fillRect(0, 0, pureMaskCanvas.width, pureMaskCanvas.height);
   };
   img.src = dataUrl;
 }
@@ -214,6 +226,7 @@ function draw(e) {
   const y = (e.clientY - rect.top) * scaleY;
   const size = parseInt(document.getElementById('brush-size').value) * scaleX;
 
+  // Draw on visible canvas (photo + semi-transparent overlay)
   maskCtx.beginPath();
   maskCtx.arc(x, y, size / 2, 0, Math.PI * 2);
   if (brushMode === 'brush') {
@@ -224,6 +237,25 @@ function draw(e) {
     maskCtx.fill();
     maskCtx.globalCompositeOperation = 'source-over';
   }
+
+  // Draw on pure mask canvas (white on black)
+  if (pureMaskCtx) {
+    pureMaskCtx.beginPath();
+    pureMaskCtx.arc(x, y, size / 2, 0, Math.PI * 2);
+    if (brushMode === 'brush') {
+      pureMaskCtx.fillStyle = '#ffffff';
+      pureMaskCtx.fill();
+    } else {
+      pureMaskCtx.fillStyle = '#000000';
+      pureMaskCtx.fill();
+    }
+  }
+}
+
+function getMaskDataUrl() {
+  // Return pure black/white mask
+  if (pureMaskCanvas) return pureMaskCanvas.toDataURL('image/png');
+  return maskCanvas ? maskCanvas.toDataURL('image/png') : null;
 }
 
 function clearMask() {
@@ -378,7 +410,7 @@ async function collectState() {
       steps: parseInt(document.getElementById('inp-steps').value),
       count: getCountVal('inp-count'),
       photo: await resizeImage(state.photos['inp']),
-      mask: maskCanvas ? stripDataUrl(maskCanvas.toDataURL()) : null,
+      mask: stripDataUrl(getMaskDataUrl()),
     };
   }
   if (mode === 'video') {
