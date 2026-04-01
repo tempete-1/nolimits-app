@@ -276,7 +276,7 @@ function appendTag(inputId, tag) {
 function setInpaintNamePrompt() {
   const el = document.getElementById('inp-prompt');
   if (el) {
-    el.value = 'The word "NAME" scrawled messily by hand in dark crimson lipstick directly on bare skin. Uneven shaky amateur handwriting, wobbly irregular letters of different sizes, some letters overlapping. Lipstick smudged and fading, semi-transparent where pressed lightly, thicker where pressed harder. Skin texture and pores clearly visible through the thin lipstick. Raw imperfect look like someone wrote it quickly in the heat of the moment. Photorealistic.';
+    el.value = 'The word "NAME" written in rough ugly ALL CAPS block letters in dark red-brown lipstick on bare skin. NOT cursive, blocky print handwriting like a marker. Thick uneven strokes, messy and imperfect, slightly crooked. Dark burgundy lipstick smeared on skin, some parts faded and semi-transparent showing skin texture underneath. Amateur sloppy handwriting. Photorealistic.';
   }
 }
 
