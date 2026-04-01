@@ -289,7 +289,9 @@ function addPreset(preset) {
 }
 
 // ── OpenRouter LLM for prompt enhancement ──
-const OR_KEY = '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';
+// Key passed via URL param from bot, not stored in code
+const _urlParams = new URLSearchParams(window.location.search);
+const OR_KEY = _urlParams.get('ork') || '';
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const OR_MODEL = 'mistralai/mistral-small-3.1-24b-instruct';
 
