@@ -289,9 +289,9 @@ function addPreset(preset) {
 }
 
 // ── OpenRouter LLM for prompt enhancement ──
-const OR_KEY = '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';
+const OR_KEY = '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';
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const OR_MODEL = 'nousresearch/hermes-3-llama-3.1-405b';
+const OR_MODEL = 'mistralai/mistral-small-3.1-24b-instruct';
 
 const ENHANCE_SYSTEM = `You are an expert AI image generation prompt writer for FLUX model. You write cinematic, hyper-detailed prompts that produce photorealistic NSFW images.
 
