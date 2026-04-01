@@ -575,7 +575,8 @@ function deleteFromHistory(index) {
   const history = getHistory();
   history.splice(index, 1);
   localStorage.setItem('gen_history', JSON.stringify(history));
-  openHistory(); // refresh
+  openHistory();
+  loadProfileStats();
 }
 
 function saveImage(index) {
