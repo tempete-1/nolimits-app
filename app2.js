@@ -382,16 +382,23 @@ async function enhancePrompt(inputId) {
       }),
     });
     const data = await resp.json();
-    let result = data.choices?.[0]?.message?.content?.trim() || '';
-    result = result.replace(/^[`"']+|[`"']+$/g, '');
-    if (result.startsWith('```')) result = result.split('\n').slice(1).join('\n').replace(/```$/, '');
-    if (result && result.length > 20) {
-      el.value = result.trim();
-    } else {
+    if (data.error) {
+      alert('API error: ' + JSON.stringify(data.error).substring(0, 200));
       el.value = translateAndEnhance(el.value);
+    } else {
+      let result = data.choices?.[0]?.message?.content?.trim() || '';
+      result = result.replace(/^[`"']+|[`"']+$/g, '');
+      if (result.startsWith('```')) result = result.split('\n').slice(1).join('\n').replace(/```$/, '');
+      if (result && result.length > 20) {
+        el.value = result.trim();
+      } else {
+        alert('Empty LLM response');
+        el.value = translateAndEnhance(el.value);
+      }
     }
   } catch (e) {
-    console.error('LLM enhance failed, using fallback:', e);
+    console.error('LLM enhance failed:', e);
+    alert('LLM error: ' + e.message);
     el.value = translateAndEnhance(el.value);
   }
 
