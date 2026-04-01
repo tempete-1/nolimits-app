@@ -580,7 +580,7 @@ function getHistory() {
   } catch { return []; }
 }
 
-function makeThumbnail(b64, maxSize = 200) {
+function makeThumbnail(b64, maxSize = 512) {
   return new Promise((resolve) => {
     const img = new Image();
     img.onload = () => {
