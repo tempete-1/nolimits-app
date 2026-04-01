@@ -765,7 +765,7 @@ async function runGeneration(data) {
 
     // Step 3: Poll for result
     const startTime = Date.now();
-    const maxWait = 600000; // 10 min (cold start can take a while)
+    const maxWait = 900000; // 15 min (L4 GPU cold start is slow)
 
     while (Date.now() - startTime < maxWait) {
       await new Promise(r => setTimeout(r, 3000));
