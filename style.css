@@ -183,10 +183,12 @@ body {
   font-size: 13px;
   font-family: inherit;
   resize: vertical;
-  min-height: 80px;
+  min-height: 120px;
+  max-height: 400px;
   outline: none;
   transition: all 0.3s;
   line-height: 1.5;
+  overflow-y: auto;
 }
 .input-area:focus { border-color: #3f3f46; }
 .input-area::placeholder { color: #27272a; }

@@ -101,6 +101,14 @@ function toggleFacePhoto() {
   }, 10);
 }
 
+// ── Auto-resize textareas ──
+document.querySelectorAll('.input-area').forEach(ta => {
+  ta.addEventListener('input', () => {
+    ta.style.height = 'auto';
+    ta.style.height = Math.min(ta.scrollHeight, 400) + 'px';
+  });
+});
+
 // ── Sliders ──
 function bindSlider(sliderId, displayId) {
   const slider = document.getElementById(sliderId);
