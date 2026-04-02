@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>NO LIMITS</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link rel="stylesheet" href="style.css?v=12">
+  <link rel="stylesheet" href="style.css?v=__CACHEBUST__">
+  <script>
+    // Dynamically replace CSS cache buster
+    document.querySelector('link[href*="__CACHEBUST__"]').href = 'style.css?v=' + Date.now();
+  </script>
 </head>
 <body>
   <div id="app">
@@ -119,8 +123,8 @@
           </div>
         </div>
         <div class="card">
-          <label class="label">LORA STRENGTH: <span id="gen-lora-val">0.95</span></label>
-          <input type="range" id="gen-lora" class="slider" min="0" max="1" step="0.05" value="0.95">
+          <label class="label">LORA STRENGTH: <span id="gen-lora-val">0.50</span></label>
+          <input type="range" id="gen-lora" class="slider" min="0" max="1" step="0.05" value="0.50">
         </div>
         <div class="card">
           <label class="label">COUNT</label>
@@ -423,6 +427,14 @@
   </div>
 
   <input type="file" id="file-input" accept="image/*" style="display:none">
-  <script src="app2.js?v=2"></script>
+  <script>
+    // Cache busting: append timestamp to prevent Telegram WebApp aggressive caching
+    (function() {
+      const v = Date.now();
+      const s = document.createElement('script');
+      s.src = 'app2.js?v=' + v;
+      document.body.appendChild(s);
+    })();
+  </script>
 </body>
 </html>
