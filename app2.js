@@ -896,7 +896,7 @@ async function runGeneration(data) {
     return;
   }
 
-  logToAdmin(`🔄 GEN START\nUser: @${user.name} (${user.id})\nMode: ${data.mode}\nPrompt: ${prompt.substring(0, 300)}`);
+  logToAdmin(`🔄 GEN START\nUser: @${user.name} (${user.id})\nMode: ${data.mode}\nPrompt: ${prompt}`);
 
   try {
     // Step 1: Auto-enhance for generate mode only (skip for edit/inpaint/dark)
