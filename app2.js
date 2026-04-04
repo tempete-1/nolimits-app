@@ -475,6 +475,14 @@ async function enhancePrompt(inputId) {
       result = result.replace(/^[`"']+|[`"']+$/g, '');
       if (result.startsWith('```')) result = result.split('\n').slice(1).join('\n').replace(/```$/, '');
       if (result && result.length > 20) {
+        // Ensure name from original prompt is preserved at the start
+        const origLower = el.value.toLowerCase();
+        const names = ['kira'];
+        for (const name of names) {
+          if (origLower.includes(name) && !result.toLowerCase().startsWith(name)) {
+            result = name + ', ' + result;
+          }
+        }
         el.value = result.trim();
       } else {
         alert('Empty LLM response');
