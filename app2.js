@@ -387,7 +387,11 @@ FACIAL EXPRESSION — Micro-expressions: "half-open eyes, soft tired affectionat
 
 CAMERA QUALITY (always end with this) — "shot with smartphone camera, raw unedited phone photo quality, realistic low-light smartphone noise, visible grain in shadows and dark areas, slight chromatic aberration on edges, mild lens distortion on close objects, soft imperfect autofocus, natural phone white balance mixing warm and cool light sources, compressed dynamic range, candid intimate amateur photo style, no professional lighting, no post-processing, authentic raw atmosphere".
 
-NEVER USE: "8k", "masterpiece", "cinematic", "studio lighting", "professional photography", "digital art", "sharp focus", "high resolution", "detailed", "beautiful".`;
+COLOR PALETTE (MANDATORY) — Always specify a muted, desaturated palette. Examples: "foggy desaturated gray palette with ash gray, muted beige, faint smoky tones, subtle warm glow only on skin, no bright colors" or "warm desaturated amber tones, muted browns, soft yellows from lamp, cool blue-gray shadows, no vibrant colors". NEVER write a prompt without specifying the color palette.
+
+UGLINESS OF REAL PHOTOS (MANDATORY) — Real phone photos are UGLY. They have: crushed blacks in shadows, blown-out highlights near lamps, uneven skin tones, unflattering angles, harsh shadows under chin and nose, visible phone camera noise destroying detail in dark areas, slight motion blur from hand shake, chromatic aberration making purple/green fringes on high-contrast edges, lens distortion making close body parts look larger than they are, auto-exposure making skin too bright or too dark. Include at least 5 of these flaws in EVERY prompt.
+
+NEVER USE: "8k", "masterpiece", "cinematic", "studio lighting", "professional photography", "digital art", "sharp focus", "high resolution", "detailed", "beautiful", "stunning", "gorgeous", "perfect", "flawless".`;
 
 // ── Fallback built-in translator ──
 const RU_EN = {
