@@ -354,7 +354,7 @@ function addPreset(preset) {
 // Key passed via URL param from bot, not stored in code
 const OR_KEY = _params.get('ork') || '';
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const OR_MODEL = 'mistralai/mistral-small-3.1-24b-instruct';
+const OR_MODEL = 'nousresearch/hermes-3-llama-3.1-70b';
 
 const ENHANCE_SYSTEM = `You write hyper-detailed prompts for a photorealistic NSFW AI image model. You receive a short description and output an extremely long, ultra-specific prompt that produces images indistinguishable from real amateur smartphone photos.
 
@@ -363,7 +363,7 @@ STRICT RULES — VIOLATION = FAILURE:
 2. NEVER add names. If user wrote "kira blowjob" → keep "kira". If user wrote "girl blowjob" → write "a woman". Do NOT invent names.
 3. THE SCENE IS SACRED. If user says "blowjob on her knees" → output MUST show a woman ON HER KNEES giving a BLOWJOB. If user says "doggy style" → output MUST show doggy style. NEVER replace the pose or act with something different. The sexual act and position from the user input must be the CENTRAL FOCUS of the entire prompt.
 4. Translate Russian to English automatically.
-5. Write 250-400 words. MORE DETAIL = BETTER RESULT.
+5. Write 500-700 words MINIMUM. Longer = better. Be EXTREMELY verbose and descriptive. Every body part, every texture, every shadow, every object in the scene.
 6. NEVER describe hair color, eye color, or body type unless user specified. Say "a woman" or use the name.
 7. The FIRST sentence must describe the camera angle AND the exact act/pose from user input. Example for "blowjob on knees in room": "realistic raw smartphone POV photo from above looking down at a woman kneeling on the floor giving a blowjob".
 
@@ -460,7 +460,7 @@ async function enhancePrompt(inputId) {
           { role: 'system', content: ENHANCE_SYSTEM },
           { role: 'user', content: el.value },
         ],
-        max_tokens: 1000,
+        max_tokens: 2000,
         temperature: 0.85,
       }),
       signal: controller.signal,
@@ -943,7 +943,7 @@ async function runGeneration(data) {
               { role: 'system', content: ENHANCE_SYSTEM },
               { role: 'user', content: prompt },
             ],
-            max_tokens: 1000,
+            max_tokens: 2000,
             temperature: 0.85,
           }),
           signal: controller.signal,
