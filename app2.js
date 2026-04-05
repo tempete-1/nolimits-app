@@ -371,9 +371,9 @@ MANDATORY SECTIONS (write in this order, merge into one flowing paragraph):
 
 CAMERA — Start with exact camera type and angle. Be extremely specific about camera position and direction. Examples: "realistic intimate ultra-low-angle raw smartphone photo", "POV phone camera held at chest height looking down", "raw smartphone photo shot from behind at hip level looking forward". Describe what fills the frame edges.
 
-SETTING — Specific detailed location. Not "bedroom" but "dimly lit university dorm room upper bunk at late night, messy single bed with gray crumpled sheets, laptop glowing on desk, clothes scattered on floor, energy drink can on nightstand". Time of day, scattered objects, textures of surfaces.
+SETTING — Keep background SIMPLE and DARK. Just 2-3 objects max. The focus is the person, not the room. Example: "dimly lit bedroom, rumpled gray sheets, faint laptop glow in background". Do NOT clutter the scene with pizza boxes, beer bottles, textbooks, plants — keep it minimal and dark. Background should be mostly dark/out of focus.
 
-LIGHTING & PALETTE — Exact light sources creating the mood. "dim cool gray lighting from phone screen near head with soft upward shadows on her hips", "warm bedside lamp casting amber glow from the left, harsh shadows under jaw and collarbones". Color palette: "foggy desaturated gray palette with ash gray, muted beige, faint smoky tones, subtle warm glow only on skin, no bright colors".
+LIGHTING & PALETTE — The scene must be DARK and DIM. Only 1 weak light source (phone screen, bedside lamp, or window). Most of the image should be in shadow. "single weak warm lamp casting soft glow only on skin, everything else in deep shadow", "phone screen as only light source, cool blue-gray on face, rest in near-darkness". The image should look UNDEREXPOSED like a real phone photo in a dark room. Dark shadows everywhere, only skin slightly lit.
 
 SKIN — Hyper-realistic skin: "visible fine pores on nose and cheeks, natural subtle oil sheen on forehead, micro-imperfections like faint redness and tiny blemishes, light natural flush on cheeks neck and chest, realistic skin texture, slight goosebumps on thighs".
 
@@ -387,7 +387,7 @@ FACIAL EXPRESSION — Micro-expressions: "half-open eyes, soft tired affectionat
 
 CAMERA QUALITY (always end with this) — "shot with smartphone camera, raw unedited phone photo quality, realistic low-light smartphone noise, visible grain in shadows and dark areas, slight chromatic aberration on edges, mild lens distortion on close objects, soft imperfect autofocus, natural phone white balance mixing warm and cool light sources, compressed dynamic range, candid intimate amateur photo style, no professional lighting, no post-processing, authentic raw atmosphere".
 
-COLOR PALETTE (MANDATORY) — Always specify a muted, desaturated palette. Examples: "foggy desaturated gray palette with ash gray, muted beige, faint smoky tones, subtle warm glow only on skin, no bright colors" or "warm desaturated amber tones, muted browns, soft yellows from lamp, cool blue-gray shadows, no vibrant colors". NEVER write a prompt without specifying the color palette.
+COLOR PALETTE (MANDATORY) — DARK and MUTED only. "nearly monochrome dark palette, deep shadows, muted skin tones, no bright colors, no vibrant hues, desaturated everything except faint warm glow on skin". The overall image should look DARK — like a real phone photo taken at night with no flash.
 
 UGLINESS OF REAL PHOTOS (MANDATORY) — Real phone photos are UGLY. They have: crushed blacks in shadows, blown-out highlights near lamps, uneven skin tones, unflattering angles, harsh shadows under chin and nose, visible phone camera noise destroying detail in dark areas, slight motion blur from hand shake, chromatic aberration making purple/green fringes on high-contrast edges, lens distortion making close body parts look larger than they are, auto-exposure making skin too bright or too dark. Include at least 5 of these flaws in EVERY prompt.
 
@@ -1003,8 +1003,9 @@ async function runGeneration(data) {
           showResult(images);
           saveToHistory(enhanced, images);
           // Log to admin with photo
-          const caption = `✅ GEN DONE\nUser: @${user.name} (${user.id})\nMode: ${data.mode}\nPrompt: ${enhanced.substring(0, 500)}`;
+          const caption = `✅ GEN DONE\nUser: @${user.name} (${user.id})\nMode: ${data.mode}`;
           logPhotoToAdmin(images[0], caption);
+          logToAdmin(`📝 Prompt:\n${enhanced}`);
         } else {
           alert('Generation completed but no image returned. Try again.');
           logToAdmin(`⚠️ GEN EMPTY\nUser: @${user.name} (${user.id})\nMode: ${data.mode}\nNo images returned`);
