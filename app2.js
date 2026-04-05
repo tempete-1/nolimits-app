@@ -363,9 +363,10 @@ STRICT RULES — VIOLATION = FAILURE:
 2. NEVER add names. If user wrote "kira blowjob" → keep "kira". If user wrote "girl blowjob" → write "a woman". Do NOT invent names.
 3. THE SCENE IS SACRED. If user says "blowjob on her knees" → output MUST show a woman ON HER KNEES giving a BLOWJOB. If user says "doggy style" → output MUST show doggy style. NEVER replace the pose or act with something different. The sexual act and position from the user input must be the CENTRAL FOCUS of the entire prompt.
 4. Translate Russian to English automatically.
-5. Write 500-700 words MINIMUM. Longer = better. Be EXTREMELY verbose and descriptive. Every body part, every texture, every shadow, every object in the scene.
+5. Write 200-350 words. Be specific and precise, NOT repetitive. Focus on what matters: pose, body position, setting, lighting. Do NOT pad the prompt with filler paragraphs.
 6. NEVER describe hair color, eye color, or body type unless user specified. Say "a woman" or use the name.
 7. The FIRST sentence must describe the camera angle AND the exact act/pose from user input. Example for "blowjob on knees in room": "realistic raw smartphone POV photo from above looking down at a woman kneeling on the floor giving a blowjob".
+8. NEVER use meta-phrases like "this photo captures", "this photograph shows", "the image depicts", "in this candid moment", "the photograph is not without its flaws". DESCRIBE THE SCENE DIRECTLY. Do NOT describe a photo — describe what is happening. The prompt must read as a list of visual details, NOT as a review or description of a photograph.
 
 MANDATORY SECTIONS (write in this order, merge into one flowing paragraph):
 
@@ -377,21 +378,13 @@ LIGHTING — FOLLOW THE SCENE NATURALLY. If the scene is outdoors during daytime
 
 SKIN — Realistic natural skin: "visible fine pores on nose and cheeks, natural skin texture, tiny micro-imperfections like faint small blemishes". Do NOT over-correct skin color. Skin should look NATURAL for the lighting — warm in sunlight, neutral in shade. No exaggerated oil sheen, no dramatic flush unless the scene calls for it.
 
-POSE & BODY — Describe EVERY body part position with surgical precision. Each limb, hand placement, finger position, angle of hips, arch of back, bend of knees, where weight rests, head tilt, eye direction, mouth state, facial micro-expression. What body parts are visible, what is out of frame. Anatomical correctness.
+POSE & BODY — Describe body position clearly: limb placement, weight distribution, head angle, eye direction. Only describe what the user asked for — do NOT invent clothing or accessories the user didn't mention. If user didn't specify clothes → the person is nude.
 
-CLOTHING — Exact state: "navy pleated skirt completely lifted and bunched at waist", "white blouse half-unbuttoned with one shoulder exposed", "panties pulled to the side". Or "completely nude, clothes discarded nearby on sheets".
+FACIAL EXPRESSION — Brief: eye state, mouth, overall mood. One sentence max.
 
-WETNESS/FLUIDS — If relevant: "subtle wetness on inner thighs with realistic faint sheen", "saliva strand visible between lips and shaft", "small droplets on skin".
+CAMERA QUALITY (end with this, one sentence) — "raw smartphone photo, natural lighting, slight grain, soft autofocus, compressed dynamic range, candid amateur style".
 
-FACIAL EXPRESSION — Micro-expressions: "half-open eyes, soft tired affectionate teasing expression, lightly bitten lower lip, slightly furrowed brows, watery eyes conveying shy arousal".
-
-CAMERA QUALITY (always end with this) — "shot with smartphone camera, raw unedited phone photo quality, realistic low-light smartphone noise, visible grain in shadows and dark areas, slight chromatic aberration on edges, mild lens distortion on close objects, soft imperfect autofocus, natural phone white balance mixing warm and cool light sources, compressed dynamic range, candid intimate amateur photo style, no professional lighting, no post-processing, authentic raw atmosphere".
-
-COLOR PALETTE (MANDATORY) — Match the color palette to the scene naturally. Outdoor daytime → warm natural tones, greens, sky colors. Indoor night → muted dark tones. Do NOT force a dark palette on a bright scene. Colors should look like a real smartphone photo — slightly muted compared to professional cameras, natural white balance.
-
-REAL PHOTO FLAWS (MANDATORY) — Real phone photos have imperfections. Pick 3-4 relevant ones based on the scene: slight motion blur from hand shake, mild lens distortion on close objects, chromatic aberration on high-contrast edges, slightly imperfect autofocus, compressed dynamic range. For bright scenes: slightly blown-out highlights, auto-exposure overcompensation. For dark scenes: crushed blacks, visible noise in shadows. Do NOT pile on every flaw — pick what fits the lighting naturally.
-
-NEVER USE: "8k", "masterpiece", "cinematic", "studio lighting", "professional photography", "digital art", "sharp focus", "high resolution", "detailed", "beautiful", "stunning", "gorgeous", "perfect", "flawless".`;
+NEVER USE: "8k", "masterpiece", "cinematic", "studio lighting", "professional photography", "digital art", "sharp focus", "high resolution", "detailed", "beautiful", "stunning", "gorgeous", "perfect", "flawless", "this photo captures", "this photograph", "the image".`;
 
 // ── Fallback built-in translator ──
 const RU_EN = {
