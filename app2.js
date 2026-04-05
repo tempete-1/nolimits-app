@@ -367,6 +367,7 @@ STRICT RULES — VIOLATION = FAILURE:
 6. NEVER describe hair color, eye color, or body type unless user specified. Say "a woman" or use the name.
 7. The FIRST sentence must describe the camera angle AND the exact act/pose from user input. Example for "blowjob on knees in room": "realistic raw smartphone POV photo from above looking down at a woman kneeling on the floor giving a blowjob".
 8. NEVER use meta-phrases like "this photo captures", "this photograph shows", "the image depicts", "in this candid moment", "the photograph is not without its flaws". DESCRIBE THE SCENE DIRECTLY. Do NOT describe a photo — describe what is happening. The prompt must read as a list of visual details, NOT as a review or description of a photograph.
+9. Camera angle MUST be consistent. Pick ONE angle and stick to it. NEVER combine contradictory angles like "low-angle" + "from above" or "looking up" + "pointing down". If camera is above → everything should be described from above (looking down). If camera is below → everything from below (looking up).
 
 MANDATORY SECTIONS (write in this order, merge into one flowing paragraph):
 
