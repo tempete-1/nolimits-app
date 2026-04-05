@@ -957,6 +957,11 @@ async function runGeneration(data) {
         enhanced = translateAndEnhance(prompt);
       }
     }
+    // Force-prepend kira if it was in original prompt but LLM removed it
+    const origLower = prompt.toLowerCase();
+    if (origLower.includes('kira') && !enhanced.toLowerCase().includes('kira')) {
+      enhanced = 'kira, ' + enhanced;
+    }
     console.log('Final prompt:', enhanced);
 
     // Step 2: Submit to RunPod
