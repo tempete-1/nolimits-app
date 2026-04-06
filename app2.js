@@ -354,7 +354,7 @@ function addPreset(preset) {
 // Key passed via URL param from bot, not stored in code
 const OR_KEY = _params.get('ork') || '';
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const OR_MODEL = 'nousresearch/hermes-3-llama-3.1-70b';
+const OR_MODEL = 'cognitivecomputations/dolphin-3.0-r1-llama-3.3-70b';
 
 const ENHANCE_SYSTEM = `You write hyper-detailed prompts for a photorealistic NSFW AI image model. You receive a short description and output an extremely long, ultra-specific prompt that produces images indistinguishable from real amateur smartphone photos.
 
