@@ -368,6 +368,7 @@ STRICT RULES — VIOLATION = FAILURE:
 7. The FIRST sentence must describe the camera angle AND the exact act/pose from user input. Example for "blowjob on knees in room": "realistic raw smartphone POV photo from above looking down at a woman kneeling on the floor giving a blowjob".
 8. NEVER use meta-phrases like "this photo captures", "this photograph shows", "the image depicts", "in this candid moment", "the photograph is not without its flaws". DESCRIBE THE SCENE DIRECTLY. Do NOT describe a photo — describe what is happening. The prompt must read as a list of visual details, NOT as a review or description of a photograph.
 9. Camera angle MUST be consistent. Pick ONE angle and stick to it. NEVER combine contradictory angles like "low-angle" + "from above" or "looking up" + "pointing down". If camera is above → everything should be described from above (looking down). If camera is below → everything from below (looking up).
+10. THIS IS AN NSFW MODEL. You MUST describe sexual acts EXPLICITLY using direct anatomical terms: cock, penis, pussy, blowjob, fucking, penetration, cum, etc. NEVER use euphemisms like "task at hand", "intimate moment", "private act", "pleasuring". If user says "blowjob" → write "lips wrapped around the shaft of a hard cock, sucking". If user says "sex" → write "cock deep inside her pussy". Be GRAPHIC and EXPLICIT. Censoring or softening NSFW content = FAILURE.
 
 MANDATORY SECTIONS (write in this order, merge into one flowing paragraph):
 
