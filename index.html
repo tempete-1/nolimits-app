@@ -239,19 +239,16 @@
         </div>
         <div id="easy-after-photo" style="display:none">
           <div class="card">
-            <label class="label">REFERENCE <span class="dim">(combine two girls)</span></label>
-            <div class="upload-zone small-upload" id="easy-ref-upload" onclick="pickPhoto('easy-ref')">
-              <span class="upload-plus">+</span>
-              <span class="upload-text">Tap to add 2nd photo</span>
-            </div>
-          </div>
-          <div class="card">
             <label class="label">PROMPT</label>
             <div class="tags">
-              <button class="tag" onclick="setEditPreset('cum','easy-prompt','easy-negative')">Cum</button>
-              <button class="tag" onclick="setEditPreset('shit','easy-prompt','easy-negative')">Shit</button>
               <button class="tag" onclick="setEditPreset('nude','easy-prompt','easy-negative')">Nude</button>
+              <button class="tag" onclick="setEditPreset('cum','easy-prompt','easy-negative')">Cum</button>
+              <button class="tag" onclick="setEditPreset('creampie','easy-prompt','easy-negative')">Creampie</button>
+              <button class="tag" onclick="setEditPreset('pussy','easy-prompt','easy-negative')">Pussy</button>
+              <button class="tag" onclick="setEditPreset('blowjob','easy-prompt','easy-negative')">Blowjob</button>
               <button class="tag" onclick="setEditPreset('anal','easy-prompt','easy-negative')">Anal</button>
+              <button class="tag" onclick="setEditPreset('bondage','easy-prompt','easy-negative')">Bondage</button>
+              <button class="tag" onclick="setEditPreset('gangbang','easy-prompt','easy-negative')">Gangbang</button>
             </div>
             <textarea id="easy-prompt" class="input-area" placeholder="Describe the edit (put face from ref on t-shirt, change background...)"></textarea>
             <button class="btn-enhance" onclick="enhancePrompt('easy-prompt')">✨ Enhance Prompt</button>
@@ -259,13 +256,6 @@
           <div class="card">
             <label class="label">NEGATIVE</label>
             <textarea id="easy-negative" class="input-area small">blurry, ugly, deformed, watermark, text, low quality, cartoon</textarea>
-          </div>
-          <div class="card">
-            <label class="label">EDIT MODE</label>
-            <div class="btn-group">
-              <button class="btn-toggle active" data-group="easy-mode" data-val="default">⚡ Default</button>
-              <button class="btn-toggle" data-group="easy-mode" data-val="depth">🎯 Depth</button>
-            </div>
           </div>
           <div class="card row">
             <div class="half">
@@ -317,10 +307,14 @@
           <div class="card">
             <label class="label">PROMPT</label>
             <div class="tags">
-              <button class="tag" onclick="setEditPreset('cum','dark-prompt','dark-negative')">Cum</button>
-              <button class="tag" onclick="setEditPreset('shit','dark-prompt','dark-negative')">Shit</button>
               <button class="tag" onclick="setEditPreset('nude','dark-prompt','dark-negative')">Nude</button>
+              <button class="tag" onclick="setEditPreset('cum','dark-prompt','dark-negative')">Cum</button>
+              <button class="tag" onclick="setEditPreset('creampie','dark-prompt','dark-negative')">Creampie</button>
+              <button class="tag" onclick="setEditPreset('pussy','dark-prompt','dark-negative')">Pussy</button>
+              <button class="tag" onclick="setEditPreset('blowjob','dark-prompt','dark-negative')">Blowjob</button>
               <button class="tag" onclick="setEditPreset('anal','dark-prompt','dark-negative')">Anal</button>
+              <button class="tag" onclick="setEditPreset('bondage','dark-prompt','dark-negative')">Bondage</button>
+              <button class="tag" onclick="setEditPreset('gangbang','dark-prompt','dark-negative')">Gangbang</button>
             </div>
             <textarea id="dark-prompt" class="input-area" placeholder="Dark Beast: describe NSFW edit..."></textarea>
             <button class="btn-enhance" onclick="enhancePrompt('dark-prompt')">✨ Enhance Prompt</button>

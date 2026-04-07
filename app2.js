@@ -286,24 +286,44 @@ function appendTag(inputId, tag) {
 // ── Edit presets (prompt + negative) ──
 const EDIT_PRESETS = {
   cum: {
-    prompt: 'thick white cum dripping on skin, semen splattered, creampie leaking, wet glistening cum drops, realistic bodily fluid, photorealistic',
+    prompt: 'thick white cum dripping on her face and breasts, semen splattered across skin, wet glistening cum drops, sticky translucent fluid, realistic bodily fluid texture, photorealistic',
     negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy',
     denoise: 0.35,
   },
-  shit: {
-    prompt: 'brown feces smeared on skin, dirty messy scat, soiled body, realistic texture, photorealistic',
-    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy',
-    denoise: 0.40,
-  },
   nude: {
-    prompt: 'completely naked, fully nude, no clothes, bare breasts with erect nipples, exposed pussy, smooth skin, photorealistic',
-    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy, clothes, dressed, fabric',
-    denoise: 0.60,
+    prompt: 'completely naked, fully nude, no clothes at all, bare breasts with visible nipples, exposed pussy, natural skin texture with visible pores, photorealistic nude body',
+    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy, clothes, dressed, fabric, bra, panties, underwear',
+    denoise: 0.55,
   },
   anal: {
-    prompt: "man's thick cock deep inside her ass, anal penetration from behind, stretched anus around penis, doggy style anal sex, photorealistic",
+    prompt: "man's thick erect cock deep inside her tight asshole, anal penetration from behind, stretched anus gripping around the shaft, doggy style anal sex, visible penetration, photorealistic",
     negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy, extra limbs',
-    denoise: 0.70,
+    denoise: 0.65,
+  },
+  blowjob: {
+    prompt: "woman's lips wrapped tightly around a thick erect cock, sucking penis, shaft going into her mouth, her cheeks slightly hollowed, saliva on lips, oral sex, photorealistic",
+    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy, extra limbs',
+    denoise: 0.65,
+  },
+  gangbang: {
+    prompt: "multiple men surrounding a nude woman, one cock in her mouth and another penetrating her pussy from behind, double penetration, group sex, gangbang, photorealistic",
+    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy, extra limbs, merged bodies',
+    denoise: 0.75,
+  },
+  pussy: {
+    prompt: "legs spread wide open exposing her bare pussy, visible labia and vaginal opening, close up between her thighs, no underwear, photorealistic",
+    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy, clothes, panties, underwear',
+    denoise: 0.50,
+  },
+  bondage: {
+    prompt: "hands tied behind her back with rough rope, bound wrists, rope bondage on nude body, rope marks on skin, submissive pose, restrained, photorealistic",
+    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy',
+    denoise: 0.50,
+  },
+  creampie: {
+    prompt: "thick white cum leaking out of her pussy, creampie dripping between her thighs, semen oozing from vagina, wet glistening fluid on inner thighs, photorealistic",
+    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy',
+    denoise: 0.40,
   },
 };
 
@@ -572,12 +592,10 @@ async function collectState() {
     return { ...base,
       prompt: document.getElementById('easy-prompt').value,
       negative: document.getElementById('easy-negative').value,
-      edit_mode: getActiveVal('easy-mode'),
       denoise: parseFloat(document.getElementById('easy-denoise').value),
       steps: q === 'detailed' ? 25 : 5,
       count: getCountVal('easy-count'),
       photo: await resizeImage(state.photos['easy']),
-      ref_photo: await resizeImage(state.photos['easy-ref']),
     };
   }
   if (mode === 'edit_dark') {
