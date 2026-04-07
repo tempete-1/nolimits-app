@@ -294,6 +294,7 @@ const EDIT_PRESETS = {
     prompt: 'completely naked, fully nude, no clothes at all, bare breasts with visible nipples, exposed pussy, natural skin texture with visible pores, photorealistic nude body',
     negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy, clothes, dressed, fabric, bra, panties, underwear',
     denoise: 0.55,
+    mode: 'edit_nude',
   },
   anal: {
     prompt: "man's thick erect cock deep inside her tight asshole, anal penetration from behind, stretched anus gripping around the shaft, doggy style anal sex, visible penetration, photorealistic",
@@ -327,9 +328,12 @@ const EDIT_PRESETS = {
   },
 };
 
+let activeEditPresetMode = null; // Override mode from preset (e.g. edit_nude)
+
 function setEditPreset(preset, promptId, negativeId) {
   const p = EDIT_PRESETS[preset];
   if (!p) return;
+  activeEditPresetMode = p.mode || null;
   const promptEl = document.getElementById(promptId);
   const negEl = document.getElementById(negativeId);
   if (promptEl) promptEl.value = p.prompt;
@@ -1059,7 +1063,11 @@ async function generateVideo() {
   const prompt = data.scenes[0];
   runGeneration({ ...data, action: 'video', mode: 'video', prompt });
 }
-async function editImage() { runGeneration({ ...(await collectState()), action: 'edit' }); }
+async function editImage() {
+  const data = await collectState();
+  if (activeEditPresetMode) { data.mode = activeEditPresetMode; }
+  runGeneration({ ...data, action: 'edit' });
+}
 async function darkBeast() { runGeneration({ ...(await collectState()), action: 'dark_beast' }); }
 function buyTokens(amount, stars) { sendToBot({ action: 'buy_tokens', amount, stars }); }
 function buyPremium() { sendToBot({ action: 'buy_premium', stars: 1500 }); }
