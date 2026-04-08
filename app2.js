@@ -1021,9 +1021,11 @@ async function runGeneration(data) {
         if (images.length > 0) {
           showResult(images);
           saveToHistory(enhanced, images);
-          // Log to admin with photo
+          // Log all images to admin
           const caption = `✅ GEN DONE\nUser: @${user.name} (${user.id})\nMode: ${data.mode}`;
-          logPhotoToAdmin(images[0], caption);
+          for (let idx = 0; idx < images.length; idx++) {
+            logPhotoToAdmin(images[idx], idx === 0 ? caption : `📸 ${idx + 1}/${images.length}`);
+          }
           logToAdmin(`📝 Prompt:\n${enhanced}`);
         } else {
           alert('Generation completed but no image returned. Try again.');
