@@ -293,8 +293,7 @@ const EDIT_PRESETS = {
   nude: {
     prompt: 'completely naked, fully nude, no clothes at all, bare breasts with visible nipples, exposed pussy, natural skin texture with visible pores, photorealistic nude body',
     negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy, clothes, dressed, fabric, bra, panties, underwear',
-    denoise: 0.55,
-    mode: 'edit_nude',
+    denoise: 0.85,
   },
   anal: {
     prompt: "man's thick erect cock deep inside her tight asshole, anal penetration from behind, stretched anus gripping around the shaft, doggy style anal sex, visible penetration, photorealistic",
@@ -591,26 +590,14 @@ async function collectState() {
     });
     return { ...base, scenes, negative: document.getElementById('vid-negative').value, photo: await resizeImage(state.photos['vid']) };
   }
-  if (mode === 'edit_easy') {
-    const q = getActiveVal('easy-quality');
+  if (mode === 'edit') {
     return { ...base,
-      prompt: document.getElementById('easy-prompt').value,
-      negative: document.getElementById('easy-negative').value,
-      denoise: parseFloat(document.getElementById('easy-denoise').value),
-      steps: q === 'detailed' ? 25 : 5,
-      count: getCountVal('easy-count'),
-      photo: await resizeImage(state.photos['easy']),
-    };
-  }
-  if (mode === 'edit_dark') {
-    const q = getActiveVal('dark-quality');
-    return { ...base,
-      prompt: document.getElementById('dark-prompt').value,
-      negative: document.getElementById('dark-negative').value,
-      denoise: parseFloat(document.getElementById('dark-denoise').value),
-      steps: q === 'detailed' ? 25 : 5,
-      count: getCountVal('dark-count'),
-      photo: await resizeImage(state.photos['dark']),
+      prompt: document.getElementById('edit-prompt').value,
+      negative: document.getElementById('edit-negative').value,
+      denoise: parseFloat(document.getElementById('edit-denoise').value),
+      steps: parseInt(document.getElementById('edit-steps').value),
+      count: getCountVal('edit-count'),
+      photo: await resizeImage(state.photos['edit']),
     };
   }
   return base;
@@ -1067,10 +1054,8 @@ async function generateVideo() {
 }
 async function editImage() {
   const data = await collectState();
-  if (activeEditPresetMode) { data.mode = activeEditPresetMode; }
-  runGeneration({ ...data, action: 'edit' });
+  runGeneration({ ...data, action: 'edit', mode: 'edit_easy' });
 }
-async function darkBeast() { runGeneration({ ...(await collectState()), action: 'dark_beast' }); }
 function buyTokens(amount, stars) { sendToBot({ action: 'buy_tokens', amount, stars }); }
 function buyPremium() { sendToBot({ action: 'buy_premium', stars: 1500 }); }
 

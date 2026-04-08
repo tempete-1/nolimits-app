@@ -43,12 +43,8 @@
             <span class="faq-desc">photo to video with scene prompts</span>
           </div>
           <div class="faq-item">
-            <span class="faq-mode">Edit Easy</span>
-            <span class="faq-desc">quick edit + combine 2 photos</span>
-          </div>
-          <div class="faq-item">
-            <span class="faq-mode">Edit Dark</span>
-            <span class="faq-desc">hardcore nsfw edits</span>
+            <span class="faq-mode">Edit</span>
+            <span class="faq-desc">NSFW edits with presets (nude, cum, anal...)</span>
           </div>
         </div>
       </div>
@@ -86,8 +82,7 @@
             <div class="dropdown-item active" data-val="generate" onclick="selectMode(this)">Generate</div>
             <div class="dropdown-item" data-val="inpaint" onclick="selectMode(this)">Inpaint</div>
             <div class="dropdown-item" data-val="video" onclick="selectMode(this)">Video</div>
-            <div class="dropdown-item" data-val="edit_easy" onclick="selectMode(this)">Edit Easy</div>
-            <div class="dropdown-item" data-val="edit_dark" onclick="selectMode(this)">Edit Dark</div>
+            <div class="dropdown-item" data-val="edit" onclick="selectMode(this)">Edit</div>
           </div>
         </div>
       </div>
@@ -228,121 +223,55 @@
         </div>
       </div>
 
-      <!-- === EDIT EASY MODE === -->
-      <div id="mode-edit_easy" class="mode-panel" style="display:none">
+      <!-- === EDIT MODE === -->
+      <div id="mode-edit" class="mode-panel" style="display:none">
         <div class="card">
           <label class="label">PHOTO</label>
-          <div class="upload-zone" id="easy-upload" onclick="pickPhoto('easy')">
+          <div class="upload-zone" id="edit-upload" onclick="pickPhoto('edit')">
             <span class="upload-plus">+</span>
             <span class="upload-text">Tap to upload or paste</span>
           </div>
         </div>
-        <div id="easy-after-photo" style="display:none">
+        <div id="edit-after-photo" style="display:none">
           <div class="card">
             <label class="label">PROMPT</label>
             <div class="tags">
-              <button class="tag" onclick="setEditPreset('nude','easy-prompt','easy-negative')">Nude</button>
-              <button class="tag" onclick="setEditPreset('cum','easy-prompt','easy-negative')">Cum</button>
-              <button class="tag" onclick="setEditPreset('creampie','easy-prompt','easy-negative')">Creampie</button>
-              <button class="tag" onclick="setEditPreset('pussy','easy-prompt','easy-negative')">Pussy</button>
-              <button class="tag" onclick="setEditPreset('blowjob','easy-prompt','easy-negative')">Blowjob</button>
-              <button class="tag" onclick="setEditPreset('anal','easy-prompt','easy-negative')">Anal</button>
-              <button class="tag" onclick="setEditPreset('bondage','easy-prompt','easy-negative')">Bondage</button>
-              <button class="tag" onclick="setEditPreset('gangbang','easy-prompt','easy-negative')">Gangbang</button>
+              <button class="tag" onclick="setEditPreset('nude','edit-prompt','edit-negative')">Nude</button>
+              <button class="tag" onclick="setEditPreset('cum','edit-prompt','edit-negative')">Cum</button>
+              <button class="tag" onclick="setEditPreset('creampie','edit-prompt','edit-negative')">Creampie</button>
+              <button class="tag" onclick="setEditPreset('pussy','edit-prompt','edit-negative')">Pussy</button>
+              <button class="tag" onclick="setEditPreset('blowjob','edit-prompt','edit-negative')">Blowjob</button>
+              <button class="tag" onclick="setEditPreset('anal','edit-prompt','edit-negative')">Anal</button>
+              <button class="tag" onclick="setEditPreset('bondage','edit-prompt','edit-negative')">Bondage</button>
+              <button class="tag" onclick="setEditPreset('gangbang','edit-prompt','edit-negative')">Gangbang</button>
             </div>
-            <textarea id="easy-prompt" class="input-area" placeholder="Describe the edit (put face from ref on t-shirt, change background...)"></textarea>
-            <button class="btn-enhance" onclick="enhancePrompt('easy-prompt')">✨ Enhance Prompt</button>
+            <textarea id="edit-prompt" class="input-area" placeholder="Describe the edit or pick a preset above..."></textarea>
+            <button class="btn-enhance" onclick="enhancePrompt('edit-prompt')">✨ Enhance Prompt</button>
           </div>
           <div class="card">
             <label class="label">NEGATIVE</label>
-            <textarea id="easy-negative" class="input-area small">blurry, ugly, deformed, watermark, text, low quality, cartoon</textarea>
+            <textarea id="edit-negative" class="input-area small">blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy, clothes, fabric, dressed</textarea>
           </div>
           <div class="card row">
             <div class="half">
-              <label class="label">DENOISE: <span id="easy-denoise-val">0.85</span></label>
-              <input type="range" class="slider" id="easy-denoise" min="0.1" max="1" step="0.05" value="0.85">
+              <label class="label">DENOISE: <span id="edit-denoise-val">0.85</span></label>
+              <input type="range" class="slider" id="edit-denoise" min="0.1" max="1" step="0.05" value="0.85">
             </div>
             <div class="half">
-              <label class="label">STEPS: <span id="easy-steps-val">5</span></label>
-              <input type="range" class="slider" id="easy-steps" min="1" max="50" step="1" value="5">
-            </div>
-          </div>
-          <div class="card">
-            <label class="label">QUALITY</label>
-            <div class="btn-group">
-              <button class="btn-toggle active" data-group="easy-quality" data-val="fast">Fast</button>
-              <button class="btn-toggle" data-group="easy-quality" data-val="detailed">Detailed</button>
+              <label class="label">STEPS: <span id="edit-steps-val">5</span></label>
+              <input type="range" class="slider" id="edit-steps" min="1" max="50" step="1" value="5">
             </div>
           </div>
           <div class="card">
             <label class="label">COUNT</label>
             <div class="count-group">
-              <span class="count-dot active" data-group="easy-count" data-val="1">1</span>
-              <span class="count-dot" data-group="easy-count" data-val="2">2</span>
-              <span class="count-dot" data-group="easy-count" data-val="3">3</span>
-              <span class="count-dot" data-group="easy-count" data-val="4">4</span>
+              <span class="count-dot active" data-group="edit-count" data-val="1">1</span>
+              <span class="count-dot" data-group="edit-count" data-val="2">2</span>
+              <span class="count-dot" data-group="edit-count" data-val="3">3</span>
+              <span class="count-dot" data-group="edit-count" data-val="4">4</span>
             </div>
           </div>
           <button class="btn-main" onclick="editImage()">E D I T &nbsp; I M A G E</button>
-        </div>
-      </div>
-
-      <!-- === EDIT DARK MODE === -->
-      <div id="mode-edit_dark" class="mode-panel" style="display:none">
-        <div class="card">
-          <label class="label">PHOTO</label>
-          <div class="upload-zone" id="dark-upload" onclick="pickPhoto('dark')">
-            <span class="upload-plus">+</span>
-            <span class="upload-text">Tap to upload or paste</span>
-          </div>
-        </div>
-        <div class="card">
-          <label class="label">QUALITY</label>
-          <div class="btn-group">
-            <button class="btn-toggle active" data-group="dark-quality" data-val="fast">Fast</button>
-            <button class="btn-toggle" data-group="dark-quality" data-val="detailed">Detailed</button>
-          </div>
-        </div>
-        <div id="dark-after-photo" style="display:none">
-          <div class="card">
-            <label class="label">PROMPT</label>
-            <div class="tags">
-              <button class="tag" onclick="setEditPreset('nude','dark-prompt','dark-negative')">Nude</button>
-              <button class="tag" onclick="setEditPreset('cum','dark-prompt','dark-negative')">Cum</button>
-              <button class="tag" onclick="setEditPreset('creampie','dark-prompt','dark-negative')">Creampie</button>
-              <button class="tag" onclick="setEditPreset('pussy','dark-prompt','dark-negative')">Pussy</button>
-              <button class="tag" onclick="setEditPreset('blowjob','dark-prompt','dark-negative')">Blowjob</button>
-              <button class="tag" onclick="setEditPreset('anal','dark-prompt','dark-negative')">Anal</button>
-              <button class="tag" onclick="setEditPreset('bondage','dark-prompt','dark-negative')">Bondage</button>
-              <button class="tag" onclick="setEditPreset('gangbang','dark-prompt','dark-negative')">Gangbang</button>
-            </div>
-            <textarea id="dark-prompt" class="input-area" placeholder="Dark Beast: describe NSFW edit..."></textarea>
-            <button class="btn-enhance" onclick="enhancePrompt('dark-prompt')">✨ Enhance Prompt</button>
-          </div>
-          <div class="card">
-            <label class="label">NEGATIVE</label>
-            <textarea id="dark-negative" class="input-area small">blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy</textarea>
-          </div>
-          <div class="card row">
-            <div class="half">
-              <label class="label">DENOISE: <span id="dark-denoise-val">0.85</span></label>
-              <input type="range" class="slider" id="dark-denoise" min="0.1" max="1" step="0.05" value="0.85">
-            </div>
-            <div class="half">
-              <label class="label">STEPS: <span id="dark-steps-val">5</span></label>
-              <input type="range" class="slider" id="dark-steps" min="1" max="50" step="1" value="5">
-            </div>
-          </div>
-          <div class="card">
-            <label class="label">COUNT</label>
-            <div class="count-group">
-              <span class="count-dot active" data-group="dark-count" data-val="1">1</span>
-              <span class="count-dot" data-group="dark-count" data-val="2">2</span>
-              <span class="count-dot" data-group="dark-count" data-val="3">3</span>
-              <span class="count-dot" data-group="dark-count" data-val="4">4</span>
-            </div>
-          </div>
-          <button class="btn-main btn-dark" onclick="darkBeast()">D A R K &nbsp; B E A S T</button>
         </div>
       </div>
 
