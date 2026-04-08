@@ -159,7 +159,7 @@ document.getElementById('file-input').addEventListener('change', (e) => {
 });
 
 function showAfterPhoto(target, dataUrl) {
-  const map = { 'inp': 'inp-after-photo', 'vid': 'vid-after-photo', 'easy': 'easy-after-photo', 'dark': 'dark-after-photo', 'edit': 'edit-after-photo' };
+  const map = { 'inp': 'inp-after-photo', 'vid': 'vid-after-photo', 'easy': 'easy-after-photo', 'dark': 'dark-after-photo', 'edit': 'edit-after-photo', 'edit-ref': null };
   const id = map[target];
   if (id) {
     const el = document.getElementById(id);
@@ -179,7 +179,7 @@ function removePhoto(target, event) {
       <span class="upload-text">Tap to upload or paste</span>
     `;
   }
-  const map = { 'inp': 'inp-after-photo', 'vid': 'vid-after-photo', 'easy': 'easy-after-photo', 'dark': 'dark-after-photo', 'edit': 'edit-after-photo' };
+  const map = { 'inp': 'inp-after-photo', 'vid': 'vid-after-photo', 'easy': 'easy-after-photo', 'dark': 'dark-after-photo', 'edit': 'edit-after-photo', 'edit-ref': null };
   const id = map[target];
   if (id) {
     const el = document.getElementById(id);
@@ -591,7 +591,7 @@ async function collectState() {
     return { ...base, scenes, negative: document.getElementById('vid-negative').value, photo: await resizeImage(state.photos['vid']) };
   }
   if (mode === 'edit') {
-    return { ...base,
+    const data = { ...base,
       prompt: document.getElementById('edit-prompt').value,
       negative: document.getElementById('edit-negative').value,
       denoise: parseFloat(document.getElementById('edit-denoise').value),
@@ -599,6 +599,10 @@ async function collectState() {
       count: getCountVal('edit-count'),
       photo: await resizeImage(state.photos['edit']),
     };
+    if (state.photos['edit-ref']) {
+      data.ref_photo = await resizeImage(state.photos['edit-ref']);
+    }
+    return data;
   }
   return base;
 }

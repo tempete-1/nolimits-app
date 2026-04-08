@@ -234,6 +234,13 @@
         </div>
         <div id="edit-after-photo" style="display:none">
           <div class="card">
+            <label class="label">REFERENCE PHOTO <span class="dim">(optional)</span></label>
+            <div class="upload-zone upload-zone-sm" id="edit-ref-upload" onclick="pickPhoto('edit-ref')">
+              <span class="upload-plus">+</span>
+              <span class="upload-text">Add 2nd photo to combine</span>
+            </div>
+          </div>
+          <div class="card">
             <label class="label">PROMPT</label>
             <div class="tags">
               <button class="tag" onclick="setEditPreset('nude','edit-prompt','edit-negative')">Nude</button>

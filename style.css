@@ -371,6 +371,14 @@ body {
 }
 .upload-zone.has-image .remove-btn { display: block; }
 .small-upload { padding: 30px 20px; }
+.upload-zone-sm {
+  padding: 20px 15px;
+  border-color: #1a1a1e;
+}
+.upload-zone-sm .upload-plus { font-size: 20px; }
+.upload-zone-sm .upload-text { font-size: 11px; }
+.upload-zone-sm.has-image { padding: 0; }
+.upload-zone-sm.has-image img { max-height: 200px; object-fit: contain; }
 
 /* ── Tags ── */
 .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
