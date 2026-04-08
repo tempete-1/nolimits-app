@@ -159,7 +159,7 @@ document.getElementById('file-input').addEventListener('change', (e) => {
 });
 
 function showAfterPhoto(target, dataUrl) {
-  const map = { 'inp': 'inp-after-photo', 'vid': 'vid-after-photo', 'easy': 'easy-after-photo', 'dark': 'dark-after-photo' };
+  const map = { 'inp': 'inp-after-photo', 'vid': 'vid-after-photo', 'easy': 'easy-after-photo', 'dark': 'dark-after-photo', 'edit': 'edit-after-photo' };
   const id = map[target];
   if (id) {
     const el = document.getElementById(id);
@@ -179,7 +179,7 @@ function removePhoto(target, event) {
       <span class="upload-text">Tap to upload or paste</span>
     `;
   }
-  const map = { 'inp': 'inp-after-photo', 'vid': 'vid-after-photo', 'easy': 'easy-after-photo', 'dark': 'dark-after-photo' };
+  const map = { 'inp': 'inp-after-photo', 'vid': 'vid-after-photo', 'easy': 'easy-after-photo', 'dark': 'dark-after-photo', 'edit': 'edit-after-photo' };
   const id = map[target];
   if (id) {
     const el = document.getElementById(id);
