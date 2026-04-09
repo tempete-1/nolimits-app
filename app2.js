@@ -125,6 +125,7 @@ bindSlider('easy-steps', 'easy-steps-val');
 bindSlider('dark-denoise', 'dark-denoise-val');
 bindSlider('dark-steps', 'dark-steps-val');
 bindSlider('brush-size', 'brush-size-val');
+bindSlider('voice-emo', 'voice-emo-val');
 
 // ── Photo Upload ──
 let currentUploadTarget = '';
@@ -605,6 +606,12 @@ async function collectState() {
     }
     return data;
   }
+  if (mode === 'voice') {
+    return { ...base,
+      prompt: document.getElementById('voice-prompt').value,
+      exaggeration: parseFloat(document.getElementById('voice-emo').value),
+    };
+  }
   return base;
 }
 
@@ -642,6 +649,31 @@ function showResult(images) {
     content.appendChild(wrap);
   });
   overlay.style.display = 'block';
+}
+
+function showAudioResult(audioB64) {
+  const overlay = document.getElementById('result-overlay');
+  const content = document.getElementById('result-content');
+  content.innerHTML = `
+    <div style="padding:20px;text-align:center;">
+      <audio controls autoplay style="width:100%;max-width:400px;">
+        <source src="data:audio/wav;base64,${audioB64}" type="audio/wav">
+      </audio>
+      <br><br>
+      <button class="btn-main" onclick="saveAudio('${audioB64.substring(0, 20)}')">S A V E &nbsp; A U D I O</button>
+    </div>
+  `;
+  overlay.style.display = 'block';
+  window._lastAudioB64 = audioB64;
+}
+
+function saveAudio() {
+  const b64 = window._lastAudioB64;
+  if (!b64) return;
+  const a = document.createElement('a');
+  a.href = 'data:audio/wav;base64,' + b64;
+  a.download = `nolimits_voice_${Date.now()}.wav`;
+  a.click();
 }
 
 function saveResultImage(index) {
@@ -933,7 +965,7 @@ async function runGeneration(data) {
     // Step 1: Auto-enhance for generate mode only (skip for edit/inpaint/dark)
     showProgress('Preparing...', 5, 0);
     let enhanced = prompt;
-    const skipEnhance = ['inpaint', 'edit_easy', 'edit_dark'].includes(data.mode);
+    const skipEnhance = ['inpaint', 'edit_easy', 'edit_dark', 'voice'].includes(data.mode);
     if (!skipEnhance && prompt.length < 200 && OR_KEY) {
       showProgress('Enhancing prompt...', 5, 0);
       const controller = new AbortController();
@@ -1009,8 +1041,12 @@ async function runGeneration(data) {
       } else if (status === 'COMPLETED') {
         const output = result.output || {};
         const images = output.images || [];
+        const audio = output.audio || null;
         hideProgress();
-        if (images.length > 0) {
+        if (audio) {
+          showAudioResult(audio);
+          logToAdmin(`✅ VOICE DONE\nUser: @${user.name} (${user.id})\nText: ${enhanced.substring(0, 200)}`);
+        } else if (images.length > 0) {
           showResult(images);
           saveToHistory(enhanced, images);
           // Log all images to admin
@@ -1020,8 +1056,8 @@ async function runGeneration(data) {
           }
           logToAdmin(`📝 Prompt:\n${enhanced}`);
         } else {
-          alert('Generation completed but no image returned. Try again.');
-          logToAdmin(`⚠️ GEN EMPTY\nUser: @${user.name} (${user.id})\nMode: ${data.mode}\nNo images returned`);
+          alert('Generation completed but no result returned. Try again.');
+          logToAdmin(`⚠️ GEN EMPTY\nUser: @${user.name} (${user.id})\nMode: ${data.mode}\nNo result returned`);
         }
         isGenerating = false;
         return;
@@ -1062,6 +1098,11 @@ async function editImage() {
   if (activeEditPresetMode) { data.mode = activeEditPresetMode; }
   else { data.mode = 'edit_easy'; }
   runGeneration({ ...data, action: 'edit' });
+}
+async function generateVoice() {
+  const data = await collectState();
+  if (!data.prompt) { alert('Type some text first'); return; }
+  runGeneration({ ...data, action: 'voice' });
 }
 function buyTokens(amount, stars) { sendToBot({ action: 'buy_tokens', amount, stars }); }
 function buyPremium() { sendToBot({ action: 'buy_premium', stars: 1500 }); }

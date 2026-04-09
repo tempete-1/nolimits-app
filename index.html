@@ -83,6 +83,7 @@
             <div class="dropdown-item" data-val="inpaint" onclick="selectMode(this)">Inpaint</div>
             <div class="dropdown-item" data-val="video" onclick="selectMode(this)">Video</div>
             <div class="dropdown-item" data-val="edit" onclick="selectMode(this)">Edit</div>
+            <div class="dropdown-item" data-val="voice" onclick="selectMode(this)">Voice</div>
           </div>
         </div>
       </div>
@@ -280,6 +281,19 @@
           </div>
           <button class="btn-main" onclick="editImage()">E D I T &nbsp; I M A G E</button>
         </div>
+      </div>
+
+      <!-- === VOICE MODE === -->
+      <div id="mode-voice" class="mode-panel" style="display:none">
+        <div class="card">
+          <label class="label">TEXT</label>
+          <textarea id="voice-prompt" class="input-area" placeholder="Type text to speak... (Russian or English)"></textarea>
+        </div>
+        <div class="card">
+          <label class="label">EMOTION: <span id="voice-emo-val">0.7</span></label>
+          <input type="range" class="slider" id="voice-emo" min="0" max="2" step="0.1" value="0.7">
+        </div>
+        <button class="btn-main" onclick="generateVoice()">G E N E R A T E &nbsp; V O I C E</button>
       </div>
 
     </div>
