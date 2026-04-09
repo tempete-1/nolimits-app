@@ -286,6 +286,13 @@
       <!-- === VOICE MODE === -->
       <div id="mode-voice" class="mode-panel" style="display:none">
         <div class="card">
+          <label class="label">VOICE SAMPLE <span class="dim">(optional, for cloning)</span></label>
+          <div class="upload-zone upload-zone-sm" id="voice-sample-upload" onclick="pickAudio()">
+            <span class="upload-plus">+</span>
+            <span class="upload-text" id="voice-sample-text">Upload voice sample (5-10s)</span>
+          </div>
+        </div>
+        <div class="card">
           <label class="label">TEXT</label>
           <textarea id="voice-prompt" class="input-area" placeholder="Type text to speak... (Russian or English)"></textarea>
         </div>

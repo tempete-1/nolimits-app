@@ -1099,9 +1099,29 @@ async function editImage() {
   else { data.mode = 'edit_easy'; }
   runGeneration({ ...data, action: 'edit' });
 }
+// ── Voice audio upload ──
+let voiceSampleB64 = null;
+function pickAudio() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'audio/*';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      voiceSampleB64 = reader.result.split(',')[1]; // strip data:audio/...;base64,
+      document.getElementById('voice-sample-text').textContent = file.name;
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
 async function generateVoice() {
   const data = await collectState();
   if (!data.prompt) { alert('Type some text first'); return; }
+  if (voiceSampleB64) data.voice_sample = voiceSampleB64;
   runGeneration({ ...data, action: 'voice' });
 }
 function buyTokens(amount, stars) { sendToBot({ action: 'buy_tokens', amount, stars }); }
