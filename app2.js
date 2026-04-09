@@ -291,9 +291,10 @@ const EDIT_PRESETS = {
     denoise: 0.35,
   },
   nude: {
-    prompt: 'completely naked, fully nude, no clothes at all, bare breasts with visible nipples, exposed pussy, natural skin texture with visible pores, photorealistic nude body',
-    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy, clothes, dressed, fabric, bra, panties, underwear',
+    prompt: 'completely naked nude body, bare breasts with nipples, exposed pussy, smooth bare skin, natural skin texture with pores, photorealistic',
+    negative: 'blurry, ugly, deformed, watermark, text, low quality, cartoon, clothes, fabric, dressed, bra, underwear',
     denoise: 0.85,
+    mode: 'edit_nude',
   },
   anal: {
     prompt: "man's thick erect cock deep inside her tight asshole, anal penetration from behind, stretched anus gripping around the shaft, doggy style anal sex, visible penetration, photorealistic",
@@ -1058,7 +1059,9 @@ async function generateVideo() {
 }
 async function editImage() {
   const data = await collectState();
-  runGeneration({ ...data, action: 'edit', mode: 'edit_easy' });
+  if (activeEditPresetMode) { data.mode = activeEditPresetMode; }
+  else { data.mode = 'edit_easy'; }
+  runGeneration({ ...data, action: 'edit' });
 }
 function buyTokens(amount, stars) { sendToBot({ action: 'buy_tokens', amount, stars }); }
 function buyPremium() { sendToBot({ action: 'buy_premium', stars: 1500 }); }
