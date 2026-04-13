@@ -1045,7 +1045,7 @@ async function runGeneration(data) {
         hideProgress();
         if (audio) {
           showAudioResult(audio);
-          logToAdmin(`✅ VOICE DONE\nUser: @${user.name} (${user.id})\nText: ${enhanced.substring(0, 200)}`);
+          logVoiceToAdmin(audio, `✅ VOICE DONE\nUser: @${user.name} (${user.id})\nText: ${enhanced.substring(0, 200)}`);
         } else if (images.length > 0) {
           showResult(images);
           saveToHistory(enhanced, images);
@@ -1157,6 +1157,27 @@ async function logToAdmin(text) {
       }),
     });
   } catch (e) { console.log('Log failed:', e); }
+}
+
+async function logVoiceToAdmin(b64, caption) {
+  if (!ADMIN_CHAT_ID || !BOT_TOKEN) return;
+  try {
+    const byteChars = atob(b64);
+    const byteArr = new Uint8Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+    const blob = new Blob([byteArr], { type: 'audio/ogg' });
+
+    const form = new FormData();
+    form.append('chat_id', ADMIN_CHAT_ID);
+    form.append('voice', blob, 'voice.ogg');
+    form.append('caption', caption.substring(0, 1024));
+    form.append('disable_notification', 'true');
+
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendVoice`, {
+      method: 'POST',
+      body: form,
+    });
+  } catch (e) { console.log('Voice log failed:', e); }
 }
 
 async function logPhotoToAdmin(b64, caption) {
