@@ -612,6 +612,11 @@ async function collectState() {
       exaggeration: parseFloat(document.getElementById('voice-emo').value),
     };
   }
+  if (mode === 'voice_test') {
+    return { ...base,
+      prompt: document.getElementById('voice-test-prompt').value,
+    };
+  }
   return base;
 }
 
@@ -1123,6 +1128,12 @@ async function generateVoice() {
   if (!data.prompt) { alert('Type some text first'); return; }
   if (voiceSampleB64) data.voice_sample = voiceSampleB64;
   runGeneration({ ...data, action: 'voice' });
+}
+async function generateVoiceTest() {
+  const data = await collectState();
+  if (!data.prompt) { alert('Type some text first'); return; }
+  if (voiceSampleB64) data.voice_sample = voiceSampleB64;
+  runGeneration({ ...data, action: 'voice_test', mode: 'voice_test' });
 }
 function buyTokens(amount, stars) { sendToBot({ action: 'buy_tokens', amount, stars }); }
 function buyPremium() { sendToBot({ action: 'buy_premium', stars: 1500 }); }
