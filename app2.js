@@ -970,7 +970,7 @@ async function runGeneration(data) {
     // Step 1: Auto-enhance for generate mode only (skip for edit/inpaint/dark)
     showProgress('Preparing...', 5, 0);
     let enhanced = prompt;
-    const skipEnhance = ['inpaint', 'edit_easy', 'edit_dark', 'voice'].includes(data.mode);
+    const skipEnhance = ['inpaint', 'edit_easy', 'edit_dark', 'voice', 'voice_test'].includes(data.mode);
     if (!skipEnhance && prompt.length < 200 && OR_KEY) {
       showProgress('Enhancing prompt...', 5, 0);
       const controller = new AbortController();
