@@ -8,7 +8,7 @@ if (tg) {
 }
 
 const state = {
-  mode: 'inpaint',
+  mode: 'generate',
   tab: 'generate',
   photos: {},
 };

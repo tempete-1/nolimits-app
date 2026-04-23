@@ -75,15 +75,14 @@
         <label class="label">MODE</label>
         <div class="dropdown" id="mode-dropdown">
           <div class="dropdown-selected" onclick="toggleDropdown()">
-            <span id="dropdown-text">Inpaint</span>
+            <span id="dropdown-text">Generate</span>
             <span class="dropdown-arrow">▼</span>
           </div>
           <div class="dropdown-menu">
-            <!-- Disabled 2026-04-22 — only inpaint + voice are active. Re-enable here if needed. -->
-            <!-- <div class="dropdown-item" data-val="generate" onclick="selectMode(this)">Generate</div> -->
-            <div class="dropdown-item active" data-val="inpaint" onclick="selectMode(this)">Inpaint</div>
-            <!-- <div class="dropdown-item" data-val="video" onclick="selectMode(this)">Video</div> -->
-            <!-- <div class="dropdown-item" data-val="edit" onclick="selectMode(this)">Edit</div> -->
+            <div class="dropdown-item active" data-val="generate" onclick="selectMode(this)">Generate</div>
+            <div class="dropdown-item" data-val="inpaint" onclick="selectMode(this)">Inpaint</div>
+            <div class="dropdown-item" data-val="video" onclick="selectMode(this)">Video</div>
+            <div class="dropdown-item" data-val="edit" onclick="selectMode(this)">Edit</div>
             <div class="dropdown-item" data-val="voice" onclick="selectMode(this)">Voice</div>
             <div class="dropdown-item" data-val="voice_test" onclick="selectMode(this)">Voice Test (F5)</div>
           </div>
