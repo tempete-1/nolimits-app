@@ -75,17 +75,15 @@
         <label class="label">MODE</label>
         <div class="dropdown" id="mode-dropdown">
           <div class="dropdown-selected" onclick="toggleDropdown()">
-            <span id="dropdown-text">Inpaint</span>
+            <span id="dropdown-text">Generate</span>
             <span class="dropdown-arrow">▼</span>
           </div>
           <div class="dropdown-menu">
-            <!-- Disabled 2026-04-22 — only inpaint + voice are active. Re-enable here if needed. -->
-            <!-- <div class="dropdown-item" data-val="generate" onclick="selectMode(this)">Generate</div> -->
-            <div class="dropdown-item active" data-val="inpaint" onclick="selectMode(this)">Inpaint</div>
-            <!-- <div class="dropdown-item" data-val="video" onclick="selectMode(this)">Video</div> -->
-            <!-- <div class="dropdown-item" data-val="edit" onclick="selectMode(this)">Edit</div> -->
+            <div class="dropdown-item active" data-val="generate" onclick="selectMode(this)">Generate</div>
+            <div class="dropdown-item" data-val="inpaint" onclick="selectMode(this)">Inpaint</div>
+            <div class="dropdown-item" data-val="video" onclick="selectMode(this)">Video</div>
+            <div class="dropdown-item" data-val="edit" onclick="selectMode(this)">Edit</div>
             <div class="dropdown-item" data-val="voice" onclick="selectMode(this)">Voice</div>
-            <div class="dropdown-item" data-val="voice_test" onclick="selectMode(this)">Voice Test (F5)</div>
           </div>
         </div>
       </div>
@@ -305,21 +303,6 @@
         <button class="btn-main" onclick="generateVoice()">G E N E R A T E &nbsp; V O I C E</button>
       </div>
 
-      <!-- === VOICE TEST (F5-TTS) MODE === -->
-      <div id="mode-voice_test" class="mode-panel" style="display:none;">
-        <div class="card">
-          <label class="label">VOICE SAMPLE <span class="dim">(optional, for cloning)</span></label>
-          <div class="upload-zone upload-zone-sm" id="voice-test-sample-upload" onclick="pickAudio()">
-            <span class="upload-plus">+</span>
-            <span class="upload-text" id="voice-test-sample-text">Upload voice sample</span>
-          </div>
-        </div>
-        <div class="card">
-          <label class="label">TEXT</label>
-          <textarea id="voice-test-prompt" class="input-area" placeholder="Type text to speak... (English)"></textarea>
-        </div>
-        <button class="btn-main" onclick="generateVoiceTest()">G E N E R A T E &nbsp; F 5 - T T S</button>
-      </div>
 
     </div>
 

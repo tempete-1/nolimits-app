@@ -8,7 +8,7 @@ if (tg) {
 }
 
 const state = {
-  mode: 'inpaint',
+  mode: 'generate',
   tab: 'generate',
   photos: {},
 };
@@ -612,11 +612,6 @@ async function collectState() {
       exaggeration: parseFloat(document.getElementById('voice-emo').value),
     };
   }
-  if (mode === 'voice_test') {
-    return { ...base,
-      prompt: document.getElementById('voice-test-prompt').value,
-    };
-  }
   return base;
 }
 
@@ -970,7 +965,7 @@ async function runGeneration(data) {
     // Step 1: Auto-enhance for generate mode only (skip for edit/inpaint/dark)
     showProgress('Preparing...', 5, 0);
     let enhanced = prompt;
-    const skipEnhance = ['inpaint', 'edit_easy', 'edit_dark', 'voice', 'voice_test'].includes(data.mode);
+    const skipEnhance = ['inpaint', 'edit_easy', 'edit_dark', 'voice'].includes(data.mode);
     if (!skipEnhance && prompt.length < 200 && OR_KEY) {
       showProgress('Enhancing prompt...', 5, 0);
       const controller = new AbortController();
@@ -1128,12 +1123,6 @@ async function generateVoice() {
   if (!data.prompt) { alert('Type some text first'); return; }
   if (voiceSampleB64) data.voice_sample = voiceSampleB64;
   runGeneration({ ...data, action: 'voice' });
-}
-async function generateVoiceTest() {
-  const data = await collectState();
-  if (!data.prompt) { alert('Type some text first'); return; }
-  if (voiceSampleB64) data.voice_sample = voiceSampleB64;
-  runGeneration({ ...data, action: 'voice_test', mode: 'voice_test' });
 }
 function buyTokens(amount, stars) { sendToBot({ action: 'buy_tokens', amount, stars }); }
 function buyPremium() { sendToBot({ action: 'buy_premium', stars: 1500 }); }
