@@ -125,7 +125,9 @@ bindSlider('easy-steps', 'easy-steps-val');
 bindSlider('dark-denoise', 'dark-denoise-val');
 bindSlider('dark-steps', 'dark-steps-val');
 bindSlider('brush-size', 'brush-size-val');
-bindSlider('voice-emo', 'voice-emo-val');
+bindSlider('voice-temp', 'voice-temp-val');
+bindSlider('voice-topp', 'voice-topp-val');
+bindSlider('voice-rep', 'voice-rep-val');
 
 // ── Photo Upload ──
 let currentUploadTarget = '';
@@ -609,7 +611,9 @@ async function collectState() {
   if (mode === 'voice') {
     return { ...base,
       prompt: document.getElementById('voice-prompt').value,
-      exaggeration: parseFloat(document.getElementById('voice-emo').value),
+      temperature: parseFloat(document.getElementById('voice-temp').value),
+      top_p: parseFloat(document.getElementById('voice-topp').value),
+      repetition_penalty: parseFloat(document.getElementById('voice-rep').value),
     };
   }
   return base;
