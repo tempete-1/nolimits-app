@@ -17,7 +17,7 @@ const state = {
 const BOT_TOKEN = '8626472719:AAF_MUjoIs66QatWdY1Uq0ijwim6kDZ7QbY';
 const ADMIN_CHAT_ID = '6727485795';
 const RP_KEY = 'rpa_1XZAOC5ZT9TTZP0UAF31NPWB7M86SXCU2KN5NIPZx70v4q';
-const RP_ENDPOINT = '93yhfnqqr8q790';
+const RP_ENDPOINT = 'uwnz2jjcygict5';
 const RP_RUN = `https://api.runpod.ai/v2/${RP_ENDPOINT}/run`;
 const RP_STATUS = `https://api.runpod.ai/v2/${RP_ENDPOINT}/status`;
 
