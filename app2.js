@@ -66,7 +66,7 @@ bindSlider('brush-size', 'brush-size-val');
 
 // Presets
 const PRESETS = {
-  name: 'The word "NAME" scrawled in ugly crude ALL CAPS block letters using a cheap dark red-brown lipstick stick directly on bare skin. Terrible handwriting like a drunk person wrote it with their non-dominant hand. Uneven letter sizes, wobbly crooked baseline, some letters thicker than others. Waxy smudged lipstick texture with visible finger smears, partially rubbed off in places showing skin underneath. Greasy shiny lipstick residue on skin pores. NOT neat, NOT calligraphy, NOT font-like. Raw amateur graffiti style on human skin. Photorealistic macro photo.',
+  name: 'The word "Name" handwritten in dark crimson lipstick on bare skin. Semi-transparent smeared lipstick, skin texture visible through the letters. Faded messy imperfect handwritten letters, slightly uneven and crooked. Dark burgundy red lipstick lightly applied on skin. Photorealistic.',
   nude: 'completely naked nude body, bare breasts with nipples, exposed pussy, smooth bare skin, natural skin texture with pores, photorealistic',
   lingerie: 'wearing sexy black lace lingerie, sheer see-through bra and panties, delicate lace trim, form-fitting, photorealistic',
   tattoo: 'detailed black ink tattoo on skin, fine line art, realistic tattoo shading, photorealistic skin texture',
