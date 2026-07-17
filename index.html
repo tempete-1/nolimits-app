@@ -7,311 +7,69 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <link rel="stylesheet" href="style.css?v=__CACHEBUST__">
   <script>
-    // Dynamically replace CSS cache buster
     document.querySelector('link[href*="__CACHEBUST__"]').href = 'style.css?v=' + Date.now();
   </script>
 </head>
 <body>
   <div id="app">
-    <!-- Header -->
     <div class="header">
       <h1>N O &nbsp; L I M I T S</h1>
     </div>
 
     <!-- Tabs -->
     <div class="tabs">
-      <button class="tab" data-tab="faq">FAQ</button>
-      <button class="tab active" data-tab="generate">GENERATE</button>
+      <button class="tab active" data-tab="generate">INPAINT</button>
       <button class="tab" data-tab="profile">PROFILE</button>
     </div>
 
-    <!-- FAQ Page -->
-    <div id="page-faq" class="page" style="display:none">
-      <div class="card">
-        <label class="label">HOW IT WORKS</label>
-        <div class="faq-list">
-          <div class="faq-item">
-            <span class="faq-mode">Generate</span>
-            <span class="faq-desc">text to image with lora + face swap</span>
-          </div>
-          <div class="faq-item">
-            <span class="faq-mode">Inpaint</span>
-            <span class="faq-desc">paint mask on photo, generate inside</span>
-          </div>
-          <div class="faq-item">
-            <span class="faq-mode">Video</span>
-            <span class="faq-desc">photo to video with scene prompts</span>
-          </div>
-          <div class="faq-item">
-            <span class="faq-mode">Edit</span>
-            <span class="faq-desc">NSFW edits with presets (nude, cum, anal...)</span>
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <label class="label">PRICING</label>
-        <div class="faq-pricing">
-          <div class="faq-price-row">
-            <span class="faq-price-label">1 image</span>
-            <span class="faq-price-val">1 token</span>
-          </div>
-          <div class="faq-price-row">
-            <span class="faq-price-label">1 video</span>
-            <span class="faq-price-val">3 tokens</span>
-          </div>
-          <div class="faq-price-row">
-            <span class="faq-price-label">premium</span>
-            <span class="faq-price-val">unlimited + priority</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Generate Page -->
+    <!-- Inpaint Page -->
     <div id="page-generate" class="page">
-
-      <!-- Mode Select -->
       <div class="card">
-        <label class="label">MODE</label>
-        <div class="dropdown" id="mode-dropdown">
-          <div class="dropdown-selected" onclick="toggleDropdown()">
-            <span id="dropdown-text">Generate</span>
-            <span class="dropdown-arrow">▼</span>
-          </div>
-          <div class="dropdown-menu">
-            <div class="dropdown-item active" data-val="generate" onclick="selectMode(this)">Generate</div>
-            <div class="dropdown-item" data-val="inpaint" onclick="selectMode(this)">Inpaint</div>
-            <div class="dropdown-item" data-val="video" onclick="selectMode(this)">Video</div>
-            <div class="dropdown-item" data-val="edit" onclick="selectMode(this)">Edit</div>
-            <div class="dropdown-item" data-val="voice" onclick="selectMode(this)">Voice</div>
-          </div>
+        <label class="label">PHOTO</label>
+        <div class="upload-zone" id="inp-upload" onclick="pickPhoto('inp')">
+          <span class="upload-plus">+</span>
+          <span class="upload-text">Tap to upload or paste</span>
         </div>
       </div>
-
-      <!-- === GENERATE MODE === -->
-      <div id="mode-generate" class="mode-panel">
+      <div id="inp-after-photo" style="display:none">
+        <div class="card">
+          <label class="label">MASK</label>
+          <canvas id="mask-canvas" class="mask-canvas"></canvas>
+          <div class="brush-tools">
+            <button class="brush-btn active" data-group="brush" data-val="brush">Brush</button>
+            <button class="brush-btn" data-group="brush" data-val="eraser">Eraser</button>
+            <button class="brush-btn" onclick="clearMask()">Clear</button>
+            <span class="brush-size-label">Size: <span id="brush-size-val">20</span>px</span>
+            <input type="range" class="slider-sm" id="brush-size" min="5" max="80" value="20">
+          </div>
+        </div>
         <div class="card">
           <label class="label">PROMPT</label>
-          <textarea id="gen-prompt" class="input-area" placeholder="Describe the scene (kira, sitting on a couch, bedroom...)"></textarea>
-          <button class="btn-enhance" onclick="enhancePrompt('gen-prompt')">✨ Enhance Prompt</button>
-        </div>
-        <div class="card">
-          <label class="label">SUB-MODE</label>
-          <div class="btn-group">
-            <button class="btn-toggle active" data-group="gen-sub" data-val="default" onclick="toggleFacePhoto()">Default</button>
-            <button class="btn-toggle" data-group="gen-sub" data-val="faceswap" onclick="toggleFacePhoto()">Face Swap</button>
+          <div class="tags">
+            <button class="tag" onclick="setPreset('name')">Name</button>
+            <button class="tag" onclick="setPreset('nude')">Nude</button>
+            <button class="tag" onclick="setPreset('lingerie')">Lingerie</button>
+            <button class="tag" onclick="setPreset('tattoo')">Tattoo</button>
           </div>
+          <textarea id="inp-prompt" class="input-area" placeholder="Describe what to paint in the mask..."></textarea>
+          <button class="btn-enhance" onclick="enhancePrompt('inp-prompt')">Enhance Prompt</button>
         </div>
-        <!-- Face photo - only visible when Face Swap selected -->
-        <div class="card" id="gen-face-card" style="display:none">
-          <label class="label">FACE PHOTO</label>
-          <div class="upload-zone" id="gen-face-upload" onclick="pickPhoto('gen-face')">
-            <span class="upload-plus">+</span>
-            <span class="upload-text">Tap to upload face photo</span>
+        <div class="card">
+          <label class="label">NEGATIVE</label>
+          <textarea id="inp-negative" class="input-area small">blurry, ugly, deformed, watermark, text, low quality, cartoon</textarea>
+        </div>
+        <div class="card row">
+          <div class="half">
+            <label class="label">CFG: <span id="inp-cfg-val">3.5</span></label>
+            <input type="range" class="slider" id="inp-cfg" min="1" max="10" step="0.5" value="3.5">
           </div>
-        </div>
-        <div class="card">
-          <label class="label">ASPECT RATIO</label>
-          <div class="btn-group">
-            <button class="btn-toggle active" data-group="gen-aspect" data-val="9:16">9:16</button>
-            <button class="btn-toggle" data-group="gen-aspect" data-val="1:1">1:1</button>
-            <button class="btn-toggle" data-group="gen-aspect" data-val="16:9">16:9</button>
-          </div>
-        </div>
-        <div class="card">
-          <label class="label">LORA STRENGTH: <span id="gen-lora-val">0.50</span></label>
-          <input type="range" id="gen-lora" class="slider" min="0" max="1" step="0.05" value="0.50">
-        </div>
-        <div class="card">
-          <label class="label">COUNT</label>
-          <div class="count-group">
-            <span class="count-dot active" data-group="gen-count" data-val="1">1</span>
-            <span class="count-dot" data-group="gen-count" data-val="2">2</span>
-            <span class="count-dot" data-group="gen-count" data-val="3">3</span>
-            <span class="count-dot" data-group="gen-count" data-val="4">4</span>
+          <div class="half">
+            <label class="label">STEPS: <span id="inp-steps-val">25</span></label>
+            <input type="range" class="slider" id="inp-steps" min="5" max="50" step="5" value="25">
           </div>
         </div>
         <button class="btn-main" onclick="generate()">G E N E R A T E</button>
       </div>
-
-      <!-- === INPAINT MODE === -->
-      <div id="mode-inpaint" class="mode-panel" style="display:none">
-        <div class="card">
-          <label class="label">PHOTO</label>
-          <div class="upload-zone" id="inp-upload" onclick="pickPhoto('inp')">
-            <span class="upload-plus">+</span>
-            <span class="upload-text">Tap to upload or paste</span>
-          </div>
-        </div>
-        <div id="inp-after-photo" style="display:none">
-          <div class="card">
-            <label class="label">MASK</label>
-            <canvas id="mask-canvas" class="mask-canvas"></canvas>
-            <div class="brush-tools">
-              <button class="brush-btn active" data-group="brush" data-val="brush">Brush</button>
-              <button class="brush-btn" data-group="brush" data-val="eraser">Eraser</button>
-              <button class="brush-btn" onclick="clearMask()">Clear</button>
-              <span class="brush-size-label">Size: <span id="brush-size-val">20</span>px</span>
-              <input type="range" class="slider-sm" id="brush-size" min="5" max="80" value="20">
-            </div>
-          </div>
-          <div class="card">
-            <label class="label">PROMPT</label>
-            <button class="name-tag" onclick="setInpaintNamePrompt()">Name</button>
-            <textarea id="inp-prompt" class="input-area" placeholder="Describe what to paint in the mask..."></textarea>
-            <button class="btn-enhance" onclick="enhancePrompt('inp-prompt')">✨ Enhance Prompt</button>
-          </div>
-          <div class="card">
-            <label class="label">NEGATIVE</label>
-            <textarea id="inp-negative" class="input-area small">blurry, ugly, deformed, watermark, text, low quality, cartoon</textarea>
-          </div>
-          <div class="card row">
-            <div class="half">
-              <label class="label">CFG: <span id="inp-cfg-val">3.5</span></label>
-              <input type="range" class="slider" id="inp-cfg" min="1" max="10" step="0.5" value="3.5">
-            </div>
-            <div class="half">
-              <label class="label">STEPS: <span id="inp-steps-val">25</span></label>
-              <input type="range" class="slider" id="inp-steps" min="5" max="50" step="5" value="25">
-            </div>
-          </div>
-          <div class="card">
-            <label class="label">COUNT:</label>
-            <div class="count-group">
-              <span class="count-dot active" data-group="inp-count" data-val="1">1</span>
-              <span class="count-dot" data-group="inp-count" data-val="2">2</span>
-              <span class="count-dot" data-group="inp-count" data-val="3">3</span>
-              <span class="count-dot" data-group="inp-count" data-val="4">4</span>
-            </div>
-          </div>
-          <button class="btn-main" onclick="generate()">G E N E R A T E</button>
-        </div>
-      </div>
-
-      <!-- === VIDEO MODE === -->
-      <div id="mode-video" class="mode-panel" style="display:none">
-        <div class="card">
-          <label class="label">PHOTO</label>
-          <div class="upload-zone" id="vid-upload" onclick="pickPhoto('vid')">
-            <span class="upload-plus">+</span>
-            <span class="upload-text">Tap to upload or paste</span>
-          </div>
-        </div>
-        <div id="vid-after-photo" style="display:none">
-          <div class="card">
-            <label class="label">SCENES <span class="dim">(6 max)</span></label>
-            <div class="tags">
-              <button class="tag" onclick="addPreset('missionary')">Missionary</button>
-              <button class="tag" onclick="addPreset('blowjob')">Blowjob</button>
-              <button class="tag" onclick="addPreset('doggy')">Doggy</button>
-              <button class="tag" onclick="addPreset('cowgirl')">Cowgirl</button>
-              <button class="tag" onclick="addPreset('handjob')">Handjob</button>
-            </div>
-            <div id="scene-list">
-              <div class="scene-slot"><span class="scene-label">SCENE 1</span><input type="text" class="scene-input" placeholder="Scene 1 prompt..."></div>
-              <div class="scene-slot"><span class="scene-label">SCENE 2</span><input type="text" class="scene-input" placeholder="Scene 2 prompt..."></div>
-              <div class="scene-slot"><span class="scene-label">SCENE 3</span><input type="text" class="scene-input" placeholder="Scene 3 prompt..."></div>
-              <div class="scene-slot"><span class="scene-label">SCENE 4</span><input type="text" class="scene-input" placeholder="Scene 4 prompt..."></div>
-              <div class="scene-slot"><span class="scene-label">SCENE 5</span><input type="text" class="scene-input" placeholder="Scene 5 prompt..."></div>
-              <div class="scene-slot"><span class="scene-label">SCENE 6</span><input type="text" class="scene-input" placeholder="Scene 6 prompt..."></div>
-            </div>
-          </div>
-          <div class="card">
-            <label class="label">NEGATIVE</label>
-            <textarea id="vid-negative" class="input-area small">blurry, ugly, deformed, text, watermark, low quality, cartoon</textarea>
-          </div>
-          <button class="btn-main" onclick="generateVideo()">G E N E R A T E &nbsp; V I D E O</button>
-        </div>
-      </div>
-
-      <!-- === EDIT MODE === -->
-      <div id="mode-edit" class="mode-panel" style="display:none">
-        <div class="card">
-          <label class="label">PHOTO</label>
-          <div class="upload-zone" id="edit-upload" onclick="pickPhoto('edit')">
-            <span class="upload-plus">+</span>
-            <span class="upload-text">Tap to upload or paste</span>
-          </div>
-        </div>
-        <div id="edit-after-photo" style="display:none">
-          <div class="card">
-            <label class="label">REFERENCE PHOTO <span class="dim">(optional)</span></label>
-            <div class="upload-zone upload-zone-sm" id="edit-ref-upload" onclick="pickPhoto('edit-ref')">
-              <span class="upload-plus">+</span>
-              <span class="upload-text">Add 2nd photo to combine</span>
-            </div>
-          </div>
-          <div class="card">
-            <label class="label">PROMPT</label>
-            <div class="tags">
-              <button class="tag" onclick="setEditPreset('nude','edit-prompt','edit-negative')">Nude</button>
-              <button class="tag" onclick="setEditPreset('cum','edit-prompt','edit-negative')">Cum</button>
-              <button class="tag" onclick="setEditPreset('creampie','edit-prompt','edit-negative')">Creampie</button>
-              <button class="tag" onclick="setEditPreset('pussy','edit-prompt','edit-negative')">Pussy</button>
-              <button class="tag" onclick="setEditPreset('blowjob','edit-prompt','edit-negative')">Blowjob</button>
-              <button class="tag" onclick="setEditPreset('anal','edit-prompt','edit-negative')">Anal</button>
-              <button class="tag" onclick="setEditPreset('bondage','edit-prompt','edit-negative')">Bondage</button>
-              <button class="tag" onclick="setEditPreset('gangbang','edit-prompt','edit-negative')">Gangbang</button>
-            </div>
-            <textarea id="edit-prompt" class="input-area" placeholder="Describe the edit or pick a preset above..."></textarea>
-            <button class="btn-enhance" onclick="enhancePrompt('edit-prompt')">✨ Enhance Prompt</button>
-          </div>
-          <div class="card">
-            <label class="label">NEGATIVE</label>
-            <textarea id="edit-negative" class="input-area small">blurry, ugly, deformed, watermark, text, low quality, cartoon, bad anatomy, clothes, fabric, dressed</textarea>
-          </div>
-          <div class="card row">
-            <div class="half">
-              <label class="label">DENOISE: <span id="edit-denoise-val">0.85</span></label>
-              <input type="range" class="slider" id="edit-denoise" min="0.1" max="1" step="0.05" value="0.85">
-            </div>
-            <div class="half">
-              <label class="label">STEPS: <span id="edit-steps-val">5</span></label>
-              <input type="range" class="slider" id="edit-steps" min="1" max="50" step="1" value="5">
-            </div>
-          </div>
-          <div class="card">
-            <label class="label">COUNT</label>
-            <div class="count-group">
-              <span class="count-dot active" data-group="edit-count" data-val="1">1</span>
-              <span class="count-dot" data-group="edit-count" data-val="2">2</span>
-              <span class="count-dot" data-group="edit-count" data-val="3">3</span>
-              <span class="count-dot" data-group="edit-count" data-val="4">4</span>
-            </div>
-          </div>
-          <button class="btn-main" onclick="editImage()">E D I T &nbsp; I M A G E</button>
-        </div>
-      </div>
-
-      <!-- === VOICE MODE === -->
-      <div id="mode-voice" class="mode-panel" style="display:none">
-        <div class="card">
-          <label class="label">VOICE SAMPLE <span class="dim">(optional, for cloning)</span></label>
-          <div class="upload-zone upload-zone-sm" id="voice-sample-upload" onclick="pickAudio()">
-            <span class="upload-plus">+</span>
-            <span class="upload-text" id="voice-sample-text">Upload voice sample (5-10s)</span>
-          </div>
-        </div>
-        <div class="card">
-          <label class="label">TEXT</label>
-          <textarea id="voice-prompt" class="input-area" placeholder="Type text to speak... (Russian or English)"></textarea>
-        </div>
-        <div class="card">
-          <label class="label">TEMPERATURE: <span id="voice-temp-val">0.9</span></label>
-          <input type="range" class="slider" id="voice-temp" min="0.1" max="1.0" step="0.05" value="0.9">
-        </div>
-        <div class="card">
-          <label class="label">TOP P: <span id="voice-topp-val">0.9</span></label>
-          <input type="range" class="slider" id="voice-topp" min="0.1" max="1.0" step="0.05" value="0.9">
-        </div>
-        <div class="card">
-          <label class="label">REPETITION PENALTY: <span id="voice-rep-val">1.05</span></label>
-          <input type="range" class="slider" id="voice-rep" min="1.0" max="1.5" step="0.05" value="1.05">
-        </div>
-        <button class="btn-main" onclick="generateVoice()">G E N E R A T E &nbsp; V O I C E</button>
-      </div>
-
-
     </div>
 
     <!-- Profile Page -->
@@ -342,7 +100,6 @@
         <button class="btn-premium" onclick="buyPremium()">PREMIUM 30 DAYS<span>1500 Stars</span></button>
       </div>
     </div>
-
   </div>
 
   <!-- Result Overlay -->
@@ -352,9 +109,7 @@
         <span class="result-title">RESULT</span>
         <button class="result-close" onclick="closeResult()">&times;</button>
       </div>
-      <div id="result-content" class="result-content">
-        <!-- Images will be inserted here -->
-      </div>
+      <div id="result-content" class="result-content"></div>
       <div class="result-actions">
         <button class="btn-main" onclick="regenerate()">R E G E N E R A T E</button>
       </div>
@@ -364,7 +119,7 @@
   <!-- Progress Overlay -->
   <div id="progress-overlay" class="progress-overlay" style="display:none">
     <div class="progress-panel">
-      <div id="progress-status" class="progress-status">Enhancing prompt...</div>
+      <div id="progress-status" class="progress-status">Preparing...</div>
       <div class="progress-bar-track">
         <div id="progress-bar-fill" class="progress-bar-fill" style="width:0%"></div>
       </div>
@@ -388,11 +143,9 @@
 
   <input type="file" id="file-input" accept="image/*" style="display:none">
   <script>
-    // Cache busting: append timestamp to prevent Telegram WebApp aggressive caching
     (function() {
-      const v = Date.now();
       const s = document.createElement('script');
-      s.src = 'app2.js?v=' + v;
+      s.src = 'app2.js?v=' + Date.now();
       document.body.appendChild(s);
     })();
   </script>
