@@ -17,6 +17,7 @@ const RP_KEY = _params.get('rk') || '';
 const RP_ENDPOINT = _params.get('re') || '';
 const RP_RUN = RP_ENDPOINT ? `https://api.runpod.ai/v2/${RP_ENDPOINT}/run` : '';
 const RP_STATUS = RP_ENDPOINT ? `https://api.runpod.ai/v2/${RP_ENDPOINT}/status` : '';
+console.log('DEBUG params:', {RP_ENDPOINT, RP_RUN, RP_KEY: RP_KEY ? RP_KEY.substring(0,8)+'...' : '<empty>', url: window.location.href});
 const API_URL = _params.get('api') || '';
 const OR_KEY = _params.get('ork') || '';
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
