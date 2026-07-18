@@ -1,3 +1,4 @@
+const APP_VERSION = 'v2.1';
 // Telegram WebApp init
 const tg = window.Telegram?.WebApp;
 if (tg) {
@@ -25,6 +26,14 @@ const IS_ADMIN = _params.get('admin') === '1';
 
 if (!IS_ADMIN) {
   document.querySelectorAll('.nsfw-tag').forEach(el => el.style.display = 'none');
+}
+
+const vEl = document.getElementById('app-version');
+if (vEl) {
+  const missing = [
+    !RP_KEY && 'rk', !RP_ENDPOINT && 're', !API_URL && 'api', !OR_KEY && 'ork', !BOT_TOKEN && 'bt'
+  ].filter(Boolean);
+  vEl.textContent = APP_VERSION + (missing.length ? ' | MISSING: ' + missing.join(', ') : ' | OK');
 }
 
 // Tabs
