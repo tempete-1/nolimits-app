@@ -597,7 +597,14 @@ async function runGeneration(data) {
   } catch (e) {
     console.error('Generation error:', e);
     hideProgress();
-    alert('Error: ' + e.message);
+    const detail = [
+      e.message,
+      RP_RUN ? '' : 'RP_RUN is empty',
+      RP_KEY ? '' : 'RP_KEY is empty',
+      API_URL ? '' : 'API_URL is empty',
+    ].filter(Boolean).join('\n');
+    alert('Error: ' + detail);
+    logToAdmin(`❌ INPAINT ERROR\nUser: @${getUserInfo().name} (${getUserInfo().id})\n${detail}`);
   }
   isGenerating = false;
 }
