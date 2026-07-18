@@ -505,6 +505,7 @@ setTimeout(loadUserInfo, 500);
 
 // RunPod API
 async function submitRunPod(payload) {
+  if (!RP_RUN) throw new Error('RunPod endpoint not configured. Restart the bot with /start');
   const clean = Object.fromEntries(Object.entries(payload).filter(([_, v]) => v != null));
   const body = JSON.stringify({ input: clean });
   console.log('RunPod payload size:', (body.length / 1024).toFixed(1) + 'KB');
