@@ -509,7 +509,7 @@ async function submitRunPod(payload) {
     headers: { 'Authorization': `Bearer ${RP_KEY}`, 'Content-Type': 'application/json' },
     body,
   });
-  if (!resp.ok) throw new Error(`RunPod ${resp.status}: ${(await resp.text()).substring(0, 200)}`);
+  if (!resp.ok) throw new Error(`RunPod ${resp.status} [URL:${RP_RUN || 'EMPTY'}] [EP:${RP_ENDPOINT || 'EMPTY'}]: ${(await resp.text()).substring(0, 200)}`);
   return (await resp.json()).id;
 }
 
