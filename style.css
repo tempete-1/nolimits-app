@@ -255,18 +255,19 @@ body {
 .slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
 
 .slider-sm {
-  width: 80px;
+  width: 100px;
   -webkit-appearance: none;
-  height: 3px;
+  height: 6px;
   border-radius: 3px;
   background: #27272a;
   outline: none;
   vertical-align: middle;
+  touch-action: none;
 }
 .slider-sm::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 14px;
-  height: 14px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: #a1a1aa;
   cursor: pointer;

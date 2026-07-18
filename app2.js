@@ -128,8 +128,10 @@ const maskCtx = maskCanvas ? maskCanvas.getContext('2d') : null;
 let isDrawing = false;
 let pureMaskCanvas = null;
 let pureMaskCtx = null;
+let lastPoint = null;
 
 if (maskCanvas) {
+  maskCanvas.style.touchAction = 'none';
   maskCanvas.addEventListener('pointerdown', startDraw);
   maskCanvas.addEventListener('pointermove', draw);
   maskCanvas.addEventListener('pointerup', stopDraw);
@@ -155,8 +157,8 @@ function loadImageToMask(dataUrl) {
   img.src = dataUrl;
 }
 
-function startDraw(e) { isDrawing = true; draw(e); }
-function stopDraw() { isDrawing = false; }
+function startDraw(e) { isDrawing = true; lastPoint = null; draw(e); }
+function stopDraw() { isDrawing = false; lastPoint = null; }
 
 function draw(e) {
   if (!isDrawing) return;
@@ -167,23 +169,38 @@ function draw(e) {
   const y = (e.clientY - rect.top) * scaleY;
   const size = parseInt(document.getElementById('brush-size').value) * scaleX;
 
-  maskCtx.beginPath();
-  maskCtx.arc(x, y, size / 2, 0, Math.PI * 2);
+  function strokeBetween(ctx, fillStyle, compositeOp) {
+    ctx.save();
+    if (compositeOp) ctx.globalCompositeOperation = compositeOp;
+    ctx.strokeStyle = fillStyle;
+    ctx.fillStyle = fillStyle;
+    ctx.lineWidth = size;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    if (lastPoint) {
+      ctx.beginPath();
+      ctx.moveTo(lastPoint.x, lastPoint.y);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
   if (brushMode === 'brush') {
-    maskCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-    maskCtx.fill();
+    strokeBetween(maskCtx, 'rgba(255, 255, 255, 0.5)');
   } else {
-    maskCtx.globalCompositeOperation = 'destination-out';
-    maskCtx.fill();
-    maskCtx.globalCompositeOperation = 'source-over';
+    strokeBetween(maskCtx, 'rgba(0,0,0,1)', 'destination-out');
   }
 
   if (pureMaskCtx) {
-    pureMaskCtx.beginPath();
-    pureMaskCtx.arc(x, y, size / 2, 0, Math.PI * 2);
-    pureMaskCtx.fillStyle = brushMode === 'brush' ? '#ffffff' : '#000000';
-    pureMaskCtx.fill();
+    strokeBetween(pureMaskCtx, brushMode === 'brush' ? '#ffffff' : '#000000');
   }
+
+  lastPoint = { x, y };
 }
 
 function getMaskDataUrl() {
