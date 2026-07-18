@@ -47,9 +47,9 @@
           <label class="label">PROMPT</label>
           <div class="tags">
             <button class="tag" onclick="setPreset('name')">Name</button>
-            <button class="tag" onclick="setPreset('nude')">Nude</button>
-            <button class="tag" onclick="setPreset('lingerie')">Lingerie</button>
-            <button class="tag" onclick="setPreset('tattoo')">Tattoo</button>
+            <button class="tag nsfw-tag" onclick="setPreset('nude')">Nude</button>
+            <button class="tag nsfw-tag" onclick="setPreset('lingerie')">Lingerie</button>
+            <button class="tag nsfw-tag" onclick="setPreset('tattoo')">Tattoo</button>
           </div>
           <textarea id="inp-prompt" class="input-area" placeholder="Describe what to paint in the mask..."></textarea>
           <button class="btn-enhance" onclick="enhancePrompt('inp-prompt')">Enhance Prompt</button>
@@ -60,8 +60,8 @@
         </div>
         <div class="card row">
           <div class="half">
-            <label class="label">CFG: <span id="inp-cfg-val">1.5</span></label>
-            <input type="range" class="slider" id="inp-cfg" min="1" max="10" step="0.5" value="1.5">
+            <label class="label">CFG: <span id="inp-cfg-val">3</span></label>
+            <input type="range" class="slider" id="inp-cfg" min="1" max="10" step="0.5" value="3">
           </div>
           <div class="half">
             <label class="label">STEPS: <span id="inp-steps-val">20</span></label>

@@ -21,6 +21,11 @@ const API_URL = _params.get('api') || '';
 const OR_KEY = _params.get('ork') || '';
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const OR_MODEL = 'cognitivecomputations/dolphin-3.0-r1-llama-3.3-70b';
+const IS_ADMIN = _params.get('admin') === '1';
+
+if (!IS_ADMIN) {
+  document.querySelectorAll('.nsfw-tag').forEach(el => el.style.display = 'none');
+}
 
 // Tabs
 document.querySelectorAll('.tab').forEach(btn => {
@@ -516,6 +521,7 @@ async function pollRunPod(jobId) {
   const resp = await fetch(`${RP_STATUS}/${jobId}`, {
     headers: { 'Authorization': `Bearer ${RP_KEY}` },
   });
+  if (!resp.ok) throw new Error(`Poll failed ${resp.status}: ${(await resp.text()).substring(0, 200)}`);
   return await resp.json();
 }
 
