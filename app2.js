@@ -28,6 +28,21 @@ if (!IS_ADMIN) {
   document.querySelectorAll('.nsfw-tag').forEach(el => el.style.display = 'none');
 } else {
   document.querySelectorAll('.admin-only').forEach(el => el.style.display = '');
+  const tagsEl = document.querySelector('.tags');
+  if (tagsEl) {
+    tagsEl.innerHTML = '';
+    [
+      { key: 'name_lipstick', label: '💄 Name' },
+      { key: 'name_marker', label: '🖊️ Name' },
+      { key: 'nude', label: 'Nude' },
+    ].forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'tag';
+      btn.textContent = p.label;
+      btn.onclick = () => setPreset(p.key);
+      tagsEl.appendChild(btn);
+    });
+  }
 }
 
 const vEl = document.getElementById('app-version');
@@ -86,6 +101,8 @@ const PRESETS = {
   name_lipstick: 'The word "Name" handwritten in dark crimson lipstick on bare skin. Semi-transparent smeared lipstick, skin texture visible through the letters. Faded messy imperfect handwritten letters, slightly uneven and crooked. Dark burgundy red lipstick lightly applied on skin. Photorealistic.',
   name_marker: 'The word "Name" handwritten in black marker on bare skin. Bold black ink strokes, slightly smeared edges, skin texture visible through the ink. Messy imperfect handwritten letters, slightly uneven and crooked. Black felt-tip marker writing on skin. Photorealistic.',
   nude: 'completely naked nude body, bare breasts with nipples, exposed pussy, smooth bare skin, natural skin texture with pores, photorealistic',
+  lingerie: 'wearing sexy black lace lingerie, sheer see-through bra and panties, delicate lace trim, form-fitting, photorealistic',
+  tattoo: 'detailed black ink tattoo on skin, fine line art, realistic tattoo shading, photorealistic skin texture',
 };
 
 function setPreset(key) {
