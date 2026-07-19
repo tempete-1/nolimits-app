@@ -772,29 +772,53 @@ if (voiceTextEl) {
   });
 }
 
+let _voiceCursor = { start: 0, end: 0 };
+(function() {
+  const el = document.getElementById('voice-text');
+  if (!el) return;
+  ['keyup','mouseup','touchend','input','focus'].forEach(evt => {
+    el.addEventListener(evt, () => {
+      _voiceCursor.start = el.selectionStart;
+      _voiceCursor.end = el.selectionEnd;
+    });
+  });
+})();
+
 function insertVoiceTag(tag) {
   const el = document.getElementById('voice-text');
   if (!el) return;
-  const start = el.selectionStart;
-  const end = el.selectionEnd;
+  const start = _voiceCursor.start;
+  const end = _voiceCursor.end;
   el.value = el.value.slice(0, start) + tag + el.value.slice(end);
+  _voiceCursor.start = _voiceCursor.end = start + tag.length;
   el.focus();
-  el.selectionStart = el.selectionEnd = start + tag.length;
+  el.selectionStart = el.selectionEnd = _voiceCursor.start;
   el.dispatchEvent(new Event('input'));
 }
 
 function wrapVoiceTag(effect) {
   const el = document.getElementById('voice-text');
   if (!el) return;
-  const start = el.selectionStart;
-  const end = el.selectionEnd;
+  const start = _voiceCursor.start;
+  const end = _voiceCursor.end;
   const selected = el.value.slice(start, end);
-  if (!selected) { alert('Select some text first'); return; }
+  if (!selected) {
+    const open = `<${effect}>`;
+    const close = `</${effect}>`;
+    el.value = el.value.slice(0, start) + open + close + el.value.slice(end);
+    _voiceCursor.start = _voiceCursor.end = start + open.length;
+    el.focus();
+    el.selectionStart = el.selectionEnd = _voiceCursor.start;
+    el.dispatchEvent(new Event('input'));
+    return;
+  }
   const wrapped = `<${effect}>${selected}</${effect}>`;
   el.value = el.value.slice(0, start) + wrapped + el.value.slice(end);
+  _voiceCursor.start = start;
+  _voiceCursor.end = start + wrapped.length;
   el.focus();
-  el.selectionStart = start;
-  el.selectionEnd = start + wrapped.length;
+  el.selectionStart = _voiceCursor.start;
+  el.selectionEnd = _voiceCursor.end;
   el.dispatchEvent(new Event('input'));
 }
 
