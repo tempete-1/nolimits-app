@@ -21,6 +21,7 @@
     <div class="tabs">
       <button class="tab active" data-tab="generate">INPAINT</button>
       <button class="tab" data-tab="profile">PROFILE</button>
+      <button class="tab admin-only" data-tab="voice" style="display:none">VOICE</button>
       <button class="tab admin-only" data-tab="admin" style="display:none">ADMIN</button>
     </div>
 
@@ -71,6 +72,74 @@
         </div>
         <button class="btn-main" onclick="generate()">G E N E R A T E</button>
       </div>
+    </div>
+
+    <!-- Voice Page -->
+    <div id="page-voice" class="page" style="display:none">
+      <div class="card">
+        <label class="label">WHAT TO SAY</label>
+        <textarea id="voice-text" class="input-area" placeholder="Type your text here... Use [laugh], [sigh], [whisper] for effects" style="min-height:100px"></textarea>
+        <div style="font-size:11px;color:#555;margin-top:4px"><span id="voice-char-count">0</span>/5000 characters</div>
+      </div>
+
+      <div class="card">
+        <label class="label">INSERT AT CURSOR</label>
+        <div class="voice-tags">
+          <button class="vtag" onclick="insertVoiceTag('[pause]')">pause</button>
+          <button class="vtag" onclick="insertVoiceTag('[long pause]')">long pause</button>
+          <button class="vtag" onclick="insertVoiceTag('[laugh]')">laugh</button>
+          <button class="vtag" onclick="insertVoiceTag('[chuckle]')">chuckle</button>
+          <button class="vtag" onclick="insertVoiceTag('[giggle]')">giggle</button>
+          <button class="vtag" onclick="insertVoiceTag('[cry]')">cry</button>
+          <button class="vtag" onclick="insertVoiceTag('[sigh]')">sigh</button>
+          <button class="vtag" onclick="insertVoiceTag('[gasp]')">gasp</button>
+          <button class="vtag" onclick="insertVoiceTag('[tsk]')">tsk</button>
+          <button class="vtag" onclick="insertVoiceTag('[breath]')">breath</button>
+          <button class="vtag" onclick="insertVoiceTag('[inhale]')">inhale</button>
+          <button class="vtag" onclick="insertVoiceTag('[exhale]')">exhale</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <label class="label">WRAP SELECTED TEXT</label>
+        <div class="voice-tags">
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('whisper')">whisper</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('soft')">soft</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('loud')">loud</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('emphasis')">emphasis</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('fast')">fast</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('slow')">slow</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('singing')">singing</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <label class="label">LANGUAGE</label>
+        <select id="voice-lang" class="voice-select">
+          <option value="en">🇬🇧 English</option>
+          <option value="ru">🇷🇺 Russian</option>
+          <option value="zh">🇨🇳 Chinese</option>
+          <option value="ja">🇯🇵 Japanese</option>
+          <option value="ko">🇰🇷 Korean</option>
+          <option value="de">🇩🇪 German</option>
+          <option value="fr">🇫🇷 French</option>
+          <option value="es">🇪🇸 Spanish</option>
+          <option value="it">🇮🇹 Italian</option>
+          <option value="pt">🇧🇷 Portuguese</option>
+          <option value="tr">🇹🇷 Turkish</option>
+          <option value="ar">🇸🇦 Arabic</option>
+          <option value="hi">🇮🇳 Hindi</option>
+        </select>
+      </div>
+
+      <div id="voice-result" style="display:none">
+        <div class="card">
+          <label class="label">RESULT</label>
+          <audio id="voice-audio" controls style="width:100%"></audio>
+        </div>
+      </div>
+
+      <button class="btn-main btn-voice" onclick="generateVoice()">G E N E R A T E &nbsp; V O I C E</button>
     </div>
 
     <!-- Admin Page -->

@@ -762,3 +762,72 @@ async function adminDeleteUser(userId) {
     searchUsers();
   } catch (e) { alert('Error: ' + e.message); }
 }
+
+// ── Voice TTS ──
+
+const voiceTextEl = document.getElementById('voice-text');
+if (voiceTextEl) {
+  voiceTextEl.addEventListener('input', () => {
+    document.getElementById('voice-char-count').textContent = voiceTextEl.value.length;
+  });
+}
+
+function insertVoiceTag(tag) {
+  const el = document.getElementById('voice-text');
+  if (!el) return;
+  const start = el.selectionStart;
+  const end = el.selectionEnd;
+  el.value = el.value.slice(0, start) + tag + el.value.slice(end);
+  el.focus();
+  el.selectionStart = el.selectionEnd = start + tag.length;
+  el.dispatchEvent(new Event('input'));
+}
+
+function wrapVoiceTag(effect) {
+  const el = document.getElementById('voice-text');
+  if (!el) return;
+  const start = el.selectionStart;
+  const end = el.selectionEnd;
+  const selected = el.value.slice(start, end);
+  if (!selected) { alert('Select some text first'); return; }
+  const wrapped = `<${effect}>${selected}</${effect}>`;
+  el.value = el.value.slice(0, start) + wrapped + el.value.slice(end);
+  el.focus();
+  el.selectionStart = start;
+  el.selectionEnd = start + wrapped.length;
+  el.dispatchEvent(new Event('input'));
+}
+
+async function generateVoice() {
+  const text = document.getElementById('voice-text')?.value?.trim();
+  if (!text) { alert('Enter text first'); return; }
+  if (text.length > 5000) { alert('Max 5000 characters'); return; }
+
+  const lang = document.getElementById('voice-lang')?.value || 'en';
+  const btn = document.querySelector('.btn-voice');
+  btn.textContent = 'GENERATING...';
+  btn.disabled = true;
+
+  try {
+    const res = await fetch(`${API_URL}/api/voice/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text, language: lang }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const audio = document.getElementById('voice-audio');
+    audio.src = url;
+    document.getElementById('voice-result').style.display = 'block';
+    audio.play();
+  } catch (e) {
+    alert('Voice error: ' + e.message);
+  } finally {
+    btn.textContent = 'G E N E R A T E   V O I C E';
+    btn.disabled = false;
+  }
+}
