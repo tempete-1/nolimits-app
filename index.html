@@ -21,6 +21,7 @@
     <div class="tabs">
       <button class="tab active" data-tab="generate">INPAINT</button>
       <button class="tab" data-tab="profile">PROFILE</button>
+      <button class="tab admin-only" data-tab="admin" style="display:none">ADMIN</button>
     </div>
 
     <!-- Inpaint Page -->
@@ -70,6 +71,19 @@
           </div>
         </div>
         <button class="btn-main" onclick="generate()">G E N E R A T E</button>
+      </div>
+    </div>
+
+    <!-- Admin Page -->
+    <div id="page-admin" class="page" style="display:none">
+      <div class="card">
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <input type="text" id="admin-search" class="input-area small" placeholder="Search by ID or username..." style="flex:1;margin:0;height:36px">
+          <button class="btn-main" style="padding:8px 16px;font-size:12px" onclick="searchUsers()">SEARCH</button>
+        </div>
+        <div id="admin-user-list" class="admin-user-list">
+          <div class="dim-text" style="text-align:center;padding:20px">Press SEARCH or load all users</div>
+        </div>
       </div>
     </div>
 

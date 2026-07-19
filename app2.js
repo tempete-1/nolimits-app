@@ -26,6 +26,8 @@ const IS_ADMIN = _params.get('admin') === '1';
 
 if (!IS_ADMIN) {
   document.querySelectorAll('.nsfw-tag').forEach(el => el.style.display = 'none');
+} else {
+  document.querySelectorAll('.admin-only').forEach(el => el.style.display = '');
 }
 
 const vEl = document.getElementById('app-version');
@@ -46,6 +48,7 @@ document.querySelectorAll('.tab').forEach(btn => {
     document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
     document.getElementById(`page-${tab}`).style.display = 'block';
     if (tab === 'profile') loadProfileStats();
+    if (tab === 'admin') searchUsers();
   });
 });
 
@@ -675,4 +678,71 @@ async function logPhotoToAdmin(b64, caption) {
     form.append('disable_notification', 'true');
     await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: form });
   } catch {}
+}
+
+// ── Admin Panel ──────────────────────────────────────────
+async function searchUsers() {
+  if (!API_URL) return;
+  const q = (document.getElementById('admin-search')?.value || '').trim();
+  const list = document.getElementById('admin-user-list');
+  list.innerHTML = '<div class="dim-text" style="text-align:center;padding:20px">Loading...</div>';
+  try {
+    const resp = await fetch(`${API_URL}/api/users?q=${encodeURIComponent(q)}`);
+    const data = await resp.json();
+    if (!data.ok) { list.innerHTML = `<div class="dim-text">Error: ${data.error}</div>`; return; }
+    if (!data.users.length) { list.innerHTML = '<div class="dim-text" style="text-align:center;padding:20px">No users found</div>'; return; }
+    list.innerHTML = data.users.map(u => `
+      <div class="admin-user-row">
+        <div class="admin-user-info">
+          <span class="admin-user-name">@${u.username || '—'}</span>
+          <span class="admin-user-id">${u.user_id}</span>
+          <span class="admin-user-meta">T:${u.tokens} G:${u.generations} ${u.premium ? '⭐' : ''}</span>
+        </div>
+        <div class="admin-user-actions">
+          ${u.premium
+            ? `<button class="btn-sm btn-danger" onclick="adminRemovePremium(${u.user_id})">-Premium</button>`
+            : `<button class="btn-sm btn-ok" onclick="adminGrantPremium(${u.user_id})">+Premium</button>`}
+          <button class="btn-sm btn-danger" onclick="adminDeleteUser(${u.user_id})">Del</button>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    list.innerHTML = `<div class="dim-text">Error: ${e.message}</div>`;
+  }
+}
+
+async function adminGrantPremium(userId) {
+  if (!confirm(`Grant premium to ${userId}?`)) return;
+  try {
+    await fetch(`${API_URL}/api/users/premium`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId, action: 'grant', days: 36500 }),
+    });
+    searchUsers();
+  } catch (e) { alert('Error: ' + e.message); }
+}
+
+async function adminRemovePremium(userId) {
+  if (!confirm(`Remove premium from ${userId}?`)) return;
+  try {
+    await fetch(`${API_URL}/api/users/premium`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId, action: 'remove' }),
+    });
+    searchUsers();
+  } catch (e) { alert('Error: ' + e.message); }
+}
+
+async function adminDeleteUser(userId) {
+  if (!confirm(`DELETE user ${userId}? This cannot be undone!`)) return;
+  try {
+    await fetch(`${API_URL}/api/users/delete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ user_id: userId }),
+    });
+    searchUsers();
+  } catch (e) { alert('Error: ' + e.message); }
 }
