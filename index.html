@@ -77,9 +77,9 @@
     <!-- Admin Page -->
     <div id="page-admin" class="page" style="display:none">
       <div class="card">
-        <div style="display:flex;gap:8px;margin-bottom:12px">
-          <input type="text" id="admin-search" class="input-area small" placeholder="Search by ID or username..." style="flex:1;margin:0;height:36px">
-          <button class="btn-main" style="padding:8px 16px;font-size:12px" onclick="searchUsers()">SEARCH</button>
+        <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center">
+          <input type="text" id="admin-search" placeholder="ID or username..." style="flex:1;background:#18181b;border:1px solid #27272a;border-radius:10px;color:#d4d4d8;padding:10px 14px;font-size:14px;outline:none;font-family:inherit">
+          <button class="btn-sm btn-ok" style="padding:10px 14px;font-size:11px;white-space:nowrap" onclick="searchUsers()">GO</button>
         </div>
         <div id="admin-user-list" class="admin-user-list">
           <div class="dim-text" style="text-align:center;padding:20px">Press SEARCH or load all users</div>
