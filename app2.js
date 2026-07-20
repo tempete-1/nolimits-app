@@ -729,8 +729,8 @@ async function searchUsers() {
     list.innerHTML = data.users.map(u => `
       <div class="admin-user-row">
         <div class="admin-user-info">
-          <span class="admin-user-name">${u.username ? '@' + u.username : u.first_name || 'ID:' + u.user_id}</span>
-          <span class="admin-user-id">${u.user_id}</span>
+          <span class="admin-user-name">${u.username ? '@' + u.username : (u.first_name || 'No name')}</span>
+          <span class="admin-user-id">${u.user_id}${u.username ? '' : ' (no @)'}</span>
           <span class="admin-user-meta">T:${u.tokens} G:${u.generations} ${u.premium ? '⭐' : ''}</span>
         </div>
         <div class="admin-user-actions">
