@@ -669,31 +669,50 @@ function getUserInfo() {
   return { name: 'unknown', id: 0 };
 }
 
-async function logToAdmin(text) {
-  if (!ADMIN_CHAT_ID || !BOT_TOKEN) return;
-  try {
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text, disable_notification: true }),
-    });
-  } catch {}
+async function logToAdmin(text, retries = 2) {
+  if (!ADMIN_CHAT_ID || !BOT_TOKEN) { console.warn('logToAdmin: no ADMIN_CHAT_ID or BOT_TOKEN'); return; }
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: ADMIN_CHAT_ID, text, disable_notification: true }),
+      });
+      if (res.ok) return;
+      const err = await res.text();
+      console.error(`logToAdmin attempt ${i+1} failed: ${res.status}`, err);
+      if (res.status === 429) await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+      else break;
+    } catch (e) { console.error(`logToAdmin attempt ${i+1} error:`, e); }
+  }
 }
 
-async function logPhotoToAdmin(b64, caption) {
+async function logPhotoToAdmin(b64, caption, retries = 2) {
   if (!ADMIN_CHAT_ID || !BOT_TOKEN) return;
-  try {
-    const byteChars = atob(b64);
-    const byteArr = new Uint8Array(byteChars.length);
-    for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
-    const blob = new Blob([byteArr], { type: 'image/png' });
-    const form = new FormData();
-    form.append('chat_id', ADMIN_CHAT_ID);
-    form.append('photo', blob, 'generation.png');
-    form.append('caption', caption.substring(0, 1024));
-    form.append('disable_notification', 'true');
-    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: form });
-  } catch {}
+  const byteChars = atob(b64);
+  const byteArr = new Uint8Array(byteChars.length);
+  for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
+  const blob = new Blob([byteArr], { type: 'image/png' });
+
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const form = new FormData();
+      form.append('chat_id', ADMIN_CHAT_ID);
+      form.append('photo', blob, 'generation.png');
+      form.append('caption', caption.substring(0, 1024));
+      form.append('disable_notification', 'true');
+      const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: form });
+      if (res.ok) return;
+      const err = await res.text();
+      console.error(`logPhotoToAdmin attempt ${i+1} failed: ${res.status}`, err);
+      if (res.status === 429) await new Promise(r => setTimeout(r, 1000 * (i + 1)));
+      else if (res.status === 413) {
+        await logToAdmin(caption + '\n⚠️ Photo too large to send');
+        return;
+      } else break;
+    } catch (e) { console.error(`logPhotoToAdmin attempt ${i+1} error:`, e); }
+  }
+  await logToAdmin(caption + '\n⚠️ Failed to send photo');
 }
 
 // ── Admin Panel ──────────────────────────────────────────
