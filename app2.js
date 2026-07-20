@@ -772,6 +772,22 @@ if (voiceTextEl) {
   });
 }
 
+const _voiceLabels = {
+  ru: ['пауза','долгая пауза','смех','хихик','хохот','плач','вздох','ахнуть','цык','дыхание','вдох','выдох',
+       'шёпот','мягко','громко','акцент','быстро','медленно','пение'],
+  en: ['pause','long pause','laugh','chuckle','giggle','cry','sigh','gasp','tsk','breath','inhale','exhale',
+       'whisper','soft','loud','emphasis','fast','slow','singing']
+};
+let _voiceLang = 'ru';
+function toggleVoiceLang() {
+  _voiceLang = _voiceLang === 'ru' ? 'en' : 'ru';
+  const labels = _voiceLabels[_voiceLang];
+  const btns = document.querySelectorAll('.vtag, .vtag.vtag-wrap');
+  const allBtns = document.querySelectorAll('.voice-tags .vtag');
+  allBtns.forEach((btn, i) => { if (labels[i]) btn.textContent = labels[i]; });
+  document.querySelector('.vtag-lang-toggle').textContent = _voiceLang === 'ru' ? 'EN' : 'RU';
+}
+
 let _voiceCursor = { start: 0, end: 0 };
 (function() {
   const el = document.getElementById('voice-text');
@@ -801,24 +817,13 @@ function wrapVoiceTag(effect) {
   if (!el) return;
   const start = _voiceCursor.start;
   const end = _voiceCursor.end;
-  const selected = el.value.slice(start, end);
-  if (!selected) {
-    const open = `<${effect}>`;
-    const close = `</${effect}>`;
-    el.value = el.value.slice(0, start) + open + close + el.value.slice(end);
-    _voiceCursor.start = _voiceCursor.end = start + open.length;
-    el.focus();
-    el.selectionStart = el.selectionEnd = _voiceCursor.start;
-    el.dispatchEvent(new Event('input'));
-    return;
-  }
-  const wrapped = `<${effect}>${selected}</${effect}>`;
-  el.value = el.value.slice(0, start) + wrapped + el.value.slice(end);
-  _voiceCursor.start = start;
-  _voiceCursor.end = start + wrapped.length;
+  const open = `<${effect}>`;
+  const close = `</${effect}>`;
+  const tag = open + close;
+  el.value = el.value.slice(0, start) + tag + el.value.slice(end);
+  _voiceCursor.start = _voiceCursor.end = start + open.length;
   el.focus();
-  el.selectionStart = _voiceCursor.start;
-  el.selectionEnd = _voiceCursor.end;
+  el.selectionStart = el.selectionEnd = _voiceCursor.start;
   el.dispatchEvent(new Event('input'));
 }
 

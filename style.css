@@ -772,6 +772,7 @@ body {
 .vtag:hover { border-color: #3f3f46; color: #fff; }
 .vtag-wrap { color: #f472b6; border-color: #831843; }
 .vtag-wrap:hover { background: #1a0a14; border-color: #be185d; }
+.vtag-lang-toggle { background: #27272a; border: 1px solid #3f3f46; color: #a1a1aa; border-radius: 6px; padding: 2px 8px; font-size: 10px; cursor: pointer; margin-left: 8px; vertical-align: middle; }
 .voice-select {
   width: 100%;
   background: #18181b;
