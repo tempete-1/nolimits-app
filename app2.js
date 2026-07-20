@@ -838,11 +838,19 @@ function wrapVoiceTag(effect) {
   const end = _voiceCursor.end;
   const open = `<${effect}>`;
   const close = `</${effect}>`;
-  const tag = open + close;
-  el.value = el.value.slice(0, start) + tag + el.value.slice(end);
-  _voiceCursor.start = _voiceCursor.end = start + open.length;
+  const selected = el.value.slice(start, end);
+  if (selected) {
+    const wrapped = open + selected + close;
+    el.value = el.value.slice(0, start) + wrapped + el.value.slice(end);
+    _voiceCursor.start = start;
+    _voiceCursor.end = start + wrapped.length;
+  } else {
+    el.value = el.value.slice(0, start) + open + close + el.value.slice(end);
+    _voiceCursor.start = _voiceCursor.end = start + open.length;
+  }
   el.focus();
-  el.selectionStart = el.selectionEnd = _voiceCursor.start;
+  el.selectionStart = _voiceCursor.start;
+  el.selectionEnd = _voiceCursor.end;
   el.dispatchEvent(new Event('input'));
 }
 
