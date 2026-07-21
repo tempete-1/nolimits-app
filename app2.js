@@ -837,24 +837,10 @@ function wrapVoiceTag(effect) {
   const start = _voiceCursor.start;
   const end = _voiceCursor.end;
   const tag = `[${effect}]`;
-  if (IS_ADMIN) {
-    const selected = el.value.slice(start, end);
-    const inserted = selected ? `${tag} ${selected}` : `${tag} `;
-    el.value = el.value.slice(0, start) + inserted + el.value.slice(end);
-    _voiceCursor.start = _voiceCursor.end = start + inserted.length;
-  } else {
-    const close = `[/${effect}]`;
-    const selected = el.value.slice(start, end);
-    if (selected) {
-      const wrapped = tag + selected + close;
-      el.value = el.value.slice(0, start) + wrapped + el.value.slice(end);
-      _voiceCursor.start = start;
-      _voiceCursor.end = start + wrapped.length;
-    } else {
-      el.value = el.value.slice(0, start) + tag + close + el.value.slice(end);
-      _voiceCursor.start = _voiceCursor.end = start + tag.length;
-    }
-  }
+  const selected = el.value.slice(start, end);
+  const inserted = selected ? `${tag} ${selected}` : `${tag} `;
+  el.value = el.value.slice(0, start) + inserted + el.value.slice(end);
+  _voiceCursor.start = _voiceCursor.end = start + inserted.length;
   el.focus();
   el.selectionStart = _voiceCursor.start;
   el.selectionEnd = _voiceCursor.end;
