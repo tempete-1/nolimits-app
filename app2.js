@@ -875,12 +875,7 @@ async function generateVoice() {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.error || `HTTP ${res.status}`);
     }
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    const audio = document.getElementById('voice-audio');
-    audio.src = url;
-    document.getElementById('voice-result').style.display = 'block';
-    audio.play();
+    await res.blob();
   } catch (e) {
     alert('Voice error: ' + e.message);
   } finally {
