@@ -792,10 +792,10 @@ if (voiceTextEl) {
 }
 
 const _voiceLabels = {
-  ru: ['пауза','смех','хихик','вздох','ахнуть','плач','кхе','шёпот','крик',
-       'возбуждённо','грустно','злобно','спокойно','нервно','игриво','саркастично','быстро','медленно','пение'],
-  en: ['pause','laughs','giggle','sighs','gasps','crying','clears throat','whispers','shouts',
-       'excited','sad','angry','calm','nervous','playfully','sarcastic','rushed','slows down','sings']
+  ru: ['пауза','долгая пауза','смех','смешок','хихик','плач','вздох','цк','щелчок','чмок','хм','дыхание','вдох','выдох',
+       'шёпот','мягко','громко','нарастание','затухание','выше тон','ниже тон','медленно','быстро','акцент','напевно','пение','смех-речь'],
+  en: ['pause','long pause','laugh','chuckle','giggle','cry','sigh','tsk','tongue click','lip smack','hum','breath','inhale','exhale',
+       'whisper','soft','loud','build intensity','decrease intensity','higher pitch','lower pitch','slow','fast','emphasis','sing-song','singing','laugh-speak']
 };
 let _voiceLang = 'ru';
 function toggleVoiceLang() {

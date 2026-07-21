@@ -83,33 +83,45 @@
       </div>
 
       <div class="card">
-        <label class="label">REACTIONS <button class="vtag-lang-toggle" onclick="toggleVoiceLang()">EN</button></label>
+        <label class="label">EFFECTS <button class="vtag-lang-toggle" onclick="toggleVoiceLang()">EN</button></label>
+      </div>
+
+      <div class="card">
+        <label class="label sub-label">INSERT AT CURSOR</label>
         <div class="voice-tags">
           <button class="vtag" onclick="insertVoiceTag('[pause]')">пауза</button>
+          <button class="vtag" onclick="insertVoiceTag('[long pause]')">долгая пауза</button>
           <button class="vtag" onclick="insertVoiceTag('[laughs]')">смех</button>
+          <button class="vtag" onclick="insertVoiceTag('[chuckle]')">смешок</button>
           <button class="vtag" onclick="insertVoiceTag('[giggle]')">хихик</button>
-          <button class="vtag" onclick="insertVoiceTag('[sighs]')">вздох</button>
-          <button class="vtag" onclick="insertVoiceTag('[gasps]')">ахнуть</button>
           <button class="vtag" onclick="insertVoiceTag('[crying]')">плач</button>
-          <button class="vtag" onclick="insertVoiceTag('[clears throat]')">кхе</button>
-          <button class="vtag" onclick="insertVoiceTag('[whispers]')">шёпот</button>
-          <button class="vtag" onclick="insertVoiceTag('[shouts]')">крик</button>
+          <button class="vtag" onclick="insertVoiceTag('[sighs]')">вздох</button>
+          <button class="vtag" onclick="insertVoiceTag('[tsk]')">цк</button>
+          <button class="vtag" onclick="insertVoiceTag('[tongue click]')">щелчок</button>
+          <button class="vtag" onclick="insertVoiceTag('[lip smack]')">чмок</button>
+          <button class="vtag" onclick="insertVoiceTag('[hum]')">хм</button>
+          <button class="vtag" onclick="insertVoiceTag('[breath]')">дыхание</button>
+          <button class="vtag" onclick="insertVoiceTag('[inhale]')">вдох</button>
+          <button class="vtag" onclick="insertVoiceTag('[exhale]')">выдох</button>
         </div>
       </div>
 
       <div class="card">
-        <label class="label">EMOTIONS & STYLE</label>
+        <label class="label sub-label">WRAP SELECTED TEXT</label>
         <div class="voice-tags">
-          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('excited')">возбуждённо</button>
-          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('sad')">грустно</button>
-          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('angry')">злобно</button>
-          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('calm')">спокойно</button>
-          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('nervous')">нервно</button>
-          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('playfully')">игриво</button>
-          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('sarcastic')">саркастично</button>
-          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('rushed')">быстро</button>
-          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('slows down')">медленно</button>
-          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('sings')">пение</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('whisper')">шёпот</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('soft')">мягко</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('loud')">громко</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('build intensity')">нарастание</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('decrease intensity')">затухание</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('higher pitch')">выше тон</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('lower pitch')">ниже тон</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('slow')">медленно</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('fast')">быстро</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('emphasis')">акцент</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('sing-song')">напевно</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('singing')">пение</button>
+          <button class="vtag vtag-wrap" onclick="wrapVoiceTag('laugh-speak')">смех-речь</button>
         </div>
       </div>
 
