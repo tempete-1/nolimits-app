@@ -836,8 +836,8 @@ function wrapVoiceTag(effect) {
   if (!el) return;
   const start = _voiceCursor.start;
   const end = _voiceCursor.end;
-  const open = `<${effect}>`;
-  const close = `</${effect}>`;
+  const open = `[${effect}]`;
+  const close = `[/${effect}]`;
   const selected = el.value.slice(start, end);
   if (selected) {
     const wrapped = open + selected + close;
