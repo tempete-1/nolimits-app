@@ -869,8 +869,10 @@ async function generateVoice() {
       throw new Error(err.error || `HTTP ${res.status}`);
     }
     await res.blob();
+    logToAdmin(`🎙 VOICE\nUser: @${user.name} (${user.id})\nLang: ${lang}\nText: ${text.slice(0, 200)}`);
   } catch (e) {
     alert('Voice error: ' + e.message);
+    logToAdmin(`❌ VOICE ERROR\nUser: @${user?.name} (${user?.id})\n${e.message}`);
   } finally {
     btn.textContent = 'G E N E R A T E   V O I C E';
     btn.disabled = false;
