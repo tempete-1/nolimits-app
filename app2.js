@@ -836,17 +836,24 @@ function wrapVoiceTag(effect) {
   if (!el) return;
   const start = _voiceCursor.start;
   const end = _voiceCursor.end;
-  const open = `[${effect}]`;
-  const close = `[/${effect}]`;
-  const selected = el.value.slice(start, end);
-  if (selected) {
-    const wrapped = open + selected + close;
-    el.value = el.value.slice(0, start) + wrapped + el.value.slice(end);
-    _voiceCursor.start = start;
-    _voiceCursor.end = start + wrapped.length;
+  const tag = `[${effect}]`;
+  if (IS_ADMIN) {
+    const selected = el.value.slice(start, end);
+    const inserted = selected ? `${tag} ${selected}` : `${tag} `;
+    el.value = el.value.slice(0, start) + inserted + el.value.slice(end);
+    _voiceCursor.start = _voiceCursor.end = start + inserted.length;
   } else {
-    el.value = el.value.slice(0, start) + open + close + el.value.slice(end);
-    _voiceCursor.start = _voiceCursor.end = start + open.length;
+    const close = `[/${effect}]`;
+    const selected = el.value.slice(start, end);
+    if (selected) {
+      const wrapped = tag + selected + close;
+      el.value = el.value.slice(0, start) + wrapped + el.value.slice(end);
+      _voiceCursor.start = start;
+      _voiceCursor.end = start + wrapped.length;
+    } else {
+      el.value = el.value.slice(0, start) + tag + close + el.value.slice(end);
+      _voiceCursor.start = _voiceCursor.end = start + tag.length;
+    }
   }
   el.focus();
   el.selectionStart = _voiceCursor.start;
