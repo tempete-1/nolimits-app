@@ -855,6 +855,7 @@ function wrapVoiceTag(effect) {
 }
 
 async function generateVoice() {
+  const user = getUserInfo();
   const text = document.getElementById('voice-text')?.value?.trim();
   if (!text) { alert('Enter text first'); return; }
   if (text.length > 5000) { alert('Max 5000 characters'); return; }
