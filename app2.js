@@ -792,10 +792,10 @@ if (voiceTextEl) {
 }
 
 const _voiceLabels = {
-  ru: ['пауза','долгая пауза','смех','хихик','хохот','плач','вздох','ахнуть','цык','дыхание','вдох','выдох',
-       'шёпот','мягко','громко','акцент','быстро','медленно','пение'],
-  en: ['pause','long pause','laugh','chuckle','giggle','cry','sigh','gasp','tsk','breath','inhale','exhale',
-       'whisper','soft','loud','emphasis','fast','slow','singing']
+  ru: ['пауза','смех','хихик','вздох','ахнуть','плач','кхе','шёпот','крик',
+       'возбуждённо','грустно','злобно','спокойно','нервно','игриво','саркастично','быстро','медленно','пение'],
+  en: ['pause','laughs','giggle','sighs','gasps','crying','clears throat','whispers','shouts',
+       'excited','sad','angry','calm','nervous','playfully','sarcastic','rushed','slows down','sings']
 };
 let _voiceLang = 'ru';
 function toggleVoiceLang() {
