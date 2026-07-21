@@ -868,7 +868,7 @@ async function generateVoice() {
     const res = await fetch(`${API_URL}/api/voice/generate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text, language: lang }),
+      body: JSON.stringify({ text, language: lang, user_id: user?.id }),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
