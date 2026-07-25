@@ -1,4 +1,4 @@
-const APP_VERSION = 'v2.2';
+const APP_VERSION = 'v2.3';
 // Telegram WebApp init
 const tg = window.Telegram?.WebApp;
 if (tg) {
@@ -178,10 +178,11 @@ let lastPoint = null;
 
 if (maskCanvas) {
   maskCanvas.style.touchAction = 'none';
-  maskCanvas.addEventListener('pointerdown', startDraw);
-  maskCanvas.addEventListener('pointermove', draw);
+  maskCanvas.addEventListener('pointerdown', (e) => { e.preventDefault(); startDraw(e); });
+  maskCanvas.addEventListener('pointermove', (e) => { e.preventDefault(); draw(e); });
   maskCanvas.addEventListener('pointerup', stopDraw);
   maskCanvas.addEventListener('pointerleave', stopDraw);
+  maskCanvas.addEventListener('pointercancel', stopDraw);
 }
 
 function loadImageToMask(dataUrl) {
@@ -206,15 +207,7 @@ function loadImageToMask(dataUrl) {
 function startDraw(e) { isDrawing = true; lastPoint = null; draw(e); }
 function stopDraw() { isDrawing = false; lastPoint = null; }
 
-function draw(e) {
-  if (!isDrawing) return;
-  const rect = maskCanvas.getBoundingClientRect();
-  const scaleX = maskCanvas.width / rect.width;
-  const scaleY = maskCanvas.height / rect.height;
-  const x = (e.clientX - rect.left) * scaleX;
-  const y = (e.clientY - rect.top) * scaleY;
-  const size = parseInt(document.getElementById('brush-size').value) * scaleX;
-
+function drawPoint(px, py, size) {
   function strokeBetween(ctx, fillStyle, compositeOp) {
     ctx.save();
     if (compositeOp) ctx.globalCompositeOperation = compositeOp;
@@ -226,11 +219,11 @@ function draw(e) {
     if (lastPoint) {
       ctx.beginPath();
       ctx.moveTo(lastPoint.x, lastPoint.y);
-      ctx.lineTo(x, y);
+      ctx.lineTo(px, py);
       ctx.stroke();
     } else {
       ctx.beginPath();
-      ctx.arc(x, y, size / 2, 0, Math.PI * 2);
+      ctx.arc(px, py, size / 2, 0, Math.PI * 2);
       ctx.fill();
     }
     ctx.restore();
@@ -246,7 +239,22 @@ function draw(e) {
     strokeBetween(pureMaskCtx, brushMode === 'brush' ? '#ffffff' : '#000000');
   }
 
-  lastPoint = { x, y };
+  lastPoint = { x: px, y: py };
+}
+
+function draw(e) {
+  if (!isDrawing) return;
+  const rect = maskCanvas.getBoundingClientRect();
+  const scaleX = maskCanvas.width / rect.width;
+  const scaleY = maskCanvas.height / rect.height;
+  const size = parseInt(document.getElementById('brush-size').value) * scaleX;
+
+  const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  for (const ev of events) {
+    const x = (ev.clientX - rect.left) * scaleX;
+    const y = (ev.clientY - rect.top) * scaleY;
+    drawPoint(x, y, size);
+  }
 }
 
 function getMaskDataUrl() {
