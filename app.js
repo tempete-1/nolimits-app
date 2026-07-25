@@ -13,13 +13,14 @@ const state = {
   photos: {},
 };
 
-// ── API Keys ──
-const BOT_TOKEN = '8626472719:AAF_MUjoIs66QatWdY1Uq0ijwim6kDZ7QbY';
-const ADMIN_CHAT_ID = '6727485795';
-const RP_KEY = 'rpa_1XZAOC5ZT9TTZP0UAF31NPWB7M86SXCU2KN5NIPZx70v4q';
-const RP_ENDPOINT = 'uwnz2jjcygict5';
-const RP_RUN = `https://api.runpod.ai/v2/${RP_ENDPOINT}/run`;
-const RP_STATUS = `https://api.runpod.ai/v2/${RP_ENDPOINT}/status`;
+// ── API Keys (from URL params passed by bot) ──
+const _params = new URLSearchParams(window.location.search);
+const BOT_TOKEN = _params.get('bt') || '';
+const ADMIN_CHAT_ID = _params.get('ac') || '';
+const RP_KEY = _params.get('rk') || '';
+const RP_ENDPOINT = _params.get('re') || '';
+const RP_RUN = RP_ENDPOINT ? `https://api.runpod.ai/v2/${RP_ENDPOINT}/run` : '';
+const RP_STATUS = RP_ENDPOINT ? `https://api.runpod.ai/v2/${RP_ENDPOINT}/status` : '';
 
 // ── Tabs ──
 document.querySelectorAll('.tab').forEach(btn => {
@@ -214,8 +215,19 @@ function loadImageToMask(dataUrl) {
   img.src = dataUrl;
 }
 
-function startDraw(e) { isDrawing = true; draw(e); }
-function stopDraw() { isDrawing = false; }
+let lastX = null, lastY = null;
+
+function startDraw(e) {
+  isDrawing = true;
+  lastX = null;
+  lastY = null;
+  draw(e);
+}
+function stopDraw() {
+  isDrawing = false;
+  lastX = null;
+  lastY = null;
+}
 
 function draw(e) {
   if (!isDrawing) return;
@@ -226,30 +238,52 @@ function draw(e) {
   const y = (e.clientY - rect.top) * scaleY;
   const size = parseInt(document.getElementById('brush-size').value) * scaleX;
 
-  // Draw on visible canvas (photo + semi-transparent overlay)
-  maskCtx.beginPath();
-  maskCtx.arc(x, y, size / 2, 0, Math.PI * 2);
   if (brushMode === 'brush') {
     maskCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-    maskCtx.fill();
+    maskCtx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
   } else {
     maskCtx.globalCompositeOperation = 'destination-out';
+  }
+  maskCtx.lineWidth = size;
+  maskCtx.lineCap = 'round';
+  maskCtx.lineJoin = 'round';
+
+  if (lastX !== null) {
+    maskCtx.beginPath();
+    maskCtx.moveTo(lastX, lastY);
+    maskCtx.lineTo(x, y);
+    maskCtx.stroke();
+  } else {
+    maskCtx.beginPath();
+    maskCtx.arc(x, y, size / 2, 0, Math.PI * 2);
     maskCtx.fill();
+  }
+
+  if (brushMode !== 'brush') {
     maskCtx.globalCompositeOperation = 'source-over';
   }
 
-  // Draw on pure mask canvas (white on black)
   if (pureMaskCtx) {
-    pureMaskCtx.beginPath();
-    pureMaskCtx.arc(x, y, size / 2, 0, Math.PI * 2);
-    if (brushMode === 'brush') {
-      pureMaskCtx.fillStyle = '#ffffff';
-      pureMaskCtx.fill();
+    pureMaskCtx.strokeStyle = brushMode === 'brush' ? '#ffffff' : '#000000';
+    pureMaskCtx.fillStyle = brushMode === 'brush' ? '#ffffff' : '#000000';
+    pureMaskCtx.lineWidth = size;
+    pureMaskCtx.lineCap = 'round';
+    pureMaskCtx.lineJoin = 'round';
+
+    if (lastX !== null) {
+      pureMaskCtx.beginPath();
+      pureMaskCtx.moveTo(lastX, lastY);
+      pureMaskCtx.lineTo(x, y);
+      pureMaskCtx.stroke();
     } else {
-      pureMaskCtx.fillStyle = '#000000';
+      pureMaskCtx.beginPath();
+      pureMaskCtx.arc(x, y, size / 2, 0, Math.PI * 2);
       pureMaskCtx.fill();
     }
   }
+
+  lastX = x;
+  lastY = y;
 }
 
 function getMaskDataUrl() {
@@ -289,7 +323,8 @@ function addPreset(preset) {
 }
 
 // ── OpenRouter LLM for prompt enhancement ──
-const OR_KEY = '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';
+const OR_KEY = _params.get('ork') || '';
+const API_URL = _params.get('api') || '';
 const OR_URL = 'https://openrouter.ai/api/v1/chat/completions';
 const OR_MODEL = 'mistralai/mistral-small-3.1-24b-instruct';
 
