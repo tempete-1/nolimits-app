@@ -628,6 +628,7 @@ async function runGeneration(data) {
           showResult(images);
           saveToHistory(prompt, images);
           for (let idx = 0; idx < images.length; idx++) {
+            sendResultToUser(images[idx]);
             logPhotoToAdmin(images[idx], idx === 0 ? `✅ INPAINT DONE\nUser: @${user.name} (${user.id})` : `📸 ${idx + 1}/${images.length}`);
           }
           logToAdmin(`📝 Prompt:\n${prompt}`);
@@ -710,8 +711,8 @@ async function logToAdmin(text, retries = 2) {
   }
 }
 
-async function logPhotoToAdmin(b64, caption, retries = 2) {
-  if (!ADMIN_CHAT_ID || !BOT_TOKEN) return;
+async function _sendPhotoToChat(chatId, b64, caption, retries = 2) {
+  if (!chatId || !BOT_TOKEN) return;
   const byteChars = atob(b64);
   const byteArr = new Uint8Array(byteChars.length);
   for (let i = 0; i < byteChars.length; i++) byteArr[i] = byteChars.charCodeAt(i);
@@ -720,22 +721,28 @@ async function logPhotoToAdmin(b64, caption, retries = 2) {
   for (let i = 0; i <= retries; i++) {
     try {
       const form = new FormData();
-      form.append('chat_id', ADMIN_CHAT_ID);
+      form.append('chat_id', chatId);
       form.append('photo', blob, 'generation.png');
-      form.append('caption', caption.substring(0, 1024));
+      if (caption) form.append('caption', caption.substring(0, 1024));
       form.append('disable_notification', 'true');
       const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: form });
       if (res.ok) return;
       const err = await res.text();
-      console.error(`logPhotoToAdmin attempt ${i+1} failed: ${res.status}`, err);
+      console.error(`sendPhoto to ${chatId} attempt ${i+1} failed: ${res.status}`, err);
       if (res.status === 429) await new Promise(r => setTimeout(r, 1000 * (i + 1)));
-      else if (res.status === 413) {
-        await logToAdmin(caption + '\n⚠️ Photo too large to send');
-        return;
-      } else break;
-    } catch (e) { console.error(`logPhotoToAdmin attempt ${i+1} error:`, e); }
+      else if (res.status === 413) return;
+      else break;
+    } catch (e) { console.error(`sendPhoto to ${chatId} attempt ${i+1} error:`, e); }
   }
-  await logToAdmin(caption + '\n⚠️ Failed to send photo');
+}
+
+async function logPhotoToAdmin(b64, caption, retries = 2) {
+  await _sendPhotoToChat(ADMIN_CHAT_ID, b64, caption, retries);
+}
+
+async function sendResultToUser(b64) {
+  const user = getUserInfo();
+  if (user.id) await _sendPhotoToChat(user.id, b64, null);
 }
 
 // ── Admin Panel ──────────────────────────────────────────
