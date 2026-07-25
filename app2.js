@@ -1,4 +1,4 @@
-const APP_VERSION = 'v2.3';
+const APP_VERSION = 'v2.4';
 // Telegram WebApp init
 const tg = window.Telegram?.WebApp;
 if (tg) {
@@ -188,6 +188,7 @@ if (maskCanvas) {
 function loadImageToMask(dataUrl) {
   const img = new Image();
   img.onload = () => {
+    _maskPhoto = img;
     const w = maskCanvas.offsetWidth;
     const ratio = img.height / img.width;
     maskCanvas.width = w;
@@ -207,39 +208,35 @@ function loadImageToMask(dataUrl) {
 function startDraw(e) { isDrawing = true; lastPoint = null; draw(e); }
 function stopDraw() { isDrawing = false; lastPoint = null; }
 
-function drawPoint(px, py, size) {
-  function strokeBetween(ctx, fillStyle, compositeOp) {
-    ctx.save();
-    if (compositeOp) ctx.globalCompositeOperation = compositeOp;
-    ctx.strokeStyle = fillStyle;
-    ctx.fillStyle = fillStyle;
-    ctx.lineWidth = size;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    if (lastPoint) {
-      ctx.beginPath();
-      ctx.moveTo(lastPoint.x, lastPoint.y);
-      ctx.lineTo(px, py);
-      ctx.stroke();
-    } else {
-      ctx.beginPath();
-      ctx.arc(px, py, size / 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.restore();
-  }
+let _maskPhoto = null;
 
-  if (brushMode === 'brush') {
-    strokeBetween(maskCtx, 'rgba(255, 255, 255, 0.5)');
+function _strokeAt(ctx, px, py, size, color) {
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = size;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  if (lastPoint) {
+    ctx.beginPath();
+    ctx.moveTo(lastPoint.x, lastPoint.y);
+    ctx.lineTo(px, py);
+    ctx.stroke();
   } else {
-    strokeBetween(maskCtx, 'rgba(0,0,0,1)', 'destination-out');
+    ctx.beginPath();
+    ctx.arc(px, py, size / 2, 0, Math.PI * 2);
+    ctx.fill();
   }
+}
 
-  if (pureMaskCtx) {
-    strokeBetween(pureMaskCtx, brushMode === 'brush' ? '#ffffff' : '#000000');
-  }
-
-  lastPoint = { x: px, y: py };
+function _redrawVisible() {
+  if (!_maskPhoto || !pureMaskCanvas) return;
+  maskCtx.clearRect(0, 0, maskCanvas.width, maskCanvas.height);
+  maskCtx.drawImage(_maskPhoto, 0, 0, maskCanvas.width, maskCanvas.height);
+  maskCtx.save();
+  maskCtx.globalAlpha = 0.5;
+  maskCtx.globalCompositeOperation = 'source-over';
+  maskCtx.drawImage(pureMaskCanvas, 0, 0);
+  maskCtx.restore();
 }
 
 function draw(e) {
@@ -249,12 +246,17 @@ function draw(e) {
   const scaleY = maskCanvas.height / rect.height;
   const size = parseInt(document.getElementById('brush-size').value) * scaleX;
 
-  const events = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  const events = (e.getCoalescedEvents && e.getCoalescedEvents().length) ? e.getCoalescedEvents() : [e];
   for (const ev of events) {
-    const x = (ev.clientX - rect.left) * scaleX;
-    const y = (ev.clientY - rect.top) * scaleY;
-    drawPoint(x, y, size);
+    const px = (ev.clientX - rect.left) * scaleX;
+    const py = (ev.clientY - rect.top) * scaleY;
+    if (pureMaskCtx) {
+      const color = brushMode === 'brush' ? '#ffffff' : '#000000';
+      _strokeAt(pureMaskCtx, px, py, size, color);
+    }
+    lastPoint = { x: px, y: py };
   }
+  _redrawVisible();
 }
 
 function getMaskDataUrl() {
