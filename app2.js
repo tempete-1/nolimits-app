@@ -901,8 +901,9 @@ async function generateVoice() {
     await res.blob();
     logToAdmin(`🎙 VOICE\nUser: @${user.name} (${user.id})\nLang: ${lang}\nText: ${text.slice(0, 200)}`);
   } catch (e) {
-    alert('Voice error: ' + e.message);
-    logToAdmin(`❌ VOICE ERROR\nUser: @${user?.name} (${user?.id})\n${e.message}`);
+    const detail = e.message === 'Failed to fetch' ? 'Network error — try disabling VPN or check connection' : e.message;
+    alert('Voice error: ' + detail);
+    logToAdmin(`❌ VOICE ERROR\nUser: @${user?.name} (${user?.id})\n${e.message}\nAPI_URL: ${API_URL}`);
   } finally {
     btn.textContent = 'G E N E R A T E   V O I C E';
     btn.disabled = false;
