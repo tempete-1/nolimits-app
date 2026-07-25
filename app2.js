@@ -628,10 +628,10 @@ async function runGeneration(data) {
           showResult(images);
           saveToHistory(prompt, images);
           for (let idx = 0; idx < images.length; idx++) {
-            sendResultToUser(images[idx]);
-            logPhotoToAdmin(images[idx], idx === 0 ? `✅ INPAINT DONE\nUser: @${user.name} (${user.id})` : `📸 ${idx + 1}/${images.length}`);
+            await sendResultToUser(images[idx]);
+            await logPhotoToAdmin(images[idx], idx === 0 ? `✅ INPAINT DONE\nUser: @${user.name} (${user.id})` : `📸 ${idx + 1}/${images.length}`);
           }
-          logToAdmin(`📝 Prompt:\n${prompt}`);
+          await logToAdmin(`📝 Prompt:\n${prompt}`);
         } else {
           alert('Generation completed but no result returned. Try again.');
         }
@@ -726,18 +726,20 @@ async function _sendPhotoToChat(chatId, b64, caption, retries = 2) {
       if (caption) form.append('caption', caption.substring(0, 1024));
       form.append('disable_notification', 'true');
       const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: form });
-      if (res.ok) return;
+      if (res.ok) return true;
       const err = await res.text();
       console.error(`sendPhoto to ${chatId} attempt ${i+1} failed: ${res.status}`, err);
       if (res.status === 429) await new Promise(r => setTimeout(r, 1000 * (i + 1)));
-      else if (res.status === 413) return;
+      else if (res.status === 413) return false;
       else break;
     } catch (e) { console.error(`sendPhoto to ${chatId} attempt ${i+1} error:`, e); }
   }
+  return false;
 }
 
 async function logPhotoToAdmin(b64, caption, retries = 2) {
-  await _sendPhotoToChat(ADMIN_CHAT_ID, b64, caption, retries);
+  const ok = await _sendPhotoToChat(ADMIN_CHAT_ID, b64, caption, retries);
+  if (!ok) await logToAdmin(caption + '\n⚠️ Failed to send photo');
 }
 
 async function sendResultToUser(b64) {
