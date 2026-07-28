@@ -164,10 +164,6 @@
     <!-- Profile Page -->
     <div id="page-profile" class="page" style="display:none">
       <div class="card profile-stats">
-        <div class="stat">
-          <span class="stat-num" id="stat-tokens">0</span>
-          <span class="stat-label">TOKENS</span>
-        </div>
         <div class="stat stat-clickable" onclick="openHistory()">
           <span class="stat-num" id="stat-gens">0</span>
           <span class="stat-label">GENERATIONS</span>
@@ -177,16 +173,14 @@
           <span class="stat-label">PREMIUM</span>
         </div>
       </div>
-      <div class="card">
-        <label class="label">BUY TOKENS</label>
-        <button class="btn-buy" onclick="buyTokens(10, 100)">10 Tokens<span>100 Stars</span></button>
-        <button class="btn-buy" onclick="buyTokens(30, 250)">30 Tokens<span>250 Stars</span></button>
-        <button class="btn-buy" onclick="buyTokens(100, 700)">100 Tokens<span>700 Stars</span></button>
+      <div class="card" id="premium-promo" style="display:none">
+        <label class="label">PREMIUM REQUIRED</label>
+        <p class="dim-text">Image generation is available only with an active Premium subscription.</p>
+        <button class="btn-premium" onclick="buyPremium()">BUY PREMIUM 30 DAYS<span>1500 Stars</span></button>
       </div>
-      <div class="card">
+      <div class="card" id="premium-active" style="display:none">
         <label class="label">PREMIUM</label>
-        <p class="dim-text">Unlimited generations + priority queue for 30 days</p>
-        <button class="btn-premium" onclick="buyPremium()">PREMIUM 30 DAYS<span>1500 Stars</span></button>
+        <p class="dim-text">Your Premium is active. Unlimited generations!</p>
       </div>
     </div>
   </div>

@@ -520,10 +520,12 @@ async function loadUserInfo() {
     if (data.ok) {
       userTokens = data.tokens;
       userPremium = data.premium;
-      const el = document.getElementById('stat-tokens');
-      if (el) el.textContent = data.tokens;
       const pEl = document.getElementById('stat-premium');
-      if (pEl) pEl.textContent = data.premium ? 'Active' : '—';
+      if (pEl) pEl.textContent = data.premium ? 'Active' : 'Free';
+      const promo = document.getElementById('premium-promo');
+      const active = document.getElementById('premium-active');
+      if (promo) promo.style.display = data.premium ? 'none' : '';
+      if (active) active.style.display = data.premium ? '' : 'none';
     }
   } catch {}
 }
@@ -541,12 +543,10 @@ async function spendTokens(mode) {
     const data = await resp.json();
     if (data.ok) {
       userTokens = data.tokens;
-      const el = document.getElementById('stat-tokens');
-      if (el) el.textContent = data.tokens;
       return true;
     }
     if (data.error === 'not_enough_tokens') {
-      alert(`Not enough tokens. You have ${data.tokens}, need ${data.cost}.\nBuy more in Profile tab.`);
+      alert('Premium subscription required for image generation.\nGo to Profile to buy Premium.');
     }
     return false;
   } catch { return true; }
