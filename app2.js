@@ -63,8 +63,8 @@ async function checkVersion() {
     }
   } catch {}
 }
-checkVersion();
-setInterval(checkVersion, 60000);
+setTimeout(checkVersion, 10000);
+setInterval(checkVersion, 300000);
 
 // Tabs
 document.querySelectorAll('.tab').forEach(btn => {
