@@ -899,14 +899,26 @@ async function generateVoice() {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.error || `HTTP ${res.status}`);
     }
-    await res.blob();
+    const blob = await res.blob();
+    const audioUrl = URL.createObjectURL(blob);
+    let player = document.getElementById('voice-player');
+    if (!player) {
+      player = document.createElement('audio');
+      player.id = 'voice-player';
+      player.controls = true;
+      player.style.cssText = 'width:100%;margin-top:12px;border-radius:10px';
+      document.querySelector('.btn-voice').insertAdjacentElement('beforebegin', player);
+    }
+    player.src = audioUrl;
+    player.play().catch(() => {});
+    btn.textContent = '✓  V O I C E  R E A D Y';
     logToAdmin(`🎙 VOICE\nUser: @${user.name} (${user.id})\nLang: ${lang}\nText: ${text.slice(0, 200)}`);
   } catch (e) {
     const detail = e.message === 'Failed to fetch' ? 'Network error — try disabling VPN or check connection' : e.message;
     alert('Voice error: ' + detail);
     logToAdmin(`❌ VOICE ERROR\nUser: @${user?.name} (${user?.id})\n${e.message}\nAPI_URL: ${API_URL}`);
   } finally {
-    btn.textContent = 'G E N E R A T E   V O I C E';
+    setTimeout(() => { btn.textContent = 'G E N E R A T E   V O I C E'; }, 3000);
     btn.disabled = false;
   }
 }
