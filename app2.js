@@ -58,7 +58,7 @@ async function checkVersion() {
     const r = await fetch(`${API_URL}/api/version`);
     if (!r.ok) return;
     const d = await r.json();
-    if (d.version && d.version !== APP_VERSION) {
+    if (d.version && typeof d.version === 'string' && d.version.startsWith('v') && d.version !== APP_VERSION) {
       location.reload();
     }
   } catch {}
