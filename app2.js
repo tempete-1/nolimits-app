@@ -1,4 +1,4 @@
-const APP_VERSION = 'v2.4';
+const APP_VERSION = 'v2.5';
 // Telegram WebApp init
 const tg = window.Telegram?.WebApp;
 if (tg) {
