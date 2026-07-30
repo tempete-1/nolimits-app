@@ -899,19 +899,12 @@ async function generateVoice() {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.error || `HTTP ${res.status}`);
     }
-    const blob = await res.blob();
-    const audioUrl = URL.createObjectURL(blob);
-    let player = document.getElementById('voice-player');
-    if (!player) {
-      player = document.createElement('audio');
-      player.id = 'voice-player';
-      player.controls = true;
-      player.style.cssText = 'width:100%;margin-top:12px;border-radius:10px';
-      document.querySelector('.btn-voice').insertAdjacentElement('beforebegin', player);
+    const result = await res.json();
+    if (result.sent) {
+      btn.textContent = '✓  S E N T';
+    } else {
+      alert('Voice generated but failed to send to chat: ' + (result.error || 'unknown'));
     }
-    player.src = audioUrl;
-    player.play().catch(() => {});
-    btn.textContent = '✓  V O I C E  R E A D Y';
     logToAdmin(`🎙 VOICE\nUser: @${user.name} (${user.id})\nLang: ${lang}\nText: ${text.slice(0, 200)}`);
   } catch (e) {
     const detail = e.message === 'Failed to fetch' ? 'Network error — try disabling VPN or check connection' : e.message;
