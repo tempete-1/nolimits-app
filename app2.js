@@ -825,9 +825,9 @@ if (voiceTextEl) {
 
 const _voiceLabels = {
   ru: ['пауза','долгая пауза','смех','смешок','хихик','плач','вздох','цк','щелчок','чмок','хм','дыхание','вдох','выдох',
-       'возбуждённо','шёпот','мягко','громко','нарастание','затухание','выше тон','ниже тон','медленно','быстро','акцент','напевно','пение','смех-речь'],
+       'возбуждённо','шёпот','мягко','громко','нарастание','затухание','выше тон','ниже тон','медленно','быстро','акцент','игриво','соблазн','смех-речь'],
   en: ['pause','long pause','laugh','chuckle','giggle','cry','sigh','tsk','tongue click','lip smack','hum','breath','inhale','exhale',
-       'excited','whisper','soft','loud','build intensity','decrease intensity','higher pitch','lower pitch','slow','fast','emphasis','sing-song','singing','laugh-speak']
+       'excited','whisper','soft','loud','build intensity','decrease intensity','higher pitch','lower pitch','slow','fast','emphasis','playful','seductive','laugh-speak']
 };
 let _voiceLang = 'ru';
 function toggleVoiceLang() {
@@ -868,9 +868,8 @@ function wrapVoiceTag(effect) {
   if (!el) return;
   const start = _voiceCursor.start;
   const end = _voiceCursor.end;
-  const tag = `[${effect}]`;
   const selected = el.value.slice(start, end);
-  const inserted = selected ? `${tag} ${selected}` : `${tag} `;
+  const inserted = selected ? `${effect} ${selected}` : `${effect} `;
   el.value = el.value.slice(0, start) + inserted + el.value.slice(end);
   _voiceCursor.start = _voiceCursor.end = start + inserted.length;
   el.focus();
