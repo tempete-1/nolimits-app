@@ -1,4 +1,4 @@
-const APP_VERSION = 'v2.5';
+const APP_VERSION = 'v2.4';
 // Telegram WebApp init
 const tg = window.Telegram?.WebApp;
 if (tg) {
@@ -53,18 +53,6 @@ if (vEl) {
   vEl.textContent = APP_VERSION + (missing.length ? ' | MISSING: ' + missing.join(', ') : ' | OK');
 }
 
-async function checkVersion() {
-  try {
-    const r = await fetch(`${API_URL}/api/version`);
-    if (!r.ok) return;
-    const d = await r.json();
-    if (d.version && typeof d.version === 'string' && d.version.startsWith('v') && d.version !== APP_VERSION) {
-      location.reload();
-    }
-  } catch {}
-}
-setTimeout(checkVersion, 10000);
-setInterval(checkVersion, 300000);
 
 // Tabs
 document.querySelectorAll('.tab').forEach(btn => {
